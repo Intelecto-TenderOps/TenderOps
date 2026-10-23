@@ -1,5 +1,15 @@
 # Frontend completo de TenderOps · PR 2
 
+## Actualización visual: vidrio azul y filtros laterales
+
+El diseño posterior utiliza superficies translúcidas, desenfoque, bordes iluminados y sombras suaves en tonos azules, incluyendo acceso, navegación, tablas, formularios y diálogos. `glass.css` centraliza esta capa y conserva alternativas sin transparencia/desenfoque; los estados de alerta mantienen sus colores semánticos y texto.
+
+`FilterPanel` unifica oportunidades, requisitos, checklist, tareas, vigencia documental, alertas, indicadores, trabajos y auditoría. El botón Filtros abre un diálogo lateral modal con desplazamiento propio. La selección aplicada se muestra como etiquetas removibles y contador; Limpiar todos restaura la vista. En oportunidades, Buscar procesos valida y aplica los criterios a la URL, conservando enlaces y búsquedas guardadas. Los demás módulos actualizan los resultados al seleccionar y permiten cerrar con Ver resultados.
+
+Escape, cierre explícito y devolución del foco utilizan el diálogo nativo. El fondo queda bloqueado mientras está abierto; el panel ocupa el ancho disponible en móvil. Las selecciones de empresa/función y la selección del proceso sobre el cual operar en Dynamics mantienen su comportamiento, porque definen contexto de trabajo.
+
+Verificación del rediseño: compilación y lint correctos, 13 pruebas unitarias, siete recorridos autónomos y once integrados aprobados. Las pruebas nuevas recorren los filtros de cada módulo, la eliminación de etiquetas, limpieza total, URL, Escape, devolución de foco y 320 px. Se inspeccionaron capturas de escritorio y panel móvil. No se ejecutó lector de pantalla ni se declara certificación WCAG.
+
 El alcance cambia por solicitud de la usuaria: adelantar la interfaz de los cinco incrementos al PR 2. El backend del PR 1 se conserva. Esta entrega permite recorrer y probar la aplicación completa; no declara terminadas las integraciones ni los criterios de aceptación de las 92 historias.
 
 ## Cómo recorrerlo

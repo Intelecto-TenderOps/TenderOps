@@ -6,6 +6,7 @@ import { queryClient } from "../shared/api";
 import { App } from "./App";
 import "./styles.css";
 import "./workspace.css";
+import "./glass.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

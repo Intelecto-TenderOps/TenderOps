@@ -1,3 +1,4 @@
+import { FilterPanel } from "./filters";
 import { useState } from "react";
 import type { ReactElement } from "react";
 import { Link } from "react-router-dom";
@@ -81,7 +82,20 @@ export function CompanyDocuments({ context, data }: ScreenProps): ReactElement {
         Son metadatos sintéticos. Registrar una renovación no carga un original
         ni reemplaza la revisión de seguridad y contenido.
       </Notice>
-      <div className="table-filters">
+      <FilterPanel
+        active={
+          type === "Todos"
+            ? []
+            : [
+                {
+                  key: "type",
+                  label: `Tipo: ${type}`,
+                  remove: () => setType("Todos"),
+                },
+              ]
+        }
+        clear={() => setType("Todos")}
+      >
         <label>
           Tipo de soporte
           <select
@@ -95,7 +109,7 @@ export function CompanyDocuments({ context, data }: ScreenProps): ReactElement {
             )}
           </select>
         </label>
-      </div>
+      </FilterPanel>
       <DataTable
         rows={rows}
         label="Vigencia documental empresarial"

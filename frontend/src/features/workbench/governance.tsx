@@ -1,3 +1,4 @@
+import { FilterPanel } from "./filters";
 import { useState } from "react";
 import type { ReactElement } from "react";
 import { Link } from "react-router-dom";
@@ -398,7 +399,20 @@ export function Operations({ context, data }: ScreenProps): ReactElement {
           detail="No hay métricas reales de Azure en esta vista"
         />
       </div>
-      <div className="table-filters">
+      <FilterPanel
+        active={
+          filter === "Todos"
+            ? []
+            : [
+                {
+                  key: "state",
+                  label: `Estado: ${filter}`,
+                  remove: () => setFilter("Todos"),
+                },
+              ]
+        }
+        clear={() => setFilter("Todos")}
+      >
         <label>
           Estado del trabajo
           <select
@@ -416,7 +430,7 @@ export function Operations({ context, data }: ScreenProps): ReactElement {
           Los trabajos de demostración se procesan localmente mientras consultas
           su estado.
         </p>
-      </div>
+      </FilterPanel>
       <DataTable
         rows={rows}
         label="Trabajos y reintentos"
@@ -603,7 +617,7 @@ export function Analytics({ context, data }: ScreenProps): ReactElement {
     (op) =>
       (source === "Todas" || op.source === source) &&
       op.publishedAt.slice(0, 10) >= from &&
-      op.publishedAt.slice(0, 10) <= until,
+      (!until || op.publishedAt.slice(0, 10) <= until),
   );
   const stages = [
     "Descubierta",
@@ -644,7 +658,42 @@ export function Analytics({ context, data }: ScreenProps): ReactElement {
         Estas cifras se derivan del conjunto sintético. No representan desempeño
         comercial, precisión de IA ni objetivos de servicio medidos.
       </Notice>
-      <div className="table-filters">
+      <FilterPanel
+        active={[
+          ...(source !== "Todas"
+            ? [
+                {
+                  key: "source",
+                  label: `Fuente: ${source}`,
+                  remove: () => setSource("Todas"),
+                },
+              ]
+            : []),
+          ...(from
+            ? [
+                {
+                  key: "from",
+                  label: `Desde: ${from}`,
+                  remove: () => setFrom(""),
+                },
+              ]
+            : []),
+          ...(until
+            ? [
+                {
+                  key: "until",
+                  label: `Hasta: ${until}`,
+                  remove: () => setUntil(""),
+                },
+              ]
+            : []),
+        ]}
+        clear={() => {
+          setSource("Todas");
+          setFrom("");
+          setUntil("");
+        }}
+      >
         <label>
           Fuente
           <select
@@ -671,8 +720,8 @@ export function Analytics({ context, data }: ScreenProps): ReactElement {
             onChange={(event) => setUntil(event.target.value)}
           />
         </label>
-      </div>
-      {from > until ? (
+      </FilterPanel>
+      {from && until && from > until ? (
         <Notice tone="warning">
           La fecha inicial no puede superar la final.
         </Notice>
@@ -1215,14 +1264,29 @@ function AuditTable({
       >
         <LockKeyhole size={22} aria-hidden="true" />
       </PageHeading>
-      <label className="audit-search">
-        Buscar acción, actor o correlación
-        <input
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          placeholder="Filtrar eventos"
-        />
-      </label>
+      <FilterPanel
+        active={
+          query
+            ? [
+                {
+                  key: "query",
+                  label: `Búsqueda: ${query}`,
+                  remove: () => setQuery(""),
+                },
+              ]
+            : []
+        }
+        clear={() => setQuery("")}
+      >
+        <label className="audit-search">
+          Buscar acción, actor o correlación
+          <input
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Filtrar eventos"
+          />
+        </label>
+      </FilterPanel>
       <DataTable
         rows={filtered}
         label="Eventos de auditoría"

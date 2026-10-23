@@ -1,3 +1,4 @@
+import { FilterPanel } from "./filters";
 import { useState } from "react";
 import type { ReactElement } from "react";
 import { Link, useSearchParams } from "react-router-dom";
@@ -222,11 +223,6 @@ export function Opportunities({ context, data }: ScreenProps): ReactElement {
   const filters = Object.fromEntries(
     Object.keys(emptyFilters).map((key) => [key, params.get(key) ?? ""]),
   ) as unknown as Filters;
-  const [expanded, setExpanded] = useState<boolean>(
-    Boolean(
-      filters.minAmount || filters.maxAmount || filters.from || filters.until,
-    ),
-  );
   const [error, setError] = useState<string>("");
   const [dialog, setDialog] = useState<FormSpec | null>(null);
   const mutation = useCommand(context);
@@ -262,83 +258,91 @@ export function Opportunities({ context, data }: ScreenProps): ReactElement {
           <Bookmark size={17} aria-hidden="true" /> Búsquedas guardadas
         </Link>
       </PageHeading>
-      <form
-        className="search-panel"
-        key={"filters-" + params.toString()}
-        onSubmit={(event) => {
-          event.preventDefault();
-          const form = new FormData(event.currentTarget);
-          const next = Object.fromEntries(
-            Object.keys(emptyFilters).map((key) => [
-              key,
-              String(form.get(key) ?? ""),
-            ]),
-          ) as unknown as Filters;
-          try {
-            validateFilters(next);
-            setError("");
-            setParams(
-              Object.fromEntries(
-                Object.entries(next).filter(([, value]) => value),
-              ),
-            );
-          } catch (failure) {
-            setError(describeError(failure));
-          }
+      <FilterPanel
+        formId="opportunity-filters"
+        active={Object.entries(filters)
+          .filter(([, value]) => value)
+          .map(([key, value]) => ({
+            key,
+            label: `${filterLabels[key as keyof Filters]}: ${value}`,
+            remove: () => {
+              const next = new URLSearchParams(params);
+              next.delete(key);
+              setParams(next);
+              setError("");
+            },
+          }))}
+        clear={() => {
+          setParams({});
+          setError("");
         }}
       >
-        <div className="search-line">
-          <div className="search-input">
-            <Search size={19} aria-hidden="true" />
-            <label className="sr-only" htmlFor="search-query">
-              {filterLabels.query}
-            </label>
-            <input
-              id="search-query"
-              name="query"
-              defaultValue={filters.query}
-              placeholder="Palabras clave, entidad o número de proceso"
-            />
+        <form
+          id="opportunity-filters"
+          className="search-panel"
+          key={"filters-" + params.toString()}
+          onSubmit={(event) => {
+            event.preventDefault();
+            const form = new FormData(event.currentTarget);
+            const next = Object.fromEntries(
+              Object.keys(emptyFilters).map((key) => [
+                key,
+                String(form.get(key) ?? ""),
+              ]),
+            ) as unknown as Filters;
+            try {
+              validateFilters(next);
+              setError("");
+              event.currentTarget.closest("dialog")?.close();
+              setParams(
+                Object.fromEntries(
+                  Object.entries(next).filter(([, value]) => value),
+                ),
+              );
+            } catch (failure) {
+              setError(describeError(failure));
+            }
+          }}
+        >
+          <div className="search-line">
+            <div className="search-input">
+              <Search size={19} aria-hidden="true" />
+              <label htmlFor="search-query">{filterLabels.query}</label>
+              <input
+                id="search-query"
+                name="query"
+                defaultValue={filters.query}
+                placeholder="Palabras clave, entidad o número de proceso"
+              />
+            </div>
           </div>
-          <button className="primary" type="submit">
-            Buscar procesos
-          </button>
-          <button
-            type="button"
-            aria-expanded={expanded}
-            onClick={() => setExpanded(!expanded)}
-          >
-            <SlidersHorizontal size={17} aria-hidden="true" /> Más filtros
-          </button>
-        </div>
-        <div className="quick-filters">
-          {(["region", "modality", "stage", "source"] as const).map((key) => (
-            <label key={key}>
-              {filterLabels[key]}
-              <select name={key} defaultValue={filters[key]}>
-                <option value="">Todas</option>
-                {(key === "region"
-                  ? regions
-                  : key === "modality"
-                    ? ["Licitación pública", "Selección abreviada"]
-                    : key === "stage"
-                      ? [
-                          "Descubierta",
-                          "Evaluación",
-                          "Decisión",
-                          "Preparación",
-                          "Presentada",
-                          "Cerrada",
-                        ]
-                      : ["SECOP II"]
-                ).map((value) => (
-                  <option key={value}>{value}</option>
-                ))}
-              </select>
-            </label>
-          ))}
-        </div>
-        {expanded && (
+          <div className="quick-filters">
+            {(["region", "modality", "stage", "source"] as const).map((key) => (
+              <label key={key}>
+                {filterLabels[key]}
+                <select name={key} defaultValue={filters[key]}>
+                  <option value="">Todas</option>
+                  {(key === "region"
+                    ? regions
+                    : key === "modality"
+                      ? ["Licitación pública", "Selección abreviada"]
+                      : key === "stage"
+                        ? [
+                            "Descubierta",
+                            "Evaluación",
+                            "Decisión",
+                            "Preparación",
+                            "Presentada",
+                            "Cerrada",
+                          ]
+                        : ["SECOP II"]
+                  ).map((value) => (
+                    <option key={value}>{value}</option>
+                  ))}
+                </select>
+              </label>
+            ))}
+          </div>
           <div className="advanced-filters">
             {(["minAmount", "maxAmount", "from", "until"] as const).map(
               (key) => (
@@ -354,13 +358,13 @@ export function Opportunities({ context, data }: ScreenProps): ReactElement {
               ),
             )}
           </div>
-        )}
-        {error && (
-          <p className="error" role="alert">
-            {error}
-          </p>
-        )}
-      </form>
+          {error && (
+            <p className="error" role="alert">
+              {error}
+            </p>
+          )}
+        </form>
+      </FilterPanel>
       <div className="results-toolbar">
         <p>
           <strong>{rows.length}</strong> procesos encontrados{" "}
@@ -726,17 +730,34 @@ export function Alerts({ context, data }: ScreenProps): ReactElement {
           Preferencias de notificación
         </Link>
       </PageHeading>
-      <div className="segmented" aria-label="Filtrar alertas">
-        {["Todas", "Sin leer", "Alta prioridad", "Silenciadas"].map((value) => (
-          <button
-            key={value}
-            aria-pressed={filter === value}
-            onClick={() => setFilter(value)}
+      <FilterPanel
+        active={
+          filter === "Todas"
+            ? []
+            : [
+                {
+                  key: "alert",
+                  label: `Alertas: ${filter}`,
+                  remove: () => setFilter("Todas"),
+                },
+              ]
+        }
+        clear={() => setFilter("Todas")}
+      >
+        <label>
+          Mostrar alertas
+          <select
+            value={filter}
+            onChange={(event) => setFilter(event.target.value)}
           >
-            {value}
-          </button>
-        ))}
-      </div>
+            {["Todas", "Sin leer", "Alta prioridad", "Silenciadas"].map(
+              (value) => (
+                <option key={value}>{value}</option>
+              ),
+            )}
+          </select>
+        </label>
+      </FilterPanel>
       {!rows.length ? (
         <Empty title="No hay alertas en esta vista" />
       ) : (
