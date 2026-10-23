@@ -1,0 +1,8 @@
+role,profile.read,profile.write,company.write,members.read,members.write,financial.read,financial.write,financial.approve,rules.write,rules.publish,sourcepolicy.write,audit.read
+Administrator,yes,yes,yes,yes,yes,no,no,no,yes,no,no,yes
+Analyst,yes,yes,no,no,no,no,no,no,no,no,no,no
+Commercial,yes,no,no,no,no,no,no,no,yes,no,no,no
+Legal,yes,no,no,no,no,no,no,no,no,no,yes,no
+Financial,yes,no,no,no,no,yes,yes,no,no,no,no,no
+Approver,yes,no,no,no,no,yes,no,yes,no,yes,no,no
+Auditor,yes,no,no,no,no,yes,no,no,no,no,no,yes

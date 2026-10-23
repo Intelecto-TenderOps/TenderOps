@@ -1,0 +1,16 @@
+**/bin/
+**/obj/
+**/node_modules/
+**/dist/
+**/wwwroot/
+**/TestResults/
+**/playwright-report/
+**/test-results/
+.env*
+!.env.example
+*.pfx
+*.p12
+*.user
+.local/
+artifacts/
+*.tsbuildinfo

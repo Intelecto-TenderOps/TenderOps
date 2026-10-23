@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/TenderOps.Api/TenderOps.Api.csproj" />
+    <Project Path="src/TenderOps.Core/TenderOps.Core.csproj" />
+    <Project Path="src/TenderOps.Infrastructure/TenderOps.Infrastructure.csproj" />
+    <Project Path="src/TenderOps.Worker/TenderOps.Worker.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/TenderOps.Tests/TenderOps.Tests.csproj" />
+  </Folder>
+</Solution>

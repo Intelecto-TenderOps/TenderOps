@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tenderops:integration-event:v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["eventId", "eventType", "schemaVersion", "companyId", "entityId", "entityVersion", "occurredAt", "source", "correlationId"],
+  "properties": {
+    "eventId": { "type": "string", "format": "uuid" },
+    "eventType": { "type": "string", "pattern": "^[a-z]+\\.changed\\.v1$" },
+    "schemaVersion": { "const": 1 },
+    "companyId": { "type": "string", "format": "uuid" },
+    "entityId": { "type": "string", "format": "uuid" },
+    "entityVersion": { "type": "integer", "minimum": 1 },
+    "occurredAt": { "type": "string", "format": "date-time" },
+    "source": { "const": "TenderOps" },
+    "correlationId": { "type": "string", "minLength": 1, "maxLength": 64 }
+  }
+}

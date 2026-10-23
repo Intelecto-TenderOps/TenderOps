@@ -1,0 +1,5 @@
+using './main.bicep'
+param environment = 'dev'
+param namePrefix = 'tenderops'
+param apiImage = 'replace-with-reviewed-registry/tenderops-api:0.1.0'
+param workerImage = 'replace-with-reviewed-registry/tenderops-worker:0.1.0'

@@ -1,0 +1,91 @@
+name: Foundation quality gates
+on:
+  pull_request:
+  push:
+    branches: [main, 'feat/**']
+permissions:
+  contents: read
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - run: dotnet restore TenderOps.slnx --locked-mode
+      - run: dotnet build TenderOps.slnx -c Release --no-restore
+      - run: dotnet test TenderOps.slnx -c Release --no-build --logger trx
+      - run: dotnet list TenderOps.slnx package --vulnerable --include-transitive
+      - run: dotnet publish src/TenderOps.Api -c Release --no-restore -o artifacts/api
+      - run: dotnet publish src/TenderOps.Worker -c Release --no-restore -o artifacts/worker
+      - uses: actions/upload-artifact@v4
+        with:
+          name: backend
+          path: artifacts
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+      - run: npm audit --audit-level=moderate
+      - uses: actions/upload-artifact@v4
+        with:
+          name: frontend
+          path: frontend/dist
+  infrastructure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: az bicep build --file infra/main.bicep
+      - run: az bicep build-params --file infra/dev.bicepparam
+      - run: az bicep build-params --file infra/test.bicepparam
+      - run: az bicep build-params --file infra/prod.bicepparam
+  browser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: dotnet restore TenderOps.slnx --locked-mode
+      - run: npm ci && npm run build && npx playwright install --with-deps chromium
+        working-directory: frontend
+      - run: |
+          mkdir -p src/TenderOps.Api/wwwroot
+          cp -r frontend/dist/* src/TenderOps.Api/wwwroot/
+          mkdir -p .local
+          openssl req -x509 -newkey rsa:2048 -keyout .local/key.pem -out .local/cert.pem -days 1 -nodes -subj '/CN=localhost'
+          openssl pkcs12 -export -out .local/dev.pfx -inkey .local/key.pem -in .local/cert.pem -passout pass:local-test-only
+          ASPNETCORE_ENVIRONMENT=Development ASPNETCORE_URLS=https://localhost:7043 ASPNETCORE_Kestrel__Certificates__Default__Path=$PWD/.local/dev.pfx ASPNETCORE_Kestrel__Certificates__Default__Password=local-test-only dotnet run --project src/TenderOps.Api --no-launch-profile > .local/api.log 2>&1 &
+          for i in $(seq 1 60); do curl -ksf https://localhost:7043/health/live && break; sleep 1; done
+      - run: npm run test:e2e
+        working-directory: frontend
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: browser-failures
+          path: |
+            frontend/test-results
+            .local/api.log
+  containers:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build --target api -t tenderops-api:ci .
+      - run: docker build --target worker -t tenderops-worker:ci .
+# No deployment or production credentials. Dataverse promotion requires real sandbox evidence.
