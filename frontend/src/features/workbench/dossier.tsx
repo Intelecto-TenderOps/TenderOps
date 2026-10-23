@@ -1,3 +1,4 @@
+import { FilterPanel } from "./filters";
 import { Fragment, useState } from "react";
 import type { ChangeEvent, ReactElement } from "react";
 import {
@@ -824,7 +825,42 @@ function Requirements({
           </button>
         ))}
       </div>
-      <div className="table-filters">
+      <FilterPanel
+        active={[
+          ...(category !== "Todas"
+            ? [
+                {
+                  key: "category",
+                  label: `Categoría: ${category}`,
+                  remove: () => setCategory("Todas"),
+                },
+              ]
+            : []),
+          ...(status !== "Todos"
+            ? [
+                {
+                  key: "status",
+                  label: `Estado: ${status}`,
+                  remove: () => setStatus("Todos"),
+                },
+              ]
+            : []),
+          ...(mandatory
+            ? [
+                {
+                  key: "mandatory",
+                  label: "Solo obligatorios",
+                  remove: () => setMandatory(false),
+                },
+              ]
+            : []),
+        ]}
+        clear={() => {
+          setCategory("Todas");
+          setStatus("Todos");
+          setMandatory(false);
+        }}
+      >
         <label>
           Categoría
           <select
@@ -867,7 +903,7 @@ function Requirements({
         <span>
           {rows.length} visibles de {all.length}
         </span>
-      </div>
+      </FilterPanel>
       <DataTable
         rows={rows}
         label="Matriz de requisitos"

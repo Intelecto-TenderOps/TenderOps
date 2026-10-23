@@ -1,8 +1,8 @@
 @import "tailwindcss";
 @theme {
-  --color-brand: #143d36;
-  --color-canvas: #f6f6f2;
-  --color-ink: #182c28;
+  --color-brand: #0e2543;
+  --color-canvas: #f1f4f7;
+  --color-ink: #15202f;
 }
 @layer base {
   :root {
@@ -42,14 +42,14 @@
   }
   button,
   .primary {
-    border: 1px solid #bcc9c3;
+    border: 1px solid #b6c1cf;
     border-radius: 6px;
     padding: 0.58rem 0.9rem;
     font: inherit;
     font-size: 0.9rem;
     cursor: pointer;
     background: white;
-    color: #173d34;
+    color: #112743;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -59,21 +59,21 @@
   }
   button:hover,
   .primary:hover {
-    background: #e9efeb;
-    border-color: #547767;
+    background: #e8ebf0;
+    border-color: #4f627c;
   }
   button:disabled {
     cursor: default;
     opacity: 0.55;
   }
   .primary {
-    background: #174c3f;
+    background: #0f2d54;
     color: #fff;
-    border-color: #174c3f;
+    border-color: #0f2d54;
     font-weight: 600;
   }
   .primary:hover {
-    background: #113e32;
+    background: #0a2445;
     color: white;
   }
   :focus-visible {
@@ -89,20 +89,20 @@
     font: inherit;
     font-size: 16px;
     background: #fff;
-    border: 1px solid #899c93;
+    border: 1px solid #7d90a8;
     border-radius: 5px;
     padding: 0.6rem 0.7rem;
-    color: #182c28;
+    color: #15202f;
     min-height: 44px;
   }
   input[readonly] {
-    background: #eff1ee;
+    background: #eceff3;
   }
   input[type="checkbox"] {
     width: 24px;
     height: 24px;
     min-height: 24px;
-    accent-color: #174c3f;
+    accent-color: #0f2d54;
   }
   [aria-invalid="true"] {
     border-color: #a12c27;
@@ -123,7 +123,7 @@
   letter-spacing: -0.035em;
 }
 .eyebrow {
-  color: #526b5e;
+  color: #4c5c71;
   letter-spacing: 0.15em;
   font-size: 0.7rem;
   font-weight: 700;
@@ -135,8 +135,8 @@
   min-height: 100vh;
 }
 aside {
-  background: #173c34;
-  color: #f0f4ed;
+  background: #112642;
+  color: #ecf0f5;
   padding: 30px 20px;
   display: flex;
   flex-direction: column;
@@ -145,20 +145,20 @@ aside .brand {
   margin-block-end: 40px;
 }
 .sidebar-label {
-  color: #b5c7ba;
+  color: #b1bccb;
   font-size: 0.65rem;
   font-weight: 650;
   letter-spacing: 0.15em;
   margin-block: 20px 10px;
 }
 aside select {
-  background: #234a40;
+  background: #1d3350;
   color: white;
-  border-color: #597367;
+  border-color: #52637a;
   font-size: 0.88rem;
 }
 .new-company {
-  color: #d9e8d6;
+  color: #d3ddeb;
   background: transparent;
   border: 0;
   justify-content: start;
@@ -166,26 +166,26 @@ aside select {
   font-size: 0.8rem;
 }
 .new-company:hover {
-  color: #173c34;
+  color: #112642;
 }
 aside nav {
   display: grid;
   gap: 3px;
 }
 aside nav a {
-  color: #d7e3d8;
+  color: #d5dce5;
   padding: 9px 12px;
   text-decoration: none;
   border-radius: 5px;
   font-size: 0.9rem;
 }
 aside nav a.active {
-  background: #d6e7c4;
-  color: #153b2e;
+  background: #bfd2ec;
+  color: #0f2541;
   font-weight: 650;
 }
 aside nav a:hover {
-  background: #365b4b;
+  background: #304561;
   color: white;
 }
 .sidebar-foot {
@@ -193,7 +193,7 @@ aside nav a:hover {
   gap: 10px;
   margin-block-start: auto;
   padding-block-start: 36px;
-  color: #bdd0c1;
+  color: #bac5d3;
   font-size: 0.75rem;
 }
 .sidebar-foot svg {
@@ -205,7 +205,7 @@ aside nav a:hover {
 .topbar {
   padding: 18px 40px;
   background: #fff;
-  border-block-end: 1px solid #d9e0d9;
+  border-block-end: 1px solid #d6dce3;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -234,7 +234,7 @@ main#content {
 }
 .environment {
   font-size: 0.72rem;
-  color: #637467;
+  color: #566981;
   padding-block-end: 28px;
 }
 .section-heading {
@@ -252,7 +252,7 @@ main#content {
 .section-heading p:not(.eyebrow) {
   max-width: 66ch;
   margin-block-start: 12px;
-  color: #56675e;
+  color: #4c5c71;
   font-size: 0.93rem;
 }
 .section-heading button {
@@ -267,12 +267,12 @@ main#content {
   margin-block: 16px 24px;
 }
 .readonly {
-  color: #5b6c61;
+  color: #506177;
   margin-block-end: 22px;
   font-size: 0.88rem;
 }
 .list-heading {
-  border-block-end: 1px solid #d0dad0;
+  border-block-end: 1px solid #cdd4dd;
   padding-block: 12px;
   display: flex;
   flex-wrap: wrap;
@@ -282,12 +282,12 @@ main#content {
 }
 .list-heading span,
 .muted {
-  color: #607164;
+  color: #54667d;
   font-size: 0.76rem;
 }
 .record {
   padding: 24px 0;
-  border-block-end: 1px solid #d0dad0;
+  border-block-end: 1px solid #cdd4dd;
 }
 .record header {
   display: flex;
@@ -309,7 +309,7 @@ dl {
 }
 dt {
   font-size: 0.73rem;
-  color: #617265;
+  color: #54677f;
   margin-block-end: 3px;
 }
 dd {
@@ -319,7 +319,7 @@ dd {
   font-variant-numeric: tabular-nums;
 }
 details {
-  color: #55685b;
+  color: #4c5c71;
   font-size: 0.75rem;
 }
 summary {
@@ -331,14 +331,14 @@ code {
 .empty {
   padding: 55px 24px;
   text-align: center;
-  color: #566c5d;
+  color: #4e5e74;
 }
 .empty p + p {
   font-size: 0.88rem;
   margin-block-start: 8px;
 }
 .editor {
-  border: 1px solid #b6c8b7;
+  border: 1px solid #b2bdcc;
   border-radius: 8px;
   background: #fff;
   padding: 24px;
@@ -370,11 +370,11 @@ code {
 .editor footer {
   margin-block-start: 24px;
   padding-block-start: 20px;
-  border-block-start: 1px solid #e0e5df;
+  border-block-start: 1px solid #dce1e8;
 }
 .editor footer span {
   font-size: 0.75rem;
-  color: #647167;
+  color: #556880;
 }
 .error,
 .field-error {
@@ -401,8 +401,8 @@ code {
   min-height: 100vh;
 }
 .login-story {
-  background: #173c34;
-  color: #f0f4ed;
+  background: #112642;
+  color: #ecf0f5;
   padding: clamp(30px, 6vw, 100px);
   display: flex;
   flex-direction: column;
@@ -412,7 +412,7 @@ code {
   margin-block-end: 80px;
 }
 .login-story .eyebrow {
-  color: #bad4ab;
+  color: #a5bcda;
 }
 .login-story h1 {
   font-size: clamp(2.2rem, 4vw, 3.8rem);
@@ -421,7 +421,7 @@ code {
 .login-story > p:not(.eyebrow) {
   margin-block-start: 28px;
   max-width: 48ch;
-  color: #d0decf;
+  color: #cdd5e0;
 }
 .login-note {
   display: flex;
@@ -439,7 +439,7 @@ code {
   margin-block-end: 16px;
 }
 .login-panel > p {
-  color: #52685b;
+  color: #4a5b70;
   margin-block-end: 25px;
 }
 .demo-options {
@@ -453,7 +453,7 @@ code {
   z-index: 10;
   padding: 12px;
   background: white;
-  color: #143d36;
+  color: #0e2543;
 }
 .skip:focus {
   top: 12px;

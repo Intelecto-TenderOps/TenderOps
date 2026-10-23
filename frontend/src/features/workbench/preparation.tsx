@@ -1,3 +1,4 @@
+import { FilterPanel } from "./filters";
 import { useState } from "react";
 import type { ReactElement } from "react";
 import { Link } from "react-router-dom";
@@ -482,7 +483,20 @@ export function PreparationScreen({
           el trabajo completado se conserva.
         </Notice>
       )}
-      <div className="table-filters">
+      <FilterPanel
+        active={
+          state === "Todos"
+            ? []
+            : [
+                {
+                  key: "state",
+                  label: `Estado: ${state}`,
+                  remove: () => setState("Todos"),
+                },
+              ]
+        }
+        clear={() => setState("Todos")}
+      >
         <label>
           Estado del entregable
           <select
@@ -497,7 +511,7 @@ export function PreparationScreen({
           </select>
         </label>
         <span>{all.length - complete} pendientes de cierre</span>
-      </div>
+      </FilterPanel>
       <DataTable
         rows={rows}
         label="Checklist de propuesta"
@@ -899,7 +913,32 @@ export function Tasks({ context, data }: ScreenProps): ReactElement {
         })}
       </div>
       <div className="results-toolbar">
-        <div className="table-filters">
+        <FilterPanel
+          active={[
+            ...(owner !== "Todos"
+              ? [
+                  {
+                    key: "owner",
+                    label: `Responsable: ${owner}`,
+                    remove: () => setOwner("Todos"),
+                  },
+                ]
+              : []),
+            ...(state !== "Todos"
+              ? [
+                  {
+                    key: "state",
+                    label: `Estado: ${state}`,
+                    remove: () => setState("Todos"),
+                  },
+                ]
+              : []),
+          ]}
+          clear={() => {
+            setOwner("Todos");
+            setState("Todos");
+          }}
+        >
           <label>
             Responsable
             <select
@@ -930,7 +969,7 @@ export function Tasks({ context, data }: ScreenProps): ReactElement {
               ))}
             </select>
           </label>
-        </div>
+        </FilterPanel>
         <div className="segmented">
           {["Lista", "Tablero"].map((value) => (
             <button

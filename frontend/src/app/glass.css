@@ -1,0 +1,449 @@
+/* Blue glass surfaces retain opaque fallbacks and readable operating tables. */
+.product-workspace
+  :is(
+    .stats-row,
+    .matrix-summary,
+    .workload-strip,
+    .editor,
+    .task-card,
+    .approval-card,
+    .source-card,
+    .alert-list,
+    .score-card,
+    .stage-strip,
+    .table-scroll
+  ) {
+  background: var(--surface);
+  border: var(--glass-border);
+  border-radius: var(--radius);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(18px);
+}
+.product-workspace .app-topbar {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(22px);
+  border-color: rgba(255, 255, 255, 0.85);
+}
+.product-workspace .avatar {
+  background: #d5e5ff;
+  color: #23559c;
+}
+.product-workspace .workspace-footer {
+  background: transparent;
+  color: #435f84;
+  border-color: #c3d5ed;
+}
+.product-workspace .sidebar-brand > a {
+  color: #f3f8ff;
+}
+.product-workspace .app-sidebar a {
+  color: #e4eeff;
+}
+.product-workspace .app-sidebar a.active {
+  color: #123c7d;
+}
+.product-workspace .app-sidebar :is(strong, h2, h3) {
+  color: #e4eeff;
+}
+.product-workspace .badge-success {
+  background: #deebff;
+  color: #24518c;
+}
+.login .login-story {
+  background: linear-gradient(
+    155deg,
+    rgba(20, 54, 111, 0.97),
+    rgba(33, 86, 162, 0.94)
+  );
+  color: #f3f8ff;
+}
+.login .login-story :is(h1, p, .eyebrow, small) {
+  color: #f0f6ff;
+}
+.login .login-panel {
+  background: rgba(255, 255, 255, 0.78);
+}
+:root {
+  --color-brand: #1849b2;
+  --color-canvas: #e9f1ff;
+  --color-ink: #12284b;
+  --surface: rgba(255, 255, 255, 0.75);
+  --canvas: #e9f1ff;
+  --ink: #12284b;
+  --muted: #475e80;
+  --line: rgba(100, 139, 197, 0.3);
+  --forest: #153977;
+  --accent: #c5dbff;
+  --radius: 18px;
+  --glass-border: 1px solid rgba(255, 255, 255, 0.8);
+  --glass-shadow:
+    0 12px 36px rgba(31, 72, 139, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+body {
+  background: #e9f1ff;
+  color: var(--ink);
+}
+.product-workspace,
+.login {
+  background:
+    radial-gradient(ellipse at 85% 8%, #cfdeff 0%, transparent 47%),
+    radial-gradient(ellipse at 25% 70%, #d8edff 0%, transparent 50%), #edf3ff;
+  background-attachment: fixed;
+}
+.product-workspace
+  :is(
+    .panel,
+    .stats-strip,
+    .stat-grid,
+    .metric-strip,
+    .readiness-panel,
+    .record,
+    .empty-state,
+    .search-panel,
+    .document-preview,
+    .comparison-table,
+    .sync-map,
+    .quality-card
+  ),
+.login > section {
+  background: var(--surface);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: var(--radius);
+  backdrop-filter: blur(18px) saturate(130%);
+  -webkit-backdrop-filter: blur(18px) saturate(130%);
+}
+.app-sidebar {
+  background: linear-gradient(
+    165deg,
+    rgba(17, 46, 98, 0.96),
+    rgba(24, 68, 129, 0.91)
+  );
+  border-inline-end: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 8px 0 40px rgba(23, 60, 120, 0.1);
+  backdrop-filter: blur(24px);
+}
+.product-workspace :is(.topbar, .demo-banner) {
+  background: rgba(255, 255, 255, 0.62);
+  backdrop-filter: blur(22px);
+  border-color: rgba(255, 255, 255, 0.85);
+}
+.product-workspace :is(.demo-banner, .demo-banner p) {
+  color: #23487b;
+}
+.product-workspace :is(.demo-dot, .badge-dot) {
+  background: currentColor;
+}
+.app-sidebar :is(.navigation-group a.active, .profile-navigation a.active) {
+  background: rgba(201, 225, 255, 0.95);
+  color: #163a78;
+  box-shadow:
+    inset 0 1px 0 #ffffff9c,
+    0 4px 16px #09234b20;
+}
+.app-sidebar a:hover {
+  background-color: rgba(202, 226, 255, 0.14);
+}
+.app-sidebar :is(.company-switch select, option) {
+  background: #244d88;
+  color: #fff;
+}
+.product-workspace :is(h1, h2, h3, strong) {
+  color: #142f59;
+}
+.product-workspace a {
+  color: #164e9a;
+}
+.product-workspace :is(.muted, .small.muted, .eyebrow) {
+  color: #435f84;
+}
+.product-workspace :is(button, input, select, textarea),
+.login :is(button, input) {
+  border-radius: 10px;
+}
+.product-workspace :is(input, select, textarea) {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: #8ca8cf;
+  color: #17365f;
+}
+.product-workspace :is(button, .secondary-link) {
+  border-color: #9fb7da;
+  color: #204b89;
+  background-color: rgba(255, 255, 255, 0.7);
+}
+.product-workspace :is(button:hover, .secondary-link:hover) {
+  background-color: #e0edff;
+  border-color: #4e7bb9;
+}
+.product-workspace :is(.primary, a.primary),
+.login .primary {
+  background: linear-gradient(135deg, #2861c5, #1749a9);
+  color: white;
+  border-color: #2052ad;
+  box-shadow:
+    0 5px 16px rgba(34, 83, 169, 0.18),
+    inset 0 1px 0 #ffffff36;
+}
+.product-workspace .primary:hover {
+  background: #153f92;
+  color: #fff;
+}
+.product-workspace
+  :is(
+    .stats-strip,
+    .status-summary,
+    .segmented,
+    .team-workload,
+    .task-column,
+    .timeline,
+    .readiness-panel,
+    .funnel-chart,
+    .mapping-grid
+  ) {
+  border-color: var(--line);
+}
+.product-workspace
+  :is(
+    .status-summary,
+    .segmented,
+    .team-workload,
+    .task-column,
+    .readiness-panel
+  ) {
+  background-color: rgba(239, 246, 255, 0.72);
+  border-radius: 14px;
+}
+.product-workspace
+  :is(
+    .segmented button[aria-pressed="true"],
+    .status-summary button[aria-pressed="true"],
+    .team-workload button[aria-pressed="true"]
+  ) {
+  background: #d5e6ff;
+  color: #163d7d;
+  border-color: #5787c7;
+}
+.product-workspace .data-table {
+  background: rgba(255, 255, 255, 0.68);
+  border-color: #c2d2e8;
+  border-radius: 14px;
+}
+.product-workspace .data-table th {
+  background: #e2edfc;
+  color: #294f80;
+  border-color: #c0d1eb;
+}
+.product-workspace .data-table td {
+  border-color: #cbd9ed;
+}
+.product-workspace .data-table tbody tr:hover {
+  background: rgba(222, 236, 255, 0.65);
+}
+.product-workspace :is(.table-scroll, .record-list) {
+  border-radius: 14px;
+}
+.product-workspace .dossier-tabs {
+  border-color: #a6bfdf;
+}
+.product-workspace .dossier-tabs a.active {
+  border-color: #2861b3;
+  color: #194b91;
+}
+.product-workspace :is(.action-dialog, .filter-drawer) {
+  background: rgba(244, 249, 255, 0.96);
+  border: var(--glass-border);
+  box-shadow: 0 24px 90px #123c7338;
+  backdrop-filter: blur(30px);
+  color: var(--ink);
+}
+.product-workspace dialog::backdrop {
+  background: rgba(14, 36, 76, 0.3);
+  backdrop-filter: blur(5px);
+}
+.product-workspace :focus-visible {
+  outline: 3px solid #2f67bd;
+  outline-offset: 3px;
+}
+.filter-toolbar {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-block: 22px;
+}
+.filter-trigger {
+  flex-shrink: 0;
+  min-height: 44px;
+  font-weight: 650;
+  box-shadow: 0 3px 10px #1749890c;
+}
+.filter-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  background: #dce9ff;
+  color: #174b98;
+  padding-inline: 5px;
+}
+.active-filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex: 1;
+  min-width: 0;
+}
+.product-workspace .filter-chip {
+  min-height: 38px;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  justify-content: space-between;
+  background: #dfebff;
+  border-color: #a8c4ee;
+  color: #234d88;
+  padding: 7px 11px;
+  text-align: start;
+}
+.filter-chip svg {
+  flex-shrink: 0;
+}
+.product-workspace .filter-clear {
+  border: 0;
+  background: transparent;
+  text-decoration: underline;
+  min-height: 38px;
+  color: #365d91;
+}
+.product-workspace .filter-drawer {
+  position: fixed;
+  inset: 0 0 0 auto;
+  margin: 0;
+  width: min(450px, 100%);
+  max-width: 100%;
+  height: 100dvh;
+  max-height: 100dvh;
+  padding: 0;
+  border-radius: 22px 0 0 22px;
+}
+.filter-drawer[open] {
+  display: flex;
+  flex-direction: column;
+  animation: filter-enter 0.18s ease-out;
+}
+.filter-drawer > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 26px 24px;
+  border-bottom: 1px solid #c1d3ed;
+}
+.filter-drawer > header .eyebrow {
+  font-size: 0.59rem;
+}
+.filter-drawer-content {
+  padding: 24px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  flex: 1;
+  min-height: 0;
+}
+.filter-drawer-content > label {
+  margin-block-end: 22px;
+}
+.filter-drawer-content :is(.quick-filters, .advanced-filters, .search-line) {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 20px;
+}
+.filter-drawer-content :is(.search-panel, .search-input) {
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+  background: none;
+  backdrop-filter: none;
+}
+.filter-drawer-content .search-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  margin: 0;
+}
+.filter-drawer-content .search-input {
+  display: block;
+  flex: initial;
+}
+.filter-drawer-content
+  :is(label, .quick-filters label, .advanced-filters label) {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.filter-drawer-content .search-input svg {
+  display: none;
+}
+.filter-drawer-content .search-input .sr-only {
+  position: static;
+  width: auto;
+  height: auto;
+  clip: auto;
+  overflow: visible;
+}
+.filter-drawer-content :is(input, select, textarea) {
+  font-size: 16px;
+}
+.filter-drawer-content .checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.filter-drawer > footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 20px 24px;
+  border-top: 1px solid #c1d3ed;
+  background: rgba(255, 255, 255, 0.7);
+}
+@keyframes filter-enter {
+  from {
+    transform: translateX(30px);
+    opacity: 0.5;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+@media (max-width: 760px) {
+  .filter-toolbar {
+    gap: 10px;
+  }
+  .active-filters {
+    flex-basis: 100%;
+  }
+  .filter-drawer > header,
+  .filter-drawer-content {
+    padding: 20px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .filter-drawer[open] {
+    animation: none;
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .product-workspace
+    :is(.panel, .record, .topbar, .demo-banner, .action-dialog, .filter-drawer),
+  .login > section {
+    background: #f5f9ff;
+    backdrop-filter: none;
+  }
+}
+@supports not (backdrop-filter: blur(1px)) {
+  .product-workspace :is(.panel, .record, .topbar, .demo-banner) {
+    background: #f4f8ff;
+  }
+}

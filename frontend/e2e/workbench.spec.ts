@@ -1,5 +1,146 @@
 import { test, expect } from "@playwright/test";
 
+test("filtros laterales y etiquetas removibles en todos los módulos", async ({
+  page,
+}) => {
+  const cases = [
+    {
+      path: "opportunities/demo-a-op-1/requirements",
+      label: "Categoría",
+      value: "Financiero",
+      chip: "Categoría: Financiero",
+    },
+    {
+      path: "opportunities/demo-a-op-1/preparation",
+      label: "Estado del entregable",
+      value: "Pendiente",
+      chip: "Estado: Pendiente",
+    },
+    {
+      path: "tasks",
+      label: "Responsable",
+      value: "Mariana Torres",
+      chip: "Responsable: Mariana Torres",
+    },
+    {
+      path: "company-documents",
+      label: "Tipo de soporte",
+      value: "Jurídico",
+      chip: "Tipo: Jurídico",
+    },
+    {
+      path: "operations",
+      label: "Estado del trabajo",
+      value: "Fallido",
+      chip: "Estado: Fallido",
+    },
+    {
+      path: "alerts",
+      label: "Mostrar alertas",
+      value: "Sin leer",
+      chip: "Alertas: Sin leer",
+    },
+    {
+      path: "analytics",
+      label: "Fuente",
+      value: "SECOP II",
+      chip: "Fuente: SECOP II",
+    },
+  ];
+  for (const item of cases) {
+    await page.goto(`/demo/${item.path}`);
+    await page.getByRole("button", { name: /^Filtros/ }).click();
+    const drawer = page.getByRole("dialog", { name: "Filtros de búsqueda" });
+    await expect(drawer).toBeVisible();
+    await page
+      .getByRole("combobox", { name: item.label, exact: true })
+      .selectOption(item.value);
+    await page
+      .getByRole("button", { name: "Ver resultados", exact: true })
+      .click();
+    const chip = page.getByRole("button", {
+      name: `Quitar filtro ${item.chip}`,
+      exact: true,
+    });
+    await expect(chip).toBeVisible();
+    await chip.click();
+    await expect(chip).toHaveCount(0);
+  }
+  await page.goto("/demo/audit");
+  await page.getByRole("button", { name: /^Filtros/ }).click();
+  await page
+    .getByLabel("Buscar acción, actor o correlación")
+    .fill("Candidatura");
+  await page
+    .getByRole("button", { name: "Ver resultados", exact: true })
+    .click();
+  await expect(
+    page.getByRole("button", { name: "Quitar filtro Búsqueda: Candidatura" }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: "Limpiar todos", exact: true })
+    .click();
+  await expect(
+    page.getByRole("button", { name: /^Quitar filtro/ }),
+  ).toHaveCount(0);
+});
+
+test("filtros de oportunidades conservan URL, etiquetas, foco y reflujo móvil", async ({
+  page,
+}) => {
+  await page.goto("/demo/opportunities");
+  const trigger = page.getByRole("button", { name: /^Filtros/ });
+  await trigger.focus();
+  await page.keyboard.press("Enter");
+  await page
+    .getByRole("combobox", { name: "Ubicación", exact: true })
+    .selectOption("Antioquia");
+  await page
+    .getByRole("combobox", { name: "Fuente", exact: true })
+    .selectOption("SECOP II");
+  await page
+    .getByRole("button", { name: "Buscar procesos", exact: true })
+    .click();
+  await expect(page).toHaveURL(/region=Antioquia/);
+  await expect(trigger).toBeFocused();
+  await page
+    .getByRole("button", {
+      name: "Quitar filtro Ubicación: Antioquia",
+      exact: true,
+    })
+    .click();
+  await expect(page).not.toHaveURL(/region=/);
+  await expect(
+    page.getByRole("button", {
+      name: "Quitar filtro Fuente: SECOP II",
+      exact: true,
+    }),
+  ).toBeVisible();
+  await page.screenshot({
+    path: "test-results/workbench/glass-blue-tags.png",
+    fullPage: true,
+  });
+  await page.setViewportSize({ width: 320, height: 850 });
+  await trigger.click();
+  await page.screenshot({
+    path: "test-results/workbench/glass-blue-drawer-mobile.png",
+    fullPage: true,
+  });
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  await page.keyboard.press("Escape");
+  await expect(trigger).toBeFocused();
+  await page
+    .getByRole("button", { name: "Limpiar todos", exact: true })
+    .click();
+  await expect(
+    page.getByRole("button", { name: /^Quitar filtro/ }),
+  ).toHaveCount(0);
+});
+
 test("navegación integral, capturas y separación de empresas sin backend", async ({
   page,
 }) => {
@@ -113,6 +254,7 @@ test("búsqueda con acentos, guardado, vacío y filtros inválidos", async ({
   page,
 }) => {
   await page.goto("/demo/opportunities");
+  await page.getByRole("button", { name: "Filtros", exact: true }).click();
   await page
     .getByRole("textbox", { name: "Buscar por objeto, entidad o número" })
     .fill("gestion documental");
@@ -141,6 +283,7 @@ test("búsqueda con acentos, guardado, vacío y filtros inválidos", async ({
     page.getByText("Documental prioritaria", { exact: true }),
   ).toBeVisible();
   await page.getByRole("link", { name: "Oportunidades", exact: true }).click();
+  await page.getByRole("button", { name: "Filtros", exact: true }).click();
   await page
     .getByRole("textbox", { name: "Buscar por objeto, entidad o número" })
     .fill("zzzinexistente");
@@ -148,7 +291,7 @@ test("búsqueda con acentos, guardado, vacío y filtros inválidos", async ({
   await expect(
     page.getByRole("heading", { name: "No hay resultados para estos filtros" }),
   ).toBeVisible();
-  await page.getByRole("button", { name: "Más filtros" }).click();
+  await page.getByRole("button", { name: /^Filtros/ }).click();
   await page.getByLabel("Valor mínimo (COP)").fill("100");
   await page.getByLabel("Valor máximo (COP)").fill("10");
   await page.getByRole("button", { name: "Buscar procesos" }).click();
