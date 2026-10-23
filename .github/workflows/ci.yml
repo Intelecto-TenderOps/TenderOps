@@ -75,6 +75,8 @@ jobs:
           for i in $(seq 1 60); do curl -ksf https://localhost:7043/health/live && break; sleep 1; done
       - run: npm run test:e2e
         working-directory: frontend
+      - run: npm run test:demo
+        working-directory: frontend
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
