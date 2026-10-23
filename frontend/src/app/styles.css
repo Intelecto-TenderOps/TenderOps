@@ -14,7 +14,7 @@
   .primary { background: #174c3f; color: #fff; border-color: #174c3f; font-weight: 600; }
   .primary:hover { background: #113e32; color: white; }
   :focus-visible { outline: 3px solid #a35c12; outline-offset: 3px; }
-  input,select,textarea { width: 100%; font: inherit; font-size: 16px; background: #fff; border: 1px solid #899c93; border-radius: 5px; padding: .6rem .7rem; color: #182c28; min-height: 44px; }
+  input,select,textarea { width: 100%; min-width: 0; max-width: 100%; font: inherit; font-size: 16px; background: #fff; border: 1px solid #899c93; border-radius: 5px; padding: .6rem .7rem; color: #182c28; min-height: 44px; }
   input[readonly] { background: #eff1ee; }
   input[type=checkbox] { width: 24px; height: 24px; min-height: 24px; accent-color: #174c3f; }
   [aria-invalid=true] { border-color: #a12c27; }
@@ -37,7 +37,7 @@ aside nav a:hover { background: #365b4b; color: white; }
 .sidebar-foot svg { flex: 0 0 auto; }
 .work-area { min-width: 0; }
 .topbar { padding: 18px 40px; background: #fff; border-block-end: 1px solid #d9e0d9; display: flex; justify-content: space-between; gap: 16px; align-items: center; font-size: .85rem; }
-.topbar>p { font-weight: 600; overflow-wrap: anywhere; }
+.topbar>p { min-width: 0; font-weight: 600; overflow-wrap: anywhere; }
 .topbar>div { display: flex; align-items: center; gap: 18px; }
 .topbar button { border: 0; padding-inline: 8px; }
 main#content { max-width: 1240px; margin-inline: auto; padding: 30px 40px 60px; }
@@ -60,7 +60,7 @@ details { color: #55685b; font-size: .75rem; } summary { cursor: pointer; } code
 .empty p+p { font-size: .88rem; margin-block-start: 8px; }
 .editor { border: 1px solid #b6c8b7; border-radius: 8px; background: #fff; padding: 24px; margin-block: 24px; }
 .editor-heading,.editor footer { display: flex; gap: 20px; justify-content: space-between; align-items: center; }
-.editor-heading { margin-block-end: 24px; }
+.editor-heading { margin-block-end: 24px; flex-wrap: wrap; }
 .form-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 20px; }
 .full { grid-column: 1/-1; }
 .field { min-width: 0; margin-block-end: 12px; }

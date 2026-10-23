@@ -19,6 +19,10 @@ test('revisión visual y navegación con teclado', async ({ page }) => {
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   await page.setViewportSize({ width: 1365, height: 900 });
   await page.evaluate(() => { document.body.style.zoom = '200%'; });
-  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  const zoomLayout = await page.evaluate(() => ({
+    width: window.innerWidth, contentWidth: document.documentElement.scrollWidth,
+    overflowing: [...document.querySelectorAll('body *')].filter(element => element.getBoundingClientRect().right > window.innerWidth + 1).map(element => ({ tag: element.tagName, className: element.className, right: element.getBoundingClientRect().right })),
+  }));
+  expect(zoomLayout.contentWidth, JSON.stringify(zoomLayout)).toBeLessThanOrEqual(zoomLayout.width);
   expect(errors).toEqual([]);
 });
