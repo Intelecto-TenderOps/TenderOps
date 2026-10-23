@@ -2542,6 +2542,9 @@
   }
 }
 
+.product-workspace .data-table button {
+  white-space: nowrap;
+}
 .product-workspace a.primary {
   color: #fff;
 }
