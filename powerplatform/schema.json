@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "prefix": "tpo",
+  "publisherStatus": "Propuesto; comprobar publisher y colisiones en sandbox antes de aplicar",
+  "solutionUniqueName": "TenderOpsFoundation",
+  "version": "0.1.0.0",
+  "storageDecision": "Un registro tipado por recurso, versionado con JSON estricto. No almacenar documentos binarios ni secretos en payload. Evolucionar columnas consultables mediante migraciones antes de búsqueda/evaluación avanzada.",
+  "common": {
+    "ownership": "UserOwned",
+    "optimisticConcurrency": true,
+    "audit": true,
+    "columns": [
+      { "name": "name", "type": "String", "maxLength": 200, "primary": true },
+      { "name": "companykey", "type": "String", "maxLength": 36, "required": true },
+      { "name": "payload", "type": "Memo", "maxLength": 100000, "required": true },
+      { "name": "version", "type": "Integer", "required": false }
+    ]
+  },
+  "tables": [
+    { "kind": "company", "label": "Empresa", "relationship": false, "key": "GUID determinista país + taxId normalizado" },
+    { "kind": "capability", "label": "Capacidad" },
+    { "kind": "experience", "label": "Experiencia" },
+    { "kind": "evidence", "label": "Referencia de evidencia", "future": "Archivo privado validado en incremento 2" },
+    { "kind": "financial", "label": "Corte financiero", "securedPayload": true },
+    { "kind": "coverage", "label": "Cobertura geográfica" },
+    { "kind": "rule", "label": "Regla de participación" },
+    { "kind": "membership", "label": "Membresía", "securedPayload": true, "columns": [{ "name": "tenantid", "type": "String", "maxLength": 36 }, { "name": "objectid", "type": "String", "maxLength": 36 }], "key": "GUID determinista empresa + tenantId + objectId" },
+    { "kind": "team", "label": "Equipo funcional" },
+    { "kind": "sourcepolicy", "label": "Política de fuente" },
+    { "kind": "job", "label": "Trabajo asíncrono" },
+    { "kind": "command", "label": "Recibo de comando", "key": "GUID determinista empresa + commandId" },
+    { "kind": "audit", "label": "Evento de auditoría", "securedPayload": true, "appendOnly": true },
+    { "kind": "outbox", "label": "Evento pendiente", "columns": [{ "name": "published", "type": "Boolean" }, { "name": "leaseuntil", "type": "DateTime" }] },
+    { "kind": "inbox", "label": "Evento recibido", "appendOnly": true, "key": "GUID determinista empresa + consumer + eventId" }
+  ],
+  "futureRelationships": ["candidatura → empresa/fuente", "documento → candidatura/versiones Blob", "evaluación → versiones de perfil/reglas", "decisión → evaluación", "preparación → decisión", "enlace comercial → opportunity/task"],
+  "security": {
+    "applicationUser": "Create/Read/Write/Append/AppendTo mínimos de tablas usadas; Team Create/Read, roles Read/Associate, sin System Administrator ni Delete de audit/command/inbox",
+    "ownerTeams": "Un equipo propietario estándar por empresa; equipo funcional es un recurso distinto",
+    "fieldProfiles": "Permitir payload secured de financial/membership/audit solo al application user correspondiente; autorización humana por BFF",
+    "directAccess": "No conceder acceso directo de usuarios finales a tablas TenderOps sin diseñar y validar privilegios equivalentes al BFF"
+  }
+}

@@ -1,0 +1,2563 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "TenderOps BFF",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "https://localhost/"
+    }
+  ],
+  "paths": {
+    "/health/live": {
+      "get": {
+        "tags": [
+          "TenderOps.Api"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "parameters": []
+      }
+    },
+    "/api/csrf": {
+      "get": {
+        "tags": [
+          "TenderOps.Api"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "parameters": []
+      }
+    },
+    "/auth/login": {
+      "get": {
+        "tags": [
+          "TenderOps.Api"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "parameters": []
+      }
+    },
+    "/api/logout": {
+      "post": {
+        "tags": [
+          "TenderOps.Api"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-CSRF-TOKEN",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Token antiforgery de la sesión actual; los formularios de logout también aceptan __RequestVerificationToken."
+          }
+        ]
+      }
+    },
+    "/api/session": {
+      "get": {
+        "tags": [
+          "TenderOps.Api"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": []
+      }
+    },
+    "/api/v1/companies": {
+      "post": {
+        "tags": [
+          "TenderOps.Api"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Company"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-CSRF-TOKEN",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Token antiforgery de la sesión actual; los formularios de logout también aceptan __RequestVerificationToken."
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/companies/{companyId}/select": {
+      "post": {
+        "tags": [
+          "TenderOps.Api"
+        ],
+        "parameters": [
+          {
+            "name": "companyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "X-CSRF-TOKEN",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Token antiforgery de la sesión actual; los formularios de logout también aceptan __RequestVerificationToken."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "session": []
+          }
+        ]
+      }
+    },
+    "/api/v1/companies/{companyId}/financial/eligible": {
+      "get": {
+        "tags": [
+          "TenderOps.Api"
+        ],
+        "parameters": [
+          {
+            "name": "companyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "session": []
+          }
+        ]
+      }
+    },
+    "/api/v1/companies/{companyId}/audit": {
+      "get": {
+        "tags": [
+          "TenderOps.Api"
+        ],
+        "parameters": [
+          {
+            "name": "companyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "session": []
+          }
+        ]
+      }
+    },
+    "/api/v1/companies/{companyId}/{kind}": {
+      "get": {
+        "tags": [
+          "TenderOps.Api"
+        ],
+        "parameters": [
+          {
+            "name": "companyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "kind",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "company",
+                "capability",
+                "experience",
+                "evidence",
+                "financial",
+                "coverage",
+                "rule",
+                "membership",
+                "team",
+                "sourcepolicy",
+                "job"
+              ]
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "session": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "TenderOps.Api"
+        ],
+        "parameters": [
+          {
+            "name": "companyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "kind",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "company",
+                "capability",
+                "experience",
+                "evidence",
+                "financial",
+                "coverage",
+                "rule",
+                "membership",
+                "team",
+                "sourcepolicy",
+                "job"
+              ]
+            }
+          },
+          {
+            "name": "X-CSRF-TOKEN",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Token antiforgery de la sesión actual; los formularios de logout también aceptan __RequestVerificationToken."
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/companyPayload"
+                  },
+                  {
+                    "$ref": "#/components/schemas/capabilityPayload"
+                  },
+                  {
+                    "$ref": "#/components/schemas/experiencePayload"
+                  },
+                  {
+                    "$ref": "#/components/schemas/evidencePayload"
+                  },
+                  {
+                    "$ref": "#/components/schemas/financialPayload"
+                  },
+                  {
+                    "$ref": "#/components/schemas/coveragePayload"
+                  },
+                  {
+                    "$ref": "#/components/schemas/rulePayload"
+                  },
+                  {
+                    "$ref": "#/components/schemas/membershipPayload"
+                  },
+                  {
+                    "$ref": "#/components/schemas/teamPayload"
+                  },
+                  {
+                    "$ref": "#/components/schemas/sourcepolicyPayload"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "session": []
+          }
+        ]
+      }
+    },
+    "/api/v1/companies/{companyId}/{kind}/{id}": {
+      "get": {
+        "tags": [
+          "TenderOps.Api"
+        ],
+        "parameters": [
+          {
+            "name": "companyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "kind",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "company",
+                "capability",
+                "experience",
+                "evidence",
+                "financial",
+                "coverage",
+                "rule",
+                "membership",
+                "team",
+                "sourcepolicy",
+                "job"
+              ]
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "session": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "TenderOps.Api"
+        ],
+        "parameters": [
+          {
+            "name": "companyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "kind",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "company",
+                "capability",
+                "experience",
+                "evidence",
+                "financial",
+                "coverage",
+                "rule",
+                "membership",
+                "team",
+                "sourcepolicy",
+                "job"
+              ]
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "X-CSRF-TOKEN",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Token antiforgery de la sesión actual; los formularios de logout también aceptan __RequestVerificationToken."
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "\"1\""
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/companyPayload"
+                  },
+                  {
+                    "$ref": "#/components/schemas/capabilityPayload"
+                  },
+                  {
+                    "$ref": "#/components/schemas/experiencePayload"
+                  },
+                  {
+                    "$ref": "#/components/schemas/evidencePayload"
+                  },
+                  {
+                    "$ref": "#/components/schemas/financialPayload"
+                  },
+                  {
+                    "$ref": "#/components/schemas/coveragePayload"
+                  },
+                  {
+                    "$ref": "#/components/schemas/rulePayload"
+                  },
+                  {
+                    "$ref": "#/components/schemas/membershipPayload"
+                  },
+                  {
+                    "$ref": "#/components/schemas/teamPayload"
+                  },
+                  {
+                    "$ref": "#/components/schemas/sourcepolicyPayload"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "session": []
+          }
+        ]
+      }
+    },
+    "/api/v1/companies/{companyId}/{kind}/{id}/approve": {
+      "post": {
+        "tags": [
+          "TenderOps.Api"
+        ],
+        "parameters": [
+          {
+            "name": "companyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "kind",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "company",
+                "capability",
+                "experience",
+                "evidence",
+                "financial",
+                "coverage",
+                "rule",
+                "membership",
+                "team",
+                "sourcepolicy",
+                "job"
+              ]
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "X-CSRF-TOKEN",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Token antiforgery de la sesión actual; los formularios de logout también aceptan __RequestVerificationToken."
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "\"1\""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "session": []
+          }
+        ]
+      }
+    },
+    "/api/v1/companies/{companyId}/evidence/{id}/download": {
+      "get": {
+        "tags": [
+          "TenderOps.Api"
+        ],
+        "parameters": [
+          {
+            "name": "companyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Error seguro con código y correlación.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafeProblem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "session": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Company": {
+        "required": [
+          "legalName",
+          "countryCode",
+          "taxId"
+        ],
+        "type": "object",
+        "properties": {
+          "legalName": {
+            "type": "string"
+          },
+          "countryCode": {
+            "type": "string"
+          },
+          "taxId": {
+            "type": "string"
+          }
+        }
+      },
+      "JsonElement": {},
+      "companyPayload": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "legalName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "countryCode": {
+            "type": "string",
+            "pattern": "^[A-Z]{2}$"
+          },
+          "taxId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50
+          }
+        },
+        "required": [
+          "legalName",
+          "countryCode",
+          "taxId"
+        ],
+        "additionalProperties": false
+      },
+      "capabilityPayload": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 150
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "countryCode": {
+            "type": "string",
+            "pattern": "^[A-Z]{2}$"
+          },
+          "validUntil": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+          },
+          "active": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "countryCode",
+          "validUntil",
+          "active"
+        ],
+        "additionalProperties": false
+      },
+      "experiencePayload": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "client": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "subject": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "start": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+          },
+          "end": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+          },
+          "amount": {
+            "type": "string",
+            "pattern": "^\\d{1,24}(\\.\\d{1,4})?$"
+          },
+          "currency": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$"
+          },
+          "status": {
+            "default": "PendingEvidence",
+            "type": "string",
+            "const": "PendingEvidence"
+          }
+        },
+        "required": [
+          "client",
+          "subject",
+          "start",
+          "end",
+          "amount",
+          "currency",
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "evidencePayload": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "experienceId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "fileName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{64}$"
+          },
+          "locator": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          }
+        },
+        "required": [
+          "experienceId",
+          "fileName",
+          "sha256",
+          "locator"
+        ],
+        "additionalProperties": false
+      },
+      "financialPayload": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "periodStart": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+          },
+          "periodEnd": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+          },
+          "validUntil": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+          },
+          "currency": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$"
+          },
+          "assets": {
+            "type": "string",
+            "pattern": "^\\d{1,24}(\\.\\d{1,4})?$"
+          },
+          "liabilities": {
+            "type": "string",
+            "pattern": "^\\d{1,24}(\\.\\d{1,4})?$"
+          },
+          "currentAssets": {
+            "type": "string",
+            "pattern": "^\\d{1,24}(\\.\\d{1,4})?$"
+          },
+          "currentLiabilities": {
+            "type": "string",
+            "pattern": "^\\d{1,24}(\\.\\d{1,4})?$"
+          },
+          "revenue": {
+            "type": "string",
+            "pattern": "^\\d{1,24}(\\.\\d{1,4})?$"
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          }
+        },
+        "required": [
+          "periodStart",
+          "periodEnd",
+          "validUntil",
+          "currency",
+          "assets",
+          "liabilities",
+          "currentAssets",
+          "currentLiabilities",
+          "revenue",
+          "source"
+        ],
+        "additionalProperties": false
+      },
+      "coveragePayload": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "countryCode": {
+            "type": "string",
+            "pattern": "^[A-Z]{2}$"
+          },
+          "subdivision": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "excluded": {
+            "type": "boolean"
+          },
+          "effectiveFrom": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+          }
+        },
+        "required": [
+          "countryCode",
+          "subdivision",
+          "excluded",
+          "effectiveFrom"
+        ],
+        "additionalProperties": false
+      },
+      "rulePayload": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 150
+          },
+          "priority": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000
+          },
+          "effectiveFrom": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+          },
+          "validUntil": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+          },
+          "field": {
+            "type": "string",
+            "enum": [
+              "country",
+              "contractValue",
+              "currentRatio",
+              "experienceValue"
+            ]
+          },
+          "operator": {
+            "type": "string",
+            "enum": [
+              "eq",
+              "gte",
+              "lte",
+              "exclude"
+            ]
+          },
+          "value": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "blocking": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name",
+          "priority",
+          "effectiveFrom",
+          "validUntil",
+          "field",
+          "operator",
+          "value",
+          "blocking"
+        ],
+        "additionalProperties": false
+      },
+      "membershipPayload": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "tenantId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "objectId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "roles": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Administrator",
+                "Analyst",
+                "Commercial",
+                "Legal",
+                "Financial",
+                "Approver",
+                "Auditor"
+              ]
+            }
+          },
+          "active": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "tenantId",
+          "objectId",
+          "roles",
+          "active"
+        ],
+        "additionalProperties": false
+      },
+      "teamPayload": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 150
+          },
+          "memberIds": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "memberIds"
+        ],
+        "additionalProperties": false
+      },
+      "sourcepolicyPayload": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 150
+          },
+          "termsVersion": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "legalBasis": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "reviewedOn": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+          },
+          "authorized": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "source",
+          "termsVersion",
+          "legalBasis",
+          "reviewedOn",
+          "authorized"
+        ],
+        "additionalProperties": false
+      },
+      "SafeProblem": {
+        "type": "object",
+        "required": [
+          "status",
+          "code",
+          "correlationId"
+        ],
+        "properties": {
+          "status": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "correlationId": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "session": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "__Host-TenderOps.Session"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "TenderOps.Api"
+    }
+  ]
+}
