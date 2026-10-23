@@ -4,19 +4,9 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  build: {
-    rolldownOptions: {
-      output: {
-        codeSplitting: {
-          groups: [
-            {
-              name: "react-vendor",
-              test: /node_modules[\\/](react|react-dom|react-router|react-router-dom|scheduler)[\\/]/,
-            },
-            { name: "validation", test: /node_modules[\\/]zod[\\/]/ },
-          ],
-        },
-      },
+  resolve: {
+    alias: {
+      "@": new URL("./src", import.meta.url).pathname,
     },
   },
   server: {
