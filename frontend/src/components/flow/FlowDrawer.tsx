@@ -45,7 +45,7 @@ export function FlowDrawer({ children }: { children: ReactNode }) {
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: 36, opacity: 0 }}
                 transition={{ type: "spring", bounce: 0.12, duration: 0.35 }}
-                className="pointer-events-auto glass-panel flex h-full w-[var(--to-flow-width)] flex-col overflow-hidden rounded-[28px] max-md:w-full"
+                className="pointer-events-auto glass-panel flex h-full w-[min(var(--to-flow-width),calc(100vw-var(--to-nav-width)-24px))] min-w-[min(380px,calc(100vw-24px))] flex-col overflow-hidden rounded-[28px] max-md:w-full"
               >
                 <Dialog.Title className="sr-only">{title}</Dialog.Title>
                 <FlowDrawerHeader

@@ -20,6 +20,22 @@ export function AppShell() {
     if (flowOpen && !navPinned) setExpanded(false);
   }, [flowOpen, navPinned, setExpanded]);
 
+  useEffect(() => {
+    const nav = navExpanded ? "268px" : "84px";
+    const flow =
+      !flowOpen
+        ? "0px"
+        : size === "wide"
+          ? `min(760px, calc(100vw - ${nav} - 24px))`
+          : size === "compact"
+            ? `min(420px, calc(100vw - ${nav} - 24px))`
+            : `min(560px, calc(100vw - ${nav} - 24px))`;
+    document.documentElement.style.setProperty("--to-nav-width", nav);
+    document.documentElement.style.setProperty("--to-flow-width", flow);
+    document.documentElement.dataset.nav = navExpanded ? "expanded" : "compact";
+    document.documentElement.dataset.flow = flowOpen ? size : "none";
+  }, [flowOpen, size, navExpanded]);
+
   return (
     <div
       className="app-shell min-h-screen"

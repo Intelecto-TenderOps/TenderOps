@@ -8,8 +8,7 @@ import {
   type SortingState,
   type RowSelectionState,
 } from "@tanstack/react-table";
-import { useVirtualizer } from "@tanstack/react-virtual";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { cn } from "@/lib/cn";
 
 export function DataTable<T extends { id: string }>({
@@ -47,18 +46,10 @@ export function DataTable<T extends { id: string }>({
     getRowId: (row) => row.id,
     initialState: { pagination: { pageSize: 12 } },
   });
-  const parent = useRef<HTMLDivElement>(null);
-  const rows = table.getRowModel().rows;
-  const virtual = useVirtualizer({
-    count: rows.length,
-    getScrollElement: () => parent.current,
-    estimateSize: () => 52,
-    overscan: 8,
-  });
 
   return (
     <div className="flex h-full min-h-[320px] flex-col">
-      <div ref={parent} className="min-h-0 flex-1 overflow-auto">
+      <div className="min-h-0 flex-1 overflow-auto">
         <table className="w-full min-w-[760px] border-collapse text-left text-sm">
           <thead className="sticky top-0 z-10 bg-white/95 text-[11px] uppercase tracking-[0.12em] text-muted">
             {table.getHeaderGroups().map((group) => (
@@ -79,30 +70,26 @@ export function DataTable<T extends { id: string }>({
               </tr>
             ))}
           </thead>
-          <tbody style={{ height: virtual.getTotalSize() }} className="relative">
-            {virtual.getVirtualItems().map((item) => {
-              const row = rows[item.index];
-              return (
-                <tr
-                  key={row.id}
-                  className={cn(
-                    "absolute left-0 w-full cursor-pointer border-t border-slate-100 hover:bg-mist/70",
-                    selectedId === row.original.id && "bg-mist",
-                  )}
-                  style={{ transform: `translateY(${item.start}px)` }}
-                  onClick={() => onRowClick?.(row.original)}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <td key={cell.id} className="px-3 py-3 align-top">
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </td>
-                  ))}
-                </tr>
-              );
-            })}
+          <tbody>
+            {table.getRowModel().rows.map((row) => (
+              <tr
+                key={row.id}
+                className={cn(
+                  "cursor-pointer border-t border-slate-100 hover:bg-mist/70",
+                  selectedId === row.original.id && "bg-mist",
+                )}
+                onClick={() => onRowClick?.(row.original)}
+              >
+                {row.getVisibleCells().map((cell) => (
+                  <td key={cell.id} className="px-3 py-3 align-top">
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))}
           </tbody>
         </table>
-        {!rows.length ? (
+        {!table.getRowModel().rows.length ? (
           <p className="p-6 text-sm text-muted">No hay registros con los filtros actuales.</p>
         ) : null}
       </div>

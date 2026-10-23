@@ -8,16 +8,16 @@ import { ProgressRing } from "@/components/viz/ProgressRing";
 import { StatusBadge } from "@/components/viz/StatusBadge";
 import type { FilterChip } from "@/contracts";
 import { matrixProgress } from "@/services/complianceService";
-import { useDemoStore } from "@/store/demo-store";
+import { useWorkspace } from "@/hooks/useWorkspace";
 import { useDrawerStore } from "@/store/drawer-store";
 
 export function MatrizPage() {
   const { id = "" } = useParams();
-  const tender = useDemoStore((state) =>
-    state.workspace.tenders.find((item) => item.secopId === id || item.id === id),
-  );
-  const rows = useDemoStore((state) =>
-    state.workspace.requirements.filter((item) => item.tenderId === tender?.id),
+  const workspace = useWorkspace();
+  const tender = workspace.tenders.find((item) => item.secopId === id || item.id === id);
+  const rows = useMemo(
+    () => workspace.requirements.filter((item) => item.tenderId === tender?.id),
+    [workspace.requirements, tender?.id],
   );
   const [selectedId, setSelectedId] = useState(rows[0]?.id);
   const [chips, setChips] = useState<FilterChip[]>([]);

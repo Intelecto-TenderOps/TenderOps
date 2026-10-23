@@ -1,17 +1,11 @@
+import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
 import { ActiveFilterChips } from "@/components/selection";
 import { Button } from "@/components/ui/button";
 import { KpiCard } from "@/components/viz/KpiCard";
+import { BarList } from "@/components/viz/SimpleChart";
 import { useFilterChips } from "@/hooks/useFilterChips";
+import { formatCurrency } from "@/lib/format";
 import { analyticsService } from "@/services/analyticsService";
 import { useDrawerStore } from "@/store/drawer-store";
 
@@ -19,8 +13,12 @@ export function AnaliticaPage() {
   const { data } = useQuery({ queryKey: ["analytics"], queryFn: () => analyticsService.snapshot() });
   const { chips, setChips } = useFilterChips();
   const openFlow = useDrawerStore((state) => state.openFlow);
-  const byModality = (data?.byModality ?? []).filter((item) =>
-    chips.every((chip) => (chip.field === "source" ? true : chip.field !== "modality" || chip.value === item.name)),
+  const byModality = useMemo(
+    () =>
+      (data?.byModality ?? []).filter((item) =>
+        chips.every((chip) => chip.field !== "modality" || chip.value === item.name),
+      ),
+    [data?.byModality, chips],
   );
   return (
     <section className="grid gap-4">
@@ -57,29 +55,13 @@ export function AnaliticaPage() {
         <KpiCard label="Recomendadas" value={data?.recommended ?? 0} />
       </div>
       <div className="grid gap-3 lg:grid-cols-2">
-        <article className="glass-panel h-80 rounded-[24px] p-4">
-          <h2 className="mb-2 text-sm font-semibold">Distribución por modalidad</h2>
-          <ResponsiveContainer>
-            <BarChart data={byModality}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#d7e6ff" />
-              <XAxis dataKey="name" tick={{ fontSize: 10 }} />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="value" fill="#3267F5" radius={8} />
-            </BarChart>
-          </ResponsiveContainer>
+        <article className="glass-panel rounded-[24px] p-4">
+          <h2 className="mb-3 text-sm font-semibold">Distribución por modalidad</h2>
+          <BarList items={byModality} />
         </article>
-        <article className="glass-panel h-80 rounded-[24px] p-4">
-          <h2 className="mb-2 text-sm font-semibold">Valor por entidad</h2>
-          <ResponsiveContainer>
-            <BarChart data={data?.byEntity ?? []}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#d7e6ff" />
-              <XAxis dataKey="name" tick={{ fontSize: 9 }} interval={0} angle={-18} height={70} />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="value" fill="#4A90FF" radius={8} />
-            </BarChart>
-          </ResponsiveContainer>
+        <article className="glass-panel rounded-[24px] p-4">
+          <h2 className="mb-3 text-sm font-semibold">Valor por entidad</h2>
+          <BarList items={data?.byEntity ?? []} formatValue={formatCurrency} />
         </article>
       </div>
     </section>

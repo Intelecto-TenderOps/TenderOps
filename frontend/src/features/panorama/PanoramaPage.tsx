@@ -1,30 +1,26 @@
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import { useMemo } from "react";
 import { KpiCard } from "@/components/viz/KpiCard";
 import { StatusBadge } from "@/components/viz/StatusBadge";
 import { Button } from "@/components/ui/button";
+import { FunnelBars } from "@/components/viz/SimpleChart";
 import { analyticsService } from "@/services/analyticsService";
-import { useDemoStore } from "@/store/demo-store";
+import { useWorkspace } from "@/hooks/useWorkspace";
 import { useDrawerStore } from "@/store/drawer-store";
-import {
-  Area,
-  AreaChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
 
 export function PanoramaPage() {
   const navigate = useNavigate();
   const openFlow = useDrawerStore((state) => state.openFlow);
   const { data } = useQuery({ queryKey: ["analytics"], queryFn: () => analyticsService.snapshot() });
-  const alerts = useDemoStore((state) => state.workspace.alerts.filter((item) => !item.silenced).slice(0, 4));
-  const tasks = useDemoStore((state) =>
-    state.workspace.tasks.filter((item) => item.status !== "hecha").slice(0, 4),
-  );
-  const tenders = useDemoStore((state) => state.workspace.tenders.slice(0, 5));
+  const workspace = useWorkspace();
+  const allAlerts = workspace.alerts;
+  const allTasks = workspace.tasks;
+  const allTenders = workspace.tenders;
+  
+  const alerts = useMemo(() => allAlerts.filter((item) => !item.silenced).slice(0, 4), [allAlerts]);
+  const tasks = useMemo(() => allTasks.filter((item) => item.status !== "hecha").slice(0, 4), [allTasks]);
+  const tenders = useMemo(() => allTenders.slice(0, 5), [allTenders]);
 
   return (
     <section className="grid gap-4">
@@ -46,16 +42,8 @@ export function PanoramaPage() {
       <div className="grid gap-3 xl:grid-cols-[1.4fr_1fr]">
         <article className="glass-panel rounded-[24px] p-4">
           <h2 className="text-sm font-semibold">Embudo comercial simulado</h2>
-          <div className="h-64">
-            <ResponsiveContainer>
-              <AreaChart data={data?.funnel ?? []}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#d7e6ff" />
-                <XAxis dataKey="stage" tick={{ fontSize: 11 }} />
-                <YAxis tick={{ fontSize: 11 }} />
-                <Tooltip />
-                <Area dataKey="count" stroke="#3267F5" fill="#4A90FF33" />
-              </AreaChart>
-            </ResponsiveContainer>
+          <div className="mt-4">
+            <FunnelBars items={data?.funnel ?? []} />
           </div>
         </article>
         <article className="glass-panel rounded-[24px] p-4">

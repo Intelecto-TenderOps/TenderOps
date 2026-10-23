@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { ColumnDef } from "@tanstack/react-table";
 import { DataWorkspace } from "@/components/data/DataWorkspace";
@@ -10,7 +10,7 @@ import type { Tender } from "@/contracts";
 import { useFilterChips } from "@/hooks/useFilterChips";
 import { formatCurrency } from "@/lib/format";
 import { chipsToFilters, filterTenders } from "@/services/tendersService";
-import { useDemoStore } from "@/store/demo-store";
+import { useWorkspace } from "@/hooks/useWorkspace";
 import { useDrawerStore } from "@/store/drawer-store";
 
 const columns: ColumnDef<Tender>[] = [
@@ -24,7 +24,11 @@ const columns: ColumnDef<Tender>[] = [
 export function ProcesosPage() {
   const navigate = useNavigate();
   const { chips, setChips } = useFilterChips();
-  const tenders = useDemoStore((state) => filterTenders(state.workspace.tenders, chipsToFilters(chips)));
+  const workspace = useWorkspace();
+  const tenders = useMemo(
+    () => filterTenders(workspace.tenders, chipsToFilters(chips)),
+    [workspace.tenders, chips],
+  );
   const [selectedId, setSelectedId] = useState(tenders[0]?.id);
   const selected = tenders.find((item) => item.id === selectedId);
   const openFlow = useDrawerStore((state) => state.openFlow);

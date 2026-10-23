@@ -569,7 +569,8 @@ function CompareFlow() {
   const payload = useDrawerStore((state) => state.payload);
   const closeFlow = useDrawerStore((state) => state.closeFlow);
   const ids = (payload.ids as string[]) ?? [];
-  const tenders = useDemoStore((state) => state.workspace.tenders.filter((item) => ids.includes(item.id)));
+  const allTenders = useDemoStore((state) => state.workspace.tenders);
+  const tenders = allTenders.filter((item) => ids.includes(item.id));
   return (
     <>
       <FlowDrawerBody>

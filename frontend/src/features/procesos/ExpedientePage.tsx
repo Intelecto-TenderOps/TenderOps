@@ -3,17 +3,14 @@ import { Button } from "@/components/ui/button";
 import { ScoreIndicator } from "@/components/viz/ScoreIndicator";
 import { StatusBadge } from "@/components/viz/StatusBadge";
 import { formatCurrency, formatDateTime } from "@/lib/format";
-import { useDemoStore } from "@/store/demo-store";
+import { useWorkspace } from "@/hooks/useWorkspace";
 import { useDrawerStore } from "@/store/drawer-store";
 
 export function ExpedienteLayout() {
   const { id = "" } = useParams();
-  const tender = useDemoStore((state) =>
-    state.workspace.tenders.find((item) => item.secopId === id || item.id === id),
-  );
-  const assessment = useDemoStore((state) =>
-    state.workspace.assessments.find((item) => item.tenderId === tender?.id),
-  );
+  const workspace = useWorkspace();
+  const tender = workspace.tenders.find((item) => item.secopId === id || item.id === id);
+  const assessment = workspace.assessments.find((item) => item.tenderId === tender?.id);
   const openFlow = useDrawerStore((state) => state.openFlow);
   if (!tender) return <p>Proceso no encontrado.</p>;
   const tabs = [
@@ -77,7 +74,7 @@ export function ExpedienteLayout() {
 
 export function ExpedienteResumen() {
   const { id = "" } = useParams();
-  const workspace = useDemoStore((state) => state.workspace);
+  const workspace = useWorkspace();
   const tender = workspace.tenders.find((item) => item.secopId === id || item.id === id);
   const assessment = workspace.assessments.find((item) => item.tenderId === tender?.id);
   if (!tender || !assessment) return null;
