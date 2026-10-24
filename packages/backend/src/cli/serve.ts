@@ -1,5 +1,10 @@
 import { createServer } from "node:http";
+import { loadEnv } from "../config/env.js";
 import { handleApiRequest } from "../http/handler.js";
+import { startSecopPoller } from "../secop/poller.js";
+
+loadEnv();
+startSecopPoller();
 
 const port = Number(process.env.PORT ?? 8787);
 

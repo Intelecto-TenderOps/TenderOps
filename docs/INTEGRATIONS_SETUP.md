@@ -1,7 +1,7 @@
 # Activación de integraciones
 
 1. Copiar `.env.example` y cargar las variables en Vercel (Production/Preview) y en Azure Function App.
-2. SECOP: con `SECOP_SEARCH_MODE=live` no se requiere token. Opcional `SOCRATA_APP_TOKEN`.
+2. SECOP: `SECOP_SEARCH_MODE=hybrid` consulta en vivo y fusiona el catálogo local. Poner `SOCRATA_APP_TOKEN` solo en `.env.local` o en Vercel. El poller local y el cron `GET /api/v1/secop/sync` mantienen la ventana reciente.
 3. Índice: levantar PostgreSQL (`docker compose up -d`) y aplicar `packages/backend/src/db/schema.sql`. Definir `DATABASE_URL` y `SECOP_SEARCH_MODE=hybrid` o `indexed`.
 4. Entra ID: registrar una aplicación con `client_credentials`, permisos Application para Dataverse y Graph, y admin consent.
 5. Dynamics/Dataverse: URL de entorno + application user.

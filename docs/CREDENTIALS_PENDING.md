@@ -15,10 +15,11 @@ Ningún secreto de ejemplo es utilizable en producción. El código de cada cone
 
 ## Recomendadas para SECOP a escala
 
-- `SOCRATA_APP_TOKEN`
+- `SOCRATA_APP_TOKEN` (solo `.env.local` o variables de Vercel; nunca en git)
+- `CRON_SECRET` para proteger `GET|POST /api/v1/secop/sync`
 - `DATABASE_URL` (PostgreSQL / Supabase)
 - `AZURE_SERVICE_BUS_CONNECTION_STRING`
 
 ## No bloquean SECOP público
 
-La búsqueda en vivo usa `https://www.datos.gov.co/resource/{dataset}.json` sin token.
+La búsqueda en vivo usa `https://www.datos.gov.co/resource/{dataset}.json`. El token reduce cupos y debe configurarse fuera del repositorio.

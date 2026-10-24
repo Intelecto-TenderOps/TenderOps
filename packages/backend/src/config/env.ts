@@ -1,4 +1,7 @@
 import { z } from "zod";
+import { loadDotEnvFiles } from "./load-dotenv.js";
+
+loadDotEnvFiles();
 
 const schema = z.object({
   NODE_ENV: z.string().optional(),
@@ -7,7 +10,7 @@ const schema = z.object({
   CORS_ALLOWED_ORIGINS: z.string().optional(),
   API_VERSION: z.string().default("v1"),
   LOG_LEVEL: z.string().default("info"),
-  SECOP_SEARCH_MODE: z.enum(["live", "indexed", "hybrid"]).default("live"),
+  SECOP_SEARCH_MODE: z.enum(["live", "indexed", "hybrid"]).default("hybrid"),
   SECOP_II_DATASET_ID: z.string().default("p6dx-8zbt"),
   SECOP_I_DATASET_ID: z.string().default("f789-7hwg"),
   SECOP_II_MODIFICATIONS_DATASET_ID: z.string().default("e2u2-swiw"),
@@ -17,8 +20,13 @@ const schema = z.object({
   SOCRATA_APP_TOKEN: z.string().optional(),
   SECOP_REQUEST_TIMEOUT_MS: z.coerce.number().default(12_000),
   SECOP_PAGE_SIZE: z.coerce.number().default(25),
-  SECOP_SYNC_ENABLED: z.enum(["true", "false"]).default("false"),
-  SECOP_SYNC_BATCH_SIZE: z.coerce.number().default(200),
+  SECOP_SYNC_ENABLED: z.enum(["true", "false"]).default("true"),
+  SECOP_SYNC_BATCH_SIZE: z.coerce.number().default(100),
+  SECOP_SYNC_PAGES: z.coerce.number().default(5),
+  SECOP_LOOKBACK_HOURS: z.coerce.number().default(72),
+  SECOP_POLL_INTERVAL_MS: z.coerce.number().default(60_000),
+  SECOP_CATALOG_PATH: z.string().optional(),
+  CRON_SECRET: z.string().optional(),
   DATABASE_URL: z.string().optional(),
   DATABASE_SSL_MODE: z.string().optional(),
   SUPABASE_URL: z.string().optional(),

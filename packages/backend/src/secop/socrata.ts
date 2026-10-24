@@ -1,4 +1,7 @@
+import { loadDotEnvFiles } from "../config/load-dotenv.js";
 import { loadEnv } from "../config/env.js";
+
+loadDotEnvFiles();
 import { buildQuery, type SoqlQuery } from "./soql.js";
 
 export class IntegrationError extends Error {

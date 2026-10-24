@@ -1,4 +1,5 @@
 import { writeFileSync } from "node:fs";
+import { loadEnv } from "../config/env.js";
 import { mapSecopII } from "../secop/mapper.js";
 import { SocrataClient } from "../secop/socrata.js";
 import { SecopSearchService } from "../secop/search.js";
@@ -20,6 +21,7 @@ async function main() {
     paginationDistinct: page2.rows[0] && sample.rows[0] ? page2.rows[0].id_del_proceso !== sample.rows[0].id_del_proceso : false,
     lastModified: sample.lastModified,
     requestId: sample.requestId,
+    tokenConfigured: Boolean(loadEnv().SOCRATA_APP_TOKEN),
     generatedAt: new Date().toISOString(),
   };
   writeFileSync(new URL("../../../../docs/SECOP_TEST_RESULTS.json", import.meta.url), JSON.stringify(report, null, 2));

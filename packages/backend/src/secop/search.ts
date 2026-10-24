@@ -1,4 +1,5 @@
 import { loadEnv } from "../config/env.js";
+import { catalogStatus, filterCatalog } from "./catalog.js";
 import { detectExactProcessId, mapSecopI, mapSecopII } from "./mapper.js";
 import { ProcessRepository } from "../db/repos.js";
 import { SocrataClient } from "./socrata.js";
@@ -41,14 +42,17 @@ export class SecopSearchService {
 
     const mode = this.env.SECOP_SEARCH_MODE;
     if (mode === "indexed") {
+      const catalogued = this.fromCatalog(query);
+      if (catalogued.items.length) return catalogued;
       if (!(await this.repo.available())) {
-        return this.empty("El índice PostgreSQL no está configurado.", query, "indexed");
+        return this.empty("El índice aún no tiene procesos sincronizados.", query, "indexed");
       }
       return this.indexed(query);
     }
-    if (mode === "hybrid" && (await this.repo.available()) && !query.q?.match(/^CO1\./i)) {
-      const indexed = await this.indexed(query);
-      if (indexed.items.length) return { ...indexed, mode: "hybrid" };
+    if (mode === "hybrid") {
+      const live = await this.live(query);
+      const catalogued = this.fromCatalog(query);
+      return mergeResults(catalogued, live, query);
     }
     return this.live(query);
   }
@@ -143,6 +147,28 @@ export class SecopSearchService {
     };
   }
 
+  private fromCatalog(query: ProcessSearchQuery): ProcessSearchResult {
+    const items = filterCatalog({
+      q: query.q,
+      source: query.source,
+      entity: query.entity,
+      department: query.department,
+      modality: query.modality,
+    }).sort((a, b) => (b.lastSourcePublicationDate ?? "").localeCompare(a.lastSourcePublicationDate ?? ""));
+    const status = catalogStatus();
+    return {
+      items,
+      total: items.length,
+      totalIsApproximate: false,
+      cursor: null,
+      mode: "indexed",
+      sourceUpdatedAt: status.lastSuccessAt,
+      syncedAt: status.lastSuccessAt ?? new Date().toISOString(),
+      appliedFilters: toFilters(query),
+      warnings: items.length ? [] : ["El catálogo local aún no tiene coincidencias."],
+    };
+  }
+
   private empty(warning: string, query: ProcessSearchQuery, mode: ProcessSearchResult["mode"]): ProcessSearchResult {
     return {
       items: [],
@@ -188,6 +214,36 @@ function toFilters(query: ProcessSearchQuery): AppliedFilter[] {
       label: LABELS[field] ?? field,
       value: String(value),
     }));
+}
+
+function mergeResults(
+  catalogued: ProcessSearchResult,
+  live: ProcessSearchResult,
+  query: ProcessSearchQuery,
+): ProcessSearchResult {
+  const map = new Map<string, (typeof live.items)[number]>();
+  for (const item of [...live.items, ...catalogued.items]) map.set(item.id, item);
+  const items = [...map.values()].sort((a, b) =>
+    (b.lastSourcePublicationDate ?? b.publicationDate ?? "").localeCompare(a.lastSourcePublicationDate ?? a.publicationDate ?? ""),
+  );
+  const pageSize = Math.min(query.pageSize ?? 25, 50);
+  const offset = Number(query.cursor ?? 0) || 0;
+  const page = items.slice(offset, offset + pageSize);
+  const warnings = [
+    ...live.warnings,
+    catalogued.items.length ? `Catálogo local: ${catalogued.items.length} procesos recientes.` : "",
+  ].filter(Boolean);
+  return {
+    items: page,
+    total: items.length,
+    totalIsApproximate: live.totalIsApproximate,
+    cursor: offset + page.length < items.length ? String(offset + page.length) : null,
+    mode: "hybrid",
+    sourceUpdatedAt: live.sourceUpdatedAt ?? catalogued.sourceUpdatedAt,
+    syncedAt: new Date().toISOString(),
+    appliedFilters: toFilters(query),
+    warnings,
+  };
 }
 
 function decodeCursor(cursor?: string) {

@@ -29,6 +29,8 @@ export function ExplorarPage() {
     queryKey: ["secop-live", filters],
     queryFn: () => tendersService.list(filters),
     retry: false,
+    refetchInterval: 45_000,
+    refetchIntervalInBackground: true,
   });
   const demoRows = useMemo(() => filterTenders(tenders, filters), [tenders, filters]);
   const rows = live.data?.simulated === false ? live.data.items : demoRows;
@@ -89,7 +91,7 @@ export function ExplorarPage() {
 
   return (
     <DataWorkspace
-      eyebrow="Exploración"
+      eyebrow={live.data?.simulated === false ? "Exploración · SECOP en vivo" : "Exploración"}
       title="Licitaciones SECOP"
       description="Listado amplio y detalle contextual. Los filtros y las acciones se ejecutan en el panel lateral."
       chips={chips}

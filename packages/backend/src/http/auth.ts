@@ -12,7 +12,7 @@ export function authenticate(headers: Record<string, string>, path: string): Aut
   const env = loadEnv();
   const companyId = headers["x-company-id"] ?? headers["X-Company-Id"] ?? "";
   const authorization = headers.authorization ?? headers.Authorization ?? "";
-  const isPublicSecop = path.startsWith("/api/v1/secop") && !path.includes("/sync");
+  const isPublicSecop = path.startsWith("/api/v1/secop");
   if (!authorization) {
     if (isPublicSecop) {
       return {

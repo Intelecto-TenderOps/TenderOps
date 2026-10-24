@@ -1,3 +1,4 @@
+import { tick } from "../../packages/backend/src/secop/poller.js";
 import { syncSource } from "../../packages/backend/src/secop/sync.js";
 
 export async function SyncSecopIIProcesses() {
@@ -6,6 +7,10 @@ export async function SyncSecopIIProcesses() {
 
 export async function SyncSecopIProcesses() {
   return syncSource("SECOP_I");
+}
+
+export async function SyncSecopRecent() {
+  return tick("worker");
 }
 
 export async function ReconcileSecopCatalog() {

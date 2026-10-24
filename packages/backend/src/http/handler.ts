@@ -8,8 +8,10 @@ import { enqueue } from "../integrations/servicebus.js";
 import { dependencyReport, requireConfigured } from "../integrations/status.js";
 import { SecopChangeDetectionService } from "../secop/changes.js";
 import { SecopDocumentDiscoveryService } from "../secop/documents.js";
+import { catalogStatus, listCatalog } from "../secop/catalog.js";
+import { scheduleRefreshIfStale, tick } from "../secop/poller.js";
 import { SecopSearchService, toFrontendTender } from "../secop/search.js";
-import { syncSource } from "../secop/sync.js";
+import { syncRecent } from "../secop/sync.js";
 import { authenticate } from "./auth.js";
 import { openApiDocument } from "../openapi.js";
 
@@ -59,7 +61,7 @@ async function route(path: string, request: HttpRequest, companyId: string): Pro
   if (method === "GET" && path === "/api/v1/openapi.json") return json(200, openApiDocument());
   if (method === "GET" && path === "/api/v1/admin/integrations") return json(200, { items: dependencyReport() });
 
-  if (path.startsWith("/api/v1/secop")) return secopRoutes(path, method, query, body);
+  if (path.startsWith("/api/v1/secop")) return secopRoutes(path, method, query, body, request.headers);
   if (path.startsWith("/api/v1/companies")) return companyRoutes(path, method, body, companyId);
   if (path.startsWith("/api/v1/assessments")) return assessmentRoutes(path, method, body);
   if (path.startsWith("/api/v1/compliance")) return complianceRoutes(path, method, body);
@@ -73,7 +75,13 @@ async function route(path: string, request: HttpRequest, companyId: string): Pro
   return json(404, { error: { code: "not_found", message: `Ruta no encontrada: ${path}` } });
 }
 
-async function secopRoutes(path: string, method: string, query: Record<string, string>, body: unknown) {
+async function secopRoutes(
+  path: string,
+  method: string,
+  query: Record<string, string>,
+  body: unknown,
+  headers: Record<string, string>,
+) {
   if (method === "GET" && path === "/api/v1/secop/sources") {
     const env = loadEnv();
     return json(200, {
@@ -86,7 +94,7 @@ async function secopRoutes(path: string, method: string, query: Record<string, s
   if (method === "GET" && (path === "/api/v1/secop/processes" || path === "/api/v1/secop/search")) {
     const result = await search.search({
       q: query.q,
-      source: (query.source as "SECOP_I" | "SECOP_II" | "all") ?? "SECOP_II",
+      source: (query.source as "SECOP_I" | "SECOP_II" | "all") ?? "all",
       entity: query.entity,
       nit: query.nit,
       department: query.department,
@@ -105,6 +113,7 @@ async function secopRoutes(path: string, method: string, query: Record<string, s
       pageSize: query.pageSize ? Number(query.pageSize) : undefined,
       cursor: query.cursor,
     });
+    scheduleRefreshIfStale();
     return json(200, {
       ...result,
       items: query.view === "raw" ? result.items : result.items.map(toFrontendTender),
@@ -122,18 +131,43 @@ async function secopRoutes(path: string, method: string, query: Record<string, s
     return json(200, { item, tender: toFrontendTender(item) });
   }
   if (method === "GET" && path === "/api/v1/secop/status") {
-    return json(200, { mode: loadEnv().SECOP_SEARCH_MODE, dependencies: dependencyReport().filter((item) => item.name.startsWith("secop") || item.name === "postgresql") });
+    const env = loadEnv();
+    return json(200, {
+      mode: env.SECOP_SEARCH_MODE,
+      tokenConfigured: Boolean(env.SOCRATA_APP_TOKEN),
+      syncEnabled: env.SECOP_SYNC_ENABLED === "true",
+      pollIntervalMs: env.SECOP_POLL_INTERVAL_MS,
+      lookbackHours: env.SECOP_LOOKBACK_HOURS,
+      catalog: catalogStatus(),
+      dependencies: dependencyReport().filter((item) => item.name.startsWith("secop") || item.name === "postgresql"),
+    });
+  }
+  if (method === "GET" && path === "/api/v1/secop/catalog") {
+    const status = catalogStatus();
+    return json(200, {
+      items: listCatalog().slice(0, 50),
+      tokenConfigured: Boolean(loadEnv().SOCRATA_APP_TOKEN),
+      ...status,
+    });
   }
   if (method === "GET" && path === "/api/v1/secop/sync-history") {
-    return json(200, { items: [], message: "Sin ejecuciones persistidas hasta configurar PostgreSQL y workers." });
+    return json(200, { items: catalogStatus().runs });
   }
-  if (method === "POST" && path === "/api/v1/secop/sync") {
-    const queued = await enqueue("secop", body ?? {}, crypto.randomUUID());
-    if (!queued.ok) {
-      const result = await syncSource(((body as { source?: "SECOP_I" | "SECOP_II" }) ?? {}).source ?? "SECOP_II");
-      return json(202, { jobId: result.runId, status: result.status, mode: "inline-limited", result });
+  if ((method === "GET" || method === "POST") && path === "/api/v1/secop/sync") {
+    if (!cronAuthorized(headers)) {
+      return json(401, { error: { code: "unauthorized", message: "Cron no autorizado." } });
     }
-    return json(202, queued);
+    if (method === "POST") {
+      const queued = await enqueue("secop", body ?? {}, crypto.randomUUID());
+      if (queued.ok) return json(202, queued);
+    }
+    const requested = ((body as { source?: string } | undefined)?.source ?? query.source) as string | undefined;
+    if (requested === "SECOP_I" || requested === "SECOP_II") {
+      const result = await syncRecent(requested);
+      return json(202, { jobId: result.runId, status: result.status, mode: "inline", result });
+    }
+    const result = await tick(method === "GET" ? "cron" : "manual");
+    return json(202, { status: result.skipped ? "skipped" : "finished", mode: "inline", result });
   }
   return json(404, { error: { code: "not_found", message: path } });
 }
@@ -257,12 +291,21 @@ function lowerHeaders(headers: Record<string, string>) {
   return Object.fromEntries(Object.entries(headers).map(([key, value]) => [key.toLowerCase(), value]));
 }
 
+function cronAuthorized(headers: Record<string, string>) {
+  const secret = loadEnv().CRON_SECRET;
+  if (!secret) return true;
+  const lowered = lowerHeaders(headers);
+  const bearer = (lowered.authorization ?? "").replace(/^Bearer\s+/i, "");
+  const header = lowered["x-cron-secret"] ?? "";
+  return bearer === secret || header === secret;
+}
+
 function corsHeaders(origin?: string) {
   const allowed = loadEnv().CORS_ALLOWED_ORIGINS?.split(",").map((item) => item.trim()) ?? ["*"];
   const value = !origin || allowed.includes("*") || allowed.includes(origin) ? origin ?? "*" : allowed[0];
   return {
     "access-control-allow-origin": value,
-    "access-control-allow-headers": "authorization,content-type,x-company-id,x-correlation-id,idempotency-key",
+    "access-control-allow-headers": "authorization,content-type,x-company-id,x-correlation-id,idempotency-key,x-cron-secret",
     "access-control-allow-methods": "GET,POST,PATCH,PUT,DELETE,OPTIONS",
   };
 }
