@@ -11,6 +11,7 @@ export default defineConfig({
   },
   server: {
     proxy: {
+      "/api/v1": { target: "http://127.0.0.1:8787" },
       "/api": { target: "https://localhost:7043", secure: false },
       "/auth": { target: "https://localhost:7043", secure: false },
     },

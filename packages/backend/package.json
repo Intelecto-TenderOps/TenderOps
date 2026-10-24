@@ -1,0 +1,23 @@
+{
+  "name": "@tenderops/backend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "secop:sample": "tsx src/cli/secop-sample.ts",
+    "dev": "tsx src/cli/serve.ts"
+  },
+  "dependencies": {
+    "pg": "8.16.3",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "24.9.1",
+    "@types/pg": "8.15.5",
+    "tsx": "4.20.6",
+    "typescript": "5.9.3",
+    "vitest": "5.0.5"
+  }
+}
