@@ -19,14 +19,15 @@ Azul corporativo, cristal translúcido y orden operativo. La interfaz debe senti
 | Texto | `--to-ink` | `#142B4F` |
 | Texto secundario | `--to-muted` | `#7486A3` |
 
-Tipografía: Plus Jakarta Sans.
+Tipografía: Segoe UI (con Tahoma y sans-serif de sistema como respaldo).
 
 ## Liquid Glass
 
 - Superficies `.glass-panel` con desenfoque 18px y borde luminoso.
 - El menú derecho usa cristal oscuro sobre `#0B2347`.
 - Las tablas usan `.table-surface` casi opaco para no perder legibilidad.
-- El tema oscuro se alterna desde el menú.
+- El tema oscuro, el menú expandido y el restablecimiento de la demo viven en el flotante de accesibilidad.
+- Las tablas usan filas enriquecidas (`.table-surface` + `DataTable`): jerarquía primaria/secundaria, cebras blanco/azul muy claro y sin columnas estrechas.
 
 ## Componentes de identidad
 

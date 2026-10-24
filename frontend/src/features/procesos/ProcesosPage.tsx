@@ -1,24 +1,44 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import type { ColumnDef } from "@tanstack/react-table";
 import { DataWorkspace } from "@/components/data/DataWorkspace";
-import { DataTable } from "@/components/data/DataTable";
+import { DataTable, RichMoney, RichPrimary, RichStage, type RichColumn } from "@/components/data/DataTable";
 import { ContextDetailPanel } from "@/components/data/ContextDetailPanel";
 import { Button } from "@/components/ui/button";
-import { StatusBadge } from "@/components/viz/StatusBadge";
 import type { Tender } from "@/contracts";
 import { useFilterChips } from "@/hooks/useFilterChips";
-import { formatCurrency } from "@/lib/format";
+import { formatCurrency, prettyLabel } from "@/lib/format";
 import { chipsToFilters, filterTenders } from "@/services/tendersService";
 import { useWorkspace } from "@/hooks/useWorkspace";
 import { useDrawerStore } from "@/store/drawer-store";
 
-const columns: ColumnDef<Tender>[] = [
-  { accessorKey: "secopId", header: "Proceso" },
-  { accessorKey: "object", header: "Objeto" },
-  { accessorKey: "owner", header: "Responsable" },
-  { accessorKey: "recommendation", header: "Recomendación", cell: ({ getValue }) => <StatusBadge value={String(getValue())} /> },
-  { accessorKey: "status", header: "Estado", cell: ({ getValue }) => <StatusBadge value={String(getValue())} /> },
+const columns: RichColumn<Tender>[] = [
+  {
+    id: "proceso",
+    header: "Proceso / entidad",
+    grow: true,
+    sortValue: (row) => row.object,
+    cell: (row) => (
+      <RichPrimary kicker={row.secopId} title={row.object} detail={`${row.entity} · ${row.department}`} />
+    ),
+  },
+  {
+    id: "presupuesto",
+    header: "Presupuesto",
+    sortValue: (row) => row.value,
+    cell: (row) => <RichMoney value={row.value} hint={row.owner} />,
+  },
+  {
+    id: "recomendacion",
+    header: "Recomendación",
+    sortValue: (row) => row.recommendation,
+    cell: (row) => <RichStage label={row.recommendation} />,
+  },
+  {
+    id: "etapa",
+    header: "Etapa",
+    sortValue: (row) => row.status,
+    cell: (row) => <RichStage label={row.status} />,
+  },
 ];
 
 export function ProcesosPage() {
@@ -73,7 +93,9 @@ export function ProcesosPage() {
             }
           >
             <p className="text-sm">{selected.object}</p>
-            <p className="mt-2 text-sm text-muted">{formatCurrency(selected.value)}</p>
+            <p className="mt-2 text-sm text-muted">
+              {formatCurrency(selected.value)} · {prettyLabel(selected.recommendation)}
+            </p>
           </ContextDetailPanel>
         )
       }

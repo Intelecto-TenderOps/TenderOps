@@ -4,8 +4,10 @@ import { FlowDrawerFooter } from "@/components/flow/FlowDrawerFooter";
 import { Button } from "@/components/ui/button";
 import { Field, Input, Select, Textarea } from "@/components/ui/field";
 import { AdvancedFilters } from "@/components/data/AdvancedFilters";
+import { DataTable, RichHtmlTable, RichPrimary, RichScore, RichValue, type RichColumn } from "@/components/data/DataTable";
+import { formatCop, prettyLabel } from "@/lib/format";
 import { MultiSelectWithChips } from "@/components/selection";
-import type { FilterChip, Recommendation } from "@/contracts";
+import type { FilterChip, Recommendation, Tender } from "@/contracts";
 import { departments, modalities, people } from "@/mocks/catalogs";
 import { companyService } from "@/services/companyService";
 import { decisionsService } from "@/services/decisionsService";
@@ -571,29 +573,35 @@ function CompareFlow() {
   const ids = (payload.ids as string[]) ?? [];
   const allTenders = useDemoStore((state) => state.workspace.tenders);
   const tenders = allTenders.filter((item) => ids.includes(item.id));
+  const columns: RichColumn<Tender>[] = [
+    {
+      id: "proceso",
+      header: "Proceso / entidad",
+      grow: true,
+      sortValue: (row) => row.object,
+      cell: (row) => <RichPrimary kicker={row.secopId} title={row.object} detail={`${row.entity} · ${row.department}`} />,
+    },
+    {
+      id: "presupuesto",
+      header: "Presupuesto",
+      sortValue: (row) => row.value,
+      cell: (row) => <RichValue primary={formatCop(row.value)} secondary={row.modality} />,
+    },
+    {
+      id: "encaje",
+      header: "Encaje",
+      sortValue: (row) => row.compatibility,
+      cell: (row) => <RichScore value={row.compatibility} hint={`Riesgo ${prettyLabel(row.risk)}`} />,
+    },
+  ];
   return (
     <>
       <FlowDrawerBody>
-        <table className="w-full text-left text-sm">
-          <thead>
-            <tr className="text-xs uppercase text-muted">
-              <th>Atributo</th>
-              {tenders.map((item) => (
-                <th key={item.id}>{item.secopId}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {["entity", "modality", "value", "compatibility", "risk"].map((key) => (
-              <tr key={key} className="border-t border-slate-100">
-                <td className="py-2 capitalize">{key}</td>
-                {tenders.map((item) => (
-                  <td key={item.id}>{String(item[key as keyof typeof item])}</td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        {tenders.length ? (
+          <DataTable data={tenders} columns={columns} />
+        ) : (
+          <RichHtmlTable headers={["Atributo"]} rows={[["Selecciona procesos para comparar"]]} />
+        )}
       </FlowDrawerBody>
       <FlowDrawerFooter>
         <Button variant="primary" onClick={() => closeFlow(true)}>Cerrar</Button>

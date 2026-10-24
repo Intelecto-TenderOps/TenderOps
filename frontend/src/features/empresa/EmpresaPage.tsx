@@ -1,8 +1,10 @@
 import { NavLink, useLocation } from "react-router-dom";
+import { DataTable, RichDate, RichMoney, RichPrimary, RichStage, RichValue } from "@/components/data/DataTable";
+import { PageHeader } from "@/components/data/PageHeader";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/viz/StatusBadge";
 import { SelectionChips } from "@/components/selection";
-import { formatCurrency, formatDate } from "@/lib/format";
+import { formatCurrency } from "@/lib/format";
 import { useDemoStore } from "@/store/demo-store";
 import { useDrawerStore } from "@/store/drawer-store";
 import { useUiStore } from "@/store/ui-store";
@@ -27,31 +29,30 @@ export function EmpresaPage() {
   const section = tabs.find((tab) => tab.to === location.pathname)?.id ?? "datos";
 
   return (
-    <section className="grid gap-4">
-      <header className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted">Perfil empresarial</p>
-          <h1 className="text-3xl font-semibold">{company?.legalName}</h1>
-          <p className="text-sm text-muted">NIT {company?.taxId} · {company?.city}</p>
-        </div>
-        <Button
-          variant="primary"
-          onClick={() =>
-            section === "experiencia"
-              ? openFlow({
-                  type: "create-experience",
-                  title: "Registrar experiencia",
-                  size: "standard",
-                  steps: ["Datos generales", "Cliente y contrato", "Valores y fechas", "Documentos", "Revisión"],
-                })
-              : section === "capacidades"
-                ? openFlow({ type: "create-capability", title: "Añadir capacidad", size: "standard" })
-                : openFlow({ type: "edit-company", title: "Editar empresa", size: "standard" })
-          }
-        >
-          {section === "experiencia" ? "Registrar experiencia" : section === "capacidades" ? "Añadir registro" : "Editar"}
-        </Button>
-      </header>
+    <section className="grid gap-3">
+      <PageHeader
+        eyebrow="Perfil empresarial"
+        title={company?.legalName ?? "Empresa"}
+        actions={
+          <Button
+            variant="primary"
+            onClick={() =>
+              section === "experiencia"
+                ? openFlow({
+                    type: "create-experience",
+                    title: "Registrar experiencia",
+                    size: "standard",
+                    steps: ["Datos generales", "Cliente y contrato", "Valores y fechas", "Documentos", "Revisión"],
+                  })
+                : section === "capacidades"
+                  ? openFlow({ type: "create-capability", title: "Añadir capacidad", size: "standard" })
+                  : openFlow({ type: "edit-company", title: "Editar empresa", size: "standard" })
+            }
+          >
+            {section === "experiencia" ? "Registrar experiencia" : section === "capacidades" ? "Añadir registro" : "Editar"}
+          </Button>
+        }
+      />
       <nav className="flex flex-wrap gap-2" aria-label="Secciones de empresa">
         {tabs.map((tab) => (
           <NavLink
@@ -77,36 +78,68 @@ export function EmpresaPage() {
         </article>
       )}
       {section === "capacidades" && (
-        <ul className="grid gap-3 md:grid-cols-2">
-          {workspace.capabilities
-            .filter((item) => item.companyId === companyId)
-            .map((item) => (
-              <li key={item.id} className="glass-panel rounded-[24px] p-4">
-                <h2 className="font-semibold">{item.name}</h2>
-                <p className="text-sm text-muted">{item.description}</p>
-                <div className="mt-2">
-                  <SelectionChips items={[{ id: item.sector, label: item.sector }]} />
-                </div>
-              </li>
-            ))}
-        </ul>
+        <div className="table-surface overflow-hidden rounded-[20px]">
+          <DataTable
+            data={workspace.capabilities.filter((item) => item.companyId === companyId)}
+            columns={[
+              {
+                id: "capacidad",
+                header: "Capacidad",
+                grow: true,
+                sortValue: (row) => row.name,
+                cell: (row) => <RichPrimary kicker={row.sector} title={row.name} detail={row.description} />,
+              },
+              {
+                id: "vigencia",
+                header: "Vigencia",
+                sortValue: (row) => row.validUntil,
+                cell: (row) => <RichDate value={row.validUntil} />,
+              },
+              {
+                id: "etapa",
+                header: "Etapa",
+                sortValue: (row) => (row.active ? 1 : 0),
+                cell: (row) => <RichStage label={row.active ? "Activa" : "Inactiva"} />,
+              },
+            ]}
+          />
+        </div>
       )}
       {section === "experiencia" && (
-        <ul className="grid gap-3">
-          {workspace.experiences
-            .filter((item) => item.companyId === companyId)
-            .map((item) => (
-              <li key={item.id} className="glass-panel rounded-[24px] p-4">
-                <h2 className="font-semibold">{item.object}</h2>
-                <p className="text-sm text-muted">
-                  {item.client} · {item.contractNumber} · {formatCurrency(item.value)}
-                </p>
-                <p className="text-xs text-muted">
-                  {formatDate(item.startDate)} — {formatDate(item.endDate)} · {item.complete ? "completa" : "pendiente"}
-                </p>
-              </li>
-            ))}
-        </ul>
+        <div className="table-surface overflow-hidden rounded-[20px]">
+          <DataTable
+            data={workspace.experiences.filter((item) => item.companyId === companyId)}
+            columns={[
+              {
+                id: "experiencia",
+                header: "Contrato / cliente",
+                grow: true,
+                sortValue: (row) => row.object,
+                cell: (row) => (
+                  <RichPrimary kicker={row.contractNumber} title={row.object} detail={`${row.client} · ${row.location}`} />
+                ),
+              },
+              {
+                id: "presupuesto",
+                header: "Presupuesto",
+                sortValue: (row) => row.value,
+                cell: (row) => <RichMoney value={row.value} hint={row.evidenceName} />,
+              },
+              {
+                id: "cierre",
+                header: "Cierre",
+                sortValue: (row) => row.endDate,
+                cell: (row) => <RichDate value={row.endDate} />,
+              },
+              {
+                id: "etapa",
+                header: "Etapa",
+                sortValue: (row) => (row.complete ? 1 : 0),
+                cell: (row) => <RichStage label={row.complete ? "Completa" : "Pendiente"} />,
+              },
+            ]}
+          />
+        </div>
       )}
       {section === "financiera" &&
         workspace.financials
@@ -150,36 +183,64 @@ export function EmpresaPage() {
             </article>
           ))}
       {section === "documentos" && (
-        <ul className="grid gap-2">
-          {workspace.companyDocuments
-            .filter((item) => item.companyId === companyId)
-            .map((item) => (
-              <li key={item.id} className="glass-panel flex items-center justify-between rounded-[22px] px-4 py-3">
-                <div>
-                  <p className="font-medium">{item.name}</p>
-                  <p className="text-xs text-muted">{item.type} · vence {item.validUntil}</p>
-                </div>
-                <StatusBadge value={item.status} />
-              </li>
-            ))}
-        </ul>
+        <div className="table-surface overflow-hidden rounded-[20px]">
+          <DataTable
+            data={workspace.companyDocuments.filter((item) => item.companyId === companyId)}
+            columns={[
+              {
+                id: "documento",
+                header: "Documento",
+                grow: true,
+                sortValue: (row) => row.name,
+                cell: (row) => <RichPrimary kicker={row.type} title={row.name} />,
+              },
+              {
+                id: "vigencia",
+                header: "Vigencia",
+                sortValue: (row) => row.validUntil,
+                cell: (row) => <RichDate value={row.validUntil} />,
+              },
+              {
+                id: "etapa",
+                header: "Etapa",
+                sortValue: (row) => row.status,
+                cell: (row) => <RichStage label={row.status} />,
+              },
+            ]}
+          />
+        </div>
       )}
       {section === "usuarios" && (
-        <ul className="grid gap-2">
-          {workspace.memberships
-            .filter((item) => item.companyId === companyId)
-            .map((item) => (
-              <li key={item.id} className="glass-panel flex items-center justify-between rounded-[22px] px-4 py-3">
-                <div>
-                  <p className="font-medium">{item.name}</p>
-                  <p className="text-xs text-muted">{item.role} · {item.team}</p>
-                </div>
-                <Button size="sm" onClick={() => openFlow({ type: "edit-user", title: "Editar usuario", recordId: item.id })}>
-                  Editar
-                </Button>
-              </li>
-            ))}
-        </ul>
+        <div className="table-surface overflow-hidden rounded-[20px]">
+          <DataTable
+            data={workspace.memberships.filter((item) => item.companyId === companyId)}
+            columns={[
+              {
+                id: "usuario",
+                header: "Usuario",
+                grow: true,
+                sortValue: (row) => row.name,
+                cell: (row) => <RichPrimary kicker={row.email} title={row.name} detail={row.team} />,
+              },
+              {
+                id: "rol",
+                header: "Rol",
+                sortValue: (row) => row.role,
+                cell: (row) => <RichValue primary={row.role} />,
+              },
+              {
+                id: "acciones",
+                header: "Acciones",
+                cell: (row) => (
+                  <Button size="sm" onClick={() => openFlow({ type: "edit-user", title: "Editar usuario", recordId: row.id })}>
+                    Editar
+                  </Button>
+                ),
+              },
+            ]}
+            onRowClick={(item) => openFlow({ type: "edit-user", title: "Editar usuario", recordId: item.id })}
+          />
+        </div>
       )}
     </section>
   );

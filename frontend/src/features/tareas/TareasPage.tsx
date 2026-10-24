@@ -1,22 +1,48 @@
 import { useMemo, useState } from "react";
-import type { ColumnDef } from "@tanstack/react-table";
-import { DataTable } from "@/components/data/DataTable";
+import { DataTable, RichDate, RichPrimary, RichStage, RichValue, type RichColumn } from "@/components/data/DataTable";
+import { PageHeader } from "@/components/data/PageHeader";
 import { TaskBoard } from "@/components/tasks/TaskBoard";
 import { Button } from "@/components/ui/button";
 import { ActiveFilterChips } from "@/components/selection";
-import { StatusBadge } from "@/components/viz/StatusBadge";
 import type { WorkTask } from "@/contracts";
 import { useFilterChips } from "@/hooks/useFilterChips";
+import { prettyLabel } from "@/lib/format";
 import { people } from "@/mocks/catalogs";
 import { useDemoStore } from "@/store/demo-store";
 import { useDrawerStore } from "@/store/drawer-store";
 
-const columns: ColumnDef<WorkTask>[] = [
-  { accessorKey: "title", header: "Tarea" },
-  { accessorKey: "owners", header: "Responsables", cell: ({ getValue }) => (getValue() as string[]).join(", ") },
-  { accessorKey: "priority", header: "Prioridad", cell: ({ getValue }) => <StatusBadge value={String(getValue())} /> },
-  { accessorKey: "status", header: "Estado", cell: ({ getValue }) => <StatusBadge value={String(getValue())} /> },
-  { accessorKey: "dueDate", header: "Fecha" },
+const columns: RichColumn<WorkTask>[] = [
+  {
+    id: "tarea",
+    header: "Tarea",
+    grow: true,
+    sortValue: (row) => row.title,
+    cell: (row) => <RichPrimary kicker={row.category} title={row.title} detail={row.description || undefined} />,
+  },
+  {
+    id: "responsables",
+    header: "Responsables",
+    sortValue: (row) => row.owners.join(", "),
+    cell: (row) => <RichValue primary={row.owners.join(", ") || "Sin asignar"} secondary={row.dynamicsTaskId ?? undefined} />,
+  },
+  {
+    id: "prioridad",
+    header: "Prioridad",
+    sortValue: (row) => row.priority,
+    cell: (row) => <RichValue primary={prettyLabel(row.priority)} />,
+  },
+  {
+    id: "etapa",
+    header: "Etapa",
+    sortValue: (row) => row.status,
+    cell: (row) => <RichStage label={row.status} />,
+  },
+  {
+    id: "cierre",
+    header: "Cierre",
+    sortValue: (row) => row.dueDate,
+    cell: (row) => <RichDate value={row.dueDate} />,
+  },
 ];
 
 export function TareasPage() {
@@ -39,43 +65,43 @@ export function TareasPage() {
   }));
 
   return (
-    <section className="grid gap-3">
-      <header className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted">Tareas y equipo</p>
-          <h1 className="text-3xl font-semibold">Trabajo en curso</h1>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {(["lista", "kanban", "calendario", "mias", "equipo", "carga"] as const).map((item) => (
-            <Button key={item} size="sm" variant={view === item ? "primary" : "secondary"} onClick={() => setView(item)}>
-              {item}
+    <section className="grid gap-2">
+      <PageHeader
+        eyebrow="Tareas y equipo"
+        title="Trabajo en curso"
+        actions={
+          <>
+            {(["lista", "kanban", "calendario", "mias", "equipo", "carga"] as const).map((item) => (
+              <Button key={item} size="sm" variant={view === item ? "primary" : "secondary"} onClick={() => setView(item)}>
+                {item}
+              </Button>
+            ))}
+            <Button
+              onClick={() =>
+                openFlow({
+                  type: "filters-generic",
+                  title: "Filtros de tareas",
+                  size: "compact",
+                  payload: {
+                    active: chips,
+                    onApply: setChips,
+                    fields: [
+                      { field: "owner", label: "Responsable", options: people.map((person) => person.name) },
+                      { field: "status", label: "Estado", options: ["pendiente", "en_curso", "bloqueada", "hecha"] },
+                      { field: "priority", label: "Prioridad", options: ["baja", "media", "alta", "urgente"] },
+                    ],
+                  },
+                })
+              }
+            >
+              Filtros
             </Button>
-          ))}
-          <Button
-            onClick={() =>
-              openFlow({
-                type: "filters-generic",
-                title: "Filtros de tareas",
-                size: "compact",
-                payload: {
-                  active: chips,
-                  onApply: setChips,
-                  fields: [
-                    { field: "owner", label: "Responsable", options: people.map((person) => person.name) },
-                    { field: "status", label: "Estado", options: ["pendiente", "en_curso", "bloqueada", "hecha"] },
-                    { field: "priority", label: "Prioridad", options: ["baja", "media", "alta", "urgente"] },
-                  ],
-                },
-              })
-            }
-          >
-            Filtros
-          </Button>
-          <Button variant="primary" onClick={() => openFlow({ type: "create-task", title: "Crear tarea", size: "standard" })}>
-            Crear
-          </Button>
-        </div>
-      </header>
+            <Button variant="primary" onClick={() => openFlow({ type: "create-task", title: "Crear tarea", size: "standard" })}>
+              Crear
+            </Button>
+          </>
+        }
+      />
       <ActiveFilterChips chips={chips} onRemove={(id) => setChips(chips.filter((chip) => chip.id !== id))} onClear={() => setChips([])} />
       {view === "kanban" && (
         <TaskBoard
@@ -84,7 +110,7 @@ export function TareasPage() {
         />
       )}
       {view === "lista" && (
-        <div className="table-surface overflow-hidden rounded-[24px]">
+        <div className="table-surface overflow-hidden rounded-[20px]">
           <DataTable
             data={rows}
             columns={columns}

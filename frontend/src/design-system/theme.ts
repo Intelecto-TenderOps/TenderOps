@@ -11,6 +11,8 @@ export const palette = {
   muted: "#7486A3",
 } as const;
 
+export const fontFamily = '"Segoe UI", "Segoe UI Variable", Tahoma, Geneva, Verdana, sans-serif';
+
 export const flowSizes = {
   compact: [380, 440],
   standard: [500, 620],

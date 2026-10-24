@@ -1,5 +1,6 @@
+import { DataTable, RichPrimary, RichStage } from "@/components/data/DataTable";
+import { PageHeader } from "@/components/data/PageHeader";
 import { Button } from "@/components/ui/button";
-import { StatusBadge } from "@/components/viz/StatusBadge";
 import { useDemoStore } from "@/store/demo-store";
 import { useDrawerStore } from "@/store/drawer-store";
 
@@ -8,28 +9,38 @@ export function PreparacionPage() {
   const tasks = useDemoStore((state) => state.workspace.tasks);
   const openFlow = useDrawerStore((state) => state.openFlow);
   return (
-    <section className="grid gap-3">
-      <header className="flex items-end justify-between">
-        <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted">Preparación</p>
-          <h1 className="text-3xl font-semibold">Vigencias y paquete</h1>
-        </div>
-        <Button onClick={() => openFlow({ type: "add-evidence", title: "Cargar evidencia", size: "compact" })}>
-          Cargar evidencia
-        </Button>
-      </header>
+    <section className="grid gap-2">
+      <PageHeader
+        eyebrow="Preparación"
+        title="Vigencias y paquete"
+        actions={
+          <Button onClick={() => openFlow({ type: "add-evidence", title: "Cargar evidencia", size: "compact" })}>
+            Cargar evidencia
+          </Button>
+        }
+      />
       <div className="grid gap-3 lg:grid-cols-2">
-        <article className="glass-panel rounded-[24px] p-4">
-          <h2 className="font-semibold">Documentos empresariales</h2>
-          <ul className="mt-3 grid gap-2">
-            {docs.map((item) => (
-              <li key={item.id} className="flex justify-between text-sm">
-                <span>{item.name}</span>
-                <StatusBadge value={item.status} />
-              </li>
-            ))}
-          </ul>
-        </article>
+        <div className="table-surface overflow-hidden rounded-[20px]">
+          <DataTable
+            data={docs}
+            columns={[
+              {
+                id: "documento",
+                header: "Documento",
+                grow: true,
+                sortValue: (row) => row.name,
+                cell: (row) => <RichPrimary kicker={row.type} title={row.name} />,
+              },
+              {
+                id: "etapa",
+                header: "Etapa",
+                sortValue: (row) => row.status,
+                cell: (row) => <RichStage label={row.status} />,
+              },
+            ]}
+            pageSize={8}
+          />
+        </div>
         <article className="glass-panel rounded-[24px] p-4">
           <h2 className="font-semibold">Entregables abiertos</h2>
           <ul className="mt-3 grid gap-2">

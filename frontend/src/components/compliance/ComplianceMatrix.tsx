@@ -1,34 +1,45 @@
-import type { ColumnDef } from "@tanstack/react-table";
-import { DataTable } from "@/components/data/DataTable";
-import { StatusBadge } from "@/components/viz/StatusBadge";
+import { DataTable, RichDate, RichPrimary, RichStage, RichValue, type RichColumn } from "@/components/data/DataTable";
 import type { Requirement } from "@/contracts";
+import { prettyLabel } from "@/lib/format";
 
-const columns: ColumnDef<Requirement>[] = [
-  { accessorKey: "code", header: "Identificador" },
-  { accessorKey: "category", header: "Categoría" },
-  { accessorKey: "requirement", header: "Requisito" },
-  { accessorKey: "condition", header: "Condición" },
-  { accessorKey: "source", header: "Fuente" },
-  { accessorKey: "evidence", header: "Evidencia" },
+const columns: RichColumn<Requirement>[] = [
   {
-    accessorKey: "compliance",
+    id: "requisito",
+    header: "Requisito",
+    grow: true,
+    sortValue: (row) => row.requirement,
+    cell: (row) => <RichPrimary kicker={`${row.code} · ${prettyLabel(row.category)}`} title={row.requirement} detail={row.condition} />,
+  },
+  {
+    id: "evidencia",
+    header: "Fuente y evidencia",
+    sortValue: (row) => row.source,
+    cell: (row) => <RichValue primary={row.source} secondary={row.evidence || "Sin evidencia"} />,
+  },
+  {
+    id: "cumplimiento",
     header: "Cumplimiento",
-    cell: ({ getValue }) => <StatusBadge value={String(getValue())} />,
+    sortValue: (row) => row.compliance,
+    cell: (row) => <RichValue primary={prettyLabel(row.compliance)} secondary={`Riesgo ${prettyLabel(row.risk)}`} />,
   },
   {
-    accessorKey: "risk",
-    header: "Riesgo",
-    cell: ({ getValue }) => <StatusBadge value={String(getValue())} />,
+    id: "responsable",
+    header: "Responsable",
+    sortValue: (row) => row.owner,
+    cell: (row) => <RichValue primary={row.owner} secondary={prettyLabel(row.copied)} />,
   },
-  { accessorKey: "owner", header: "Responsable" },
-  { accessorKey: "dueDate", header: "Fecha" },
-  { accessorKey: "status", header: "Estado" },
   {
-    accessorKey: "copied",
-    header: "Copiado",
-    cell: ({ getValue }) => <StatusBadge value={String(getValue())} />,
+    id: "cierre",
+    header: "Cierre",
+    sortValue: (row) => row.dueDate,
+    cell: (row) => <RichDate value={row.dueDate} />,
   },
-  { accessorKey: "notes", header: "Observaciones" },
+  {
+    id: "etapa",
+    header: "Etapa",
+    sortValue: (row) => row.status,
+    cell: (row) => <RichStage label={row.status} />,
+  },
 ];
 
 export function ComplianceMatrix({

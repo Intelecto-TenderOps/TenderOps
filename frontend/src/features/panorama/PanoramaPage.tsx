@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { useMemo } from "react";
+import { PageHeader } from "@/components/data/PageHeader";
 import { KpiCard } from "@/components/viz/KpiCard";
 import { StatusBadge } from "@/components/viz/StatusBadge";
 import { Button } from "@/components/ui/button";
@@ -23,14 +24,8 @@ export function PanoramaPage() {
   const tenders = useMemo(() => allTenders.slice(0, 5), [allTenders]);
 
   return (
-    <section className="grid gap-4">
-      <header>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted">Panorama ejecutivo</p>
-        <h1 className="text-3xl font-semibold tracking-tight">El día de la mesa de licitaciones</h1>
-        <p className="mt-1 max-w-2xl text-sm text-muted">
-          Indicadores simulados de detección, calificación y preparación. Las acciones abren paneles laterales.
-        </p>
-      </header>
+    <section className="grid gap-3">
+      <PageHeader eyebrow="Panorama ejecutivo" title="El día de la mesa de licitaciones" />
       <div className="grid gap-3 md:grid-cols-3 xl:grid-cols-6">
         <KpiCard label="Detectadas" value={data?.detected ?? "—"} />
         <KpiCard label="Evaluadas" value={data?.evaluated ?? "—"} />

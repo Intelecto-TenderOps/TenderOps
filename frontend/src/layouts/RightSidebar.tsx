@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { ChevronLeft, Moon, PanelRight, RotateCcw, Sun } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { useState } from "react";
 import { navigation } from "@/config/navigation";
 import { cn } from "@/lib/cn";
@@ -11,15 +11,11 @@ export function RightSidebar() {
   const expanded = useUiStore((state) => state.navExpanded || state.navPinned);
   const pinned = useUiStore((state) => state.navPinned);
   const setExpanded = useUiStore((state) => state.setNavExpanded);
-  const togglePinned = useUiStore((state) => state.toggleNavPinned);
   const mobileOpen = useUiStore((state) => state.mobileNavOpen);
   const setMobile = useUiStore((state) => state.setMobileNavOpen);
-  const theme = useUiStore((state) => state.theme);
-  const toggleTheme = useUiStore((state) => state.toggleTheme);
   const companyId = useUiStore((state) => state.companyId);
   const setCompany = useUiStore((state) => state.setCompany);
   const companies = useDemoStore((state) => state.workspace.companies);
-  const reset = useDemoStore((state) => state.reset);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
 
   return (
@@ -112,30 +108,6 @@ export function RightSidebar() {
         })}
       </nav>
       <div className="grid gap-2 px-3 pb-4">
-        <button
-          type="button"
-          className="flex items-center justify-center gap-2 rounded-full bg-white/10 px-3 py-2 text-xs"
-          onClick={togglePinned}
-        >
-          <PanelRight size={14} />
-          {expanded ? (pinned ? "Fijado" : "Expandido") : null}
-        </button>
-        <button
-          type="button"
-          className="flex items-center justify-center gap-2 rounded-full bg-white/10 px-3 py-2 text-xs"
-          onClick={toggleTheme}
-        >
-          {theme === "light" ? <Moon size={14} /> : <Sun size={14} />}
-          {expanded ? "Tema" : null}
-        </button>
-        <button
-          type="button"
-          className="flex items-center justify-center gap-2 rounded-full bg-white/10 px-3 py-2 text-xs"
-          onClick={() => reset()}
-        >
-          <RotateCcw size={14} />
-          {expanded ? "Restablecer demo" : null}
-        </button>
         {expanded ? (
           <div className="rounded-2xl bg-white/8 px-3 py-2 text-xs">
             <p className="font-semibold">Valentina Herrera</p>

@@ -45,4 +45,4 @@ Los contratos separan `tenderOpsId`, `secopId`, `dynamicsOpportunityId`, `dynami
 
 ## Persistencia de demostración
 
-Clave `tenderops.demo.v1`. El botón «Restablecer demo» del menú derecho vuelve a la semilla.
+Clave `tenderops.demo.v1`. El flotante de accesibilidad (abajo a la izquierda) restablece la demo, cambia el tema y fija o expande el menú.

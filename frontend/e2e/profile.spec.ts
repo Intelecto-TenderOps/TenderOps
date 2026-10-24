@@ -10,7 +10,7 @@ test("perfil empresarial, validación y persistencia local", async ({ page }) =>
   await page.getByLabel("Descripción").fill("Estructuración y revisión de proyectos tecnológicos");
   await page.getByLabel("Vigente hasta").fill("2030-12-31");
   await page.getByRole("button", { name: "Guardar" }).click();
-  await expect(page.getByRole("heading", { name: "Consultoría de contratación" })).toBeVisible();
+  await expect(page.getByText("Consultoría de contratación")).toBeVisible();
   await page.reload();
-  await expect(page.getByRole("heading", { name: "Consultoría de contratación" })).toBeVisible();
+  await expect(page.getByText("Consultoría de contratación")).toBeVisible();
 });

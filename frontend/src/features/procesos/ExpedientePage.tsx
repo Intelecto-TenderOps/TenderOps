@@ -26,12 +26,12 @@ export function ExpedienteLayout() {
   ];
   return (
     <section className="flex min-h-0 flex-1 flex-col gap-3">
-      <header className="glass-panel rounded-[24px] p-4">
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <div>
-            <p className="font-mono text-xs text-corporate">{tender.secopId}</p>
-            <h1 className="text-2xl font-semibold">{tender.object}</h1>
-            <p className="text-sm text-muted">
+      <header className="glass-panel rounded-[20px] px-4 py-3">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="min-w-0">
+            <p className="text-[11px] font-medium text-corporate">{tender.secopId}</p>
+            <h1 className="text-[17px] font-semibold leading-tight">{tender.object}</h1>
+            <p className="text-xs text-muted">
               {tender.entity} · {formatCurrency(tender.value)} · cierra {formatDateTime(tender.closesAt)}
             </p>
           </div>
@@ -52,7 +52,7 @@ export function ExpedienteLayout() {
             </Button>
           </div>
         </div>
-        <nav className="mt-4 flex flex-wrap gap-2" aria-label="Pestañas del expediente">
+        <nav className="mt-2 flex flex-wrap gap-2" aria-label="Pestañas del expediente">
           {tabs.map((tab) => (
             <NavLink
               key={tab.to}

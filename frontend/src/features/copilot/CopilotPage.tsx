@@ -1,3 +1,4 @@
+import { PageHeader } from "@/components/data/PageHeader";
 import { useMutation } from "@tanstack/react-query";
 import { TenderOpsCopilot } from "@/components/copilot/TenderOpsCopilot";
 import { copilotService } from "@/services/copilotService";
@@ -9,14 +10,10 @@ export function CopilotPage() {
   const openFlow = useDrawerStore((state) => state.openFlow);
   const ask = useMutation({ mutationFn: (value: string) => copilotService.ask(value) });
   return (
-    <section className="glass-panel flex min-h-[70vh] flex-col rounded-[28px] p-5">
-      <header className="mb-4">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted">Copilot Studio</p>
-        <h1 className="text-3xl font-semibold">Orquestador de demostración</h1>
-        <p className="text-sm text-muted">
-          Conversaciones y hallazgos estructurados. No hay llamadas reales a Copilot Studio.
-        </p>
-      </header>
+    <section className="glass-panel flex min-h-[70vh] flex-col rounded-[28px] p-4">
+      <div className="mb-3">
+        <PageHeader eyebrow="Copilot Studio" title="Orquestador de demostración" />
+      </div>
       <TenderOpsCopilot
         messages={messages}
         busy={ask.isPending}

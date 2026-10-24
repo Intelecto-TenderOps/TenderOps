@@ -1,5 +1,6 @@
 import { Menu, X } from "lucide-react";
 import { Outlet } from "react-router-dom";
+import { AccessibilityDock } from "@/components/a11y/AccessibilityDock";
 import { DrawerManager } from "@/components/flow/DrawerManager";
 import { DEMO_MODE_LABEL } from "@/config/constants";
 import { RightSidebar } from "./RightSidebar";
@@ -50,12 +51,12 @@ export function AppShell() {
         style={{
           paddingRight: "calc(var(--to-nav-width) + var(--to-flow-width) + 28px)",
           paddingLeft: 20,
-          paddingTop: 16,
-          paddingBottom: 16,
+          paddingTop: 10,
+          paddingBottom: 12,
         }}
       >
-        <div className="mb-3 flex items-center justify-between gap-3">
-          <div className="glass-panel flex items-center gap-2 rounded-full px-3 py-1.5 text-xs text-muted">
+        <div className="mb-2 flex items-center justify-between gap-3">
+          <div className="glass-panel flex items-center gap-2 rounded-full px-3 py-1 text-[11px] text-muted">
             <span className="h-2 w-2 rounded-full bg-electric" aria-hidden="true" />
             {DEMO_MODE_LABEL} · datos simulados · se pueden restablecer
           </div>
@@ -75,6 +76,7 @@ export function AppShell() {
         </main>
       </div>
       <DrawerManager />
+      <AccessibilityDock />
       <RightSidebar />
     </div>
   );

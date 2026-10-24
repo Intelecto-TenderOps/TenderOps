@@ -1,25 +1,48 @@
 import { useState } from "react";
-import type { ColumnDef } from "@tanstack/react-table";
 import { DataWorkspace } from "@/components/data/DataWorkspace";
-import { DataTable } from "@/components/data/DataTable";
+import { DataTable, RichMoney, RichPrimary, RichStage, RichValue, type RichColumn } from "@/components/data/DataTable";
 import { ContextDetailPanel } from "@/components/data/ContextDetailPanel";
 import { Button } from "@/components/ui/button";
-import { StatusBadge } from "@/components/viz/StatusBadge";
 import type { CommercialOpportunity } from "@/contracts";
 import { useFilterChips } from "@/hooks/useFilterChips";
-import { formatCurrency } from "@/lib/format";
+import { prettyLabel } from "@/lib/format";
 import { opportunitiesService } from "@/services/opportunitiesService";
 import { useDemoStore } from "@/store/demo-store";
 import { useDrawerStore } from "@/store/drawer-store";
 
-const columns: ColumnDef<CommercialOpportunity>[] = [
-  { accessorKey: "account", header: "Cuenta" },
-  { accessorKey: "name", header: "Oportunidad" },
-  { accessorKey: "dynamicsOpportunityId", header: "Dynamics" },
-  { accessorKey: "value", header: "Valor", cell: ({ getValue }) => formatCurrency(Number(getValue())) },
-  { accessorKey: "owner", header: "Responsable" },
-  { accessorKey: "stage", header: "Etapa" },
-  { accessorKey: "status", header: "Estado", cell: ({ getValue }) => <StatusBadge value={String(getValue())} /> },
+const columns: RichColumn<CommercialOpportunity>[] = [
+  {
+    id: "oportunidad",
+    header: "Oportunidad / cuenta",
+    grow: true,
+    sortValue: (row) => row.name,
+    cell: (row) => (
+      <RichPrimary kicker={row.dynamicsOpportunityId} title={row.name} detail={`${row.account} · ${row.dynamicsAccountId}`} />
+    ),
+  },
+  {
+    id: "presupuesto",
+    header: "Presupuesto",
+    sortValue: (row) => row.value,
+    cell: (row) => <RichMoney value={row.value} hint={row.owner} />,
+  },
+  {
+    id: "etapa",
+    header: "Etapa",
+    sortValue: (row) => row.stage,
+    cell: (row) => <RichStage label={row.stage} />,
+  },
+  {
+    id: "estado",
+    header: "Estado",
+    sortValue: (row) => row.status,
+    cell: (row) => (
+      <RichValue
+        primary={prettyLabel(row.status)}
+        secondary={row.outcome ? prettyLabel(row.outcome) : `${row.activities} actividades`}
+      />
+    ),
+  },
 ];
 
 export function OportunidadesPage() {

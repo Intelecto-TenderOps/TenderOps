@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { PageHeader } from "@/components/data/PageHeader";
 import { DocumentExplorer } from "@/components/documents/DocumentExplorer";
 import { EvidenceViewer } from "@/components/documents/EvidenceViewer";
 import { ActiveFilterChips } from "@/components/selection";
@@ -18,32 +19,32 @@ export function DocumentosPage() {
   const selected = filtered.find((item) => item.id === selectedId) ?? null;
   const openFlow = useDrawerStore((state) => state.openFlow);
   return (
-    <section className="grid gap-3">
-      <header className="flex items-end justify-between">
-        <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted">Documentos</p>
-          <h1 className="text-3xl font-semibold">Repositorio de procesos</h1>
-        </div>
-        <Button
-          onClick={() =>
-            openFlow({
-              type: "filters-generic",
-              title: "Filtros documentales",
-              size: "compact",
-              payload: {
-                active: chips,
-                onApply: setChips,
-                fields: [{ field: "category", label: "Tipo", options: ["pliego", "técnico", "estudio", "adenda"] }],
-              },
-            })
-          }
-        >
-          Filtros
-        </Button>
-      </header>
+    <section className="grid gap-2">
+      <PageHeader
+        eyebrow="Documentos"
+        title="Repositorio de procesos"
+        actions={
+          <Button
+            onClick={() =>
+              openFlow({
+                type: "filters-generic",
+                title: "Filtros documentales",
+                size: "compact",
+                payload: {
+                  active: chips,
+                  onApply: setChips,
+                  fields: [{ field: "category", label: "Tipo", options: ["pliego", "técnico", "estudio", "adenda"] }],
+                },
+              })
+            }
+          >
+            Filtros
+          </Button>
+        }
+      />
       <ActiveFilterChips chips={chips} onRemove={(id) => setChips(chips.filter((chip) => chip.id !== id))} onClear={() => setChips([])} />
       <div className="grid gap-3 lg:grid-cols-2">
-        <div className="glass-panel rounded-[24px] p-4">
+        <div className="table-surface overflow-hidden rounded-[20px]">
           <DocumentExplorer documents={filtered} selectedId={selectedId} onSelect={(doc) => setSelectedId(doc.id)} />
         </div>
         <div className="glass-panel rounded-[24px] p-4">

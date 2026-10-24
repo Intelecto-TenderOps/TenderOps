@@ -1,11 +1,56 @@
 import { useMemo } from "react";
+import { DataTable, RichDate, RichPrimary, RichStage, RichValue, type RichColumn } from "@/components/data/DataTable";
+import { PageHeader } from "@/components/data/PageHeader";
 import { Button } from "@/components/ui/button";
 import { ActiveFilterChips } from "@/components/selection";
-import { StatusBadge } from "@/components/viz/StatusBadge";
+import type { AlertItem } from "@/contracts";
 import { useFilterChips } from "@/hooks/useFilterChips";
+import { prettyLabel } from "@/lib/format";
 import { alertsService } from "@/services/alertsService";
 import { useDemoStore } from "@/store/demo-store";
 import { useDrawerStore } from "@/store/drawer-store";
+
+const columns: RichColumn<AlertItem>[] = [
+  {
+    id: "alerta",
+    header: "Alerta",
+    grow: true,
+    sortValue: (row) => row.title,
+    cell: (row) => <RichPrimary kicker={prettyLabel(row.kind)} title={row.title} detail={row.detail} />,
+  },
+  {
+    id: "urgencia",
+    header: "Urgencia",
+    sortValue: (row) => row.urgency,
+    cell: (row) => <RichValue primary={prettyLabel(row.urgency)} />,
+  },
+  {
+    id: "etapa",
+    header: "Etapa",
+    sortValue: (row) => (row.read ? 1 : 0),
+    cell: (row) => <RichStage label={row.read ? "Leída" : "Sin leer"} />,
+  },
+  {
+    id: "cierre",
+    header: "Fecha",
+    sortValue: (row) => row.createdAt,
+    cell: (row) => <RichDate value={row.createdAt} />,
+  },
+  {
+    id: "acciones",
+    header: "Acciones",
+    cell: (row) => (
+      <div className="flex flex-wrap gap-1" onClick={(event) => event.stopPropagation()}>
+        <Button size="sm" onClick={() => void alertsService.markRead(row.id)}>
+          Marcar
+        </Button>
+        <Button size="sm" onClick={() => void alertsService.toggleSilence(row.id)}>
+          {row.silenced ? "Reactivar" : "Silenciar"}
+        </Button>
+      </div>
+    ),
+  },
+];
 
 export function AlertasPage() {
   const { chips, setChips } = useFilterChips();
@@ -21,57 +66,42 @@ export function AlertasPage() {
     [alerts, chips],
   );
   return (
-    <section className="grid gap-3">
-      <header className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted">Alertas</p>
-          <h1 className="text-3xl font-semibold">Señales de la mesa</h1>
-        </div>
-        <Button
-          onClick={() =>
-            openFlow({
-              type: "filters-generic",
-              title: "Filtros de alertas",
-              size: "compact",
-              payload: {
-                active: chips,
-                onApply: setChips,
-                fields: [
-                  { field: "kind", label: "Tipo", options: ["nueva", "cambio", "adenda", "vencimiento", "riesgo"] },
-                  { field: "status", label: "Estado", options: ["Sin leer"] },
-                ],
-              },
-            })
-          }
-        >
-          Filtros
-        </Button>
-      </header>
+    <section className="grid gap-2">
+      <PageHeader
+        eyebrow="Alertas"
+        title="Señales de la mesa"
+        actions={
+          <Button
+            onClick={() =>
+              openFlow({
+                type: "filters-generic",
+                title: "Filtros de alertas",
+                size: "compact",
+                payload: {
+                  active: chips,
+                  onApply: setChips,
+                  fields: [
+                    { field: "kind", label: "Tipo", options: ["nueva", "cambio", "adenda", "vencimiento", "riesgo"] },
+                    { field: "status", label: "Estado", options: ["Sin leer"] },
+                  ],
+                },
+              })
+            }
+          >
+            Filtros
+          </Button>
+        }
+      />
       <ActiveFilterChips chips={chips} onRemove={(id) => setChips(chips.filter((chip) => chip.id !== id))} onClear={() => setChips([])} />
-      <ul className="grid gap-2">
-        {rows.map((item) => (
-          <li key={item.id} className="glass-panel flex flex-wrap items-center justify-between gap-3 rounded-[22px] px-4 py-3">
-            <div>
-              <div className="flex items-center gap-2">
-                <StatusBadge value={item.kind} />
-                <strong>{item.title}</strong>
-              </div>
-              <p className="text-sm text-muted">{item.detail}</p>
-            </div>
-            <div className="flex gap-2">
-              <Button size="sm" onClick={() => void alertsService.markRead(item.id)}>
-                Marcar
-              </Button>
-              <Button size="sm" onClick={() => void alertsService.toggleSilence(item.id)}>
-                {item.silenced ? "Reactivar" : "Silenciar"}
-              </Button>
-              <Button size="sm" onClick={() => openFlow({ type: "alert-detail", title: "Detalle de alerta", recordId: item.id, size: "compact" })}>
-                Detalle
-              </Button>
-            </div>
-          </li>
-        ))}
-      </ul>
+      <div className="table-surface overflow-hidden rounded-[20px]">
+        <DataTable
+          data={rows}
+          columns={columns}
+          onRowClick={(item) =>
+            openFlow({ type: "alert-detail", title: "Detalle de alerta", recordId: item.id, size: "compact" })
+          }
+        />
+      </div>
     </section>
   );
 }

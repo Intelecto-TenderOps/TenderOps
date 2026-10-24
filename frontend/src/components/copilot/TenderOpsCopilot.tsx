@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/field";
 import type { CopilotMessage } from "@/contracts";
+import { RichHtmlTable } from "@/components/data/DataTable";
 import { StatusBadge } from "@/components/viz/StatusBadge";
 
 export function TenderOpsCopilot({
@@ -36,28 +37,9 @@ export function TenderOpsCopilot({
               </ul>
             ) : null}
             {message.table ? (
-              <table className="mt-3 w-full text-left text-xs">
-                <thead>
-                  <tr>
-                    {message.table.headers.map((header) => (
-                      <th key={header} className="pb-1">
-                        {header}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {message.table.rows.map((row) => (
-                    <tr key={row.join("-")}>
-                      {row.map((cell) => (
-                        <td key={cell} className="py-1">
-                          {cell}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <div className="mt-3">
+                <RichHtmlTable headers={message.table.headers} rows={message.table.rows} />
+              </div>
             ) : null}
             {message.recommendation ? (
               <p className="mt-2 text-sm font-medium">{message.recommendation}</p>

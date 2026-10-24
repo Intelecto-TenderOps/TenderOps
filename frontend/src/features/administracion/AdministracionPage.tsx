@@ -1,6 +1,8 @@
 import { NavLink, useLocation } from "react-router-dom";
+import { DataTable, RichDate, RichPrimary, RichStage, RichValue, type RichColumn } from "@/components/data/DataTable";
+import { PageHeader } from "@/components/data/PageHeader";
 import { Button } from "@/components/ui/button";
-import { StatusBadge } from "@/components/viz/StatusBadge";
+import type { AuditEvent, IntegrationStatus, Membership, SourceConfig } from "@/contracts";
 import { adminService } from "@/services/adminService";
 import { useDemoStore } from "@/store/demo-store";
 import { useDrawerStore } from "@/store/drawer-store";
@@ -15,17 +17,84 @@ const tabs = [
   { to: "/administracion/integraciones", label: "Integraciones" },
 ];
 
+const userColumns: RichColumn<Membership>[] = [
+  {
+    id: "usuario",
+    header: "Usuario",
+    grow: true,
+    sortValue: (row) => row.name,
+    cell: (row) => <RichPrimary kicker={row.email} title={row.name} detail={row.team} />,
+  },
+  {
+    id: "rol",
+    header: "Rol",
+    sortValue: (row) => row.role,
+    cell: (row) => <RichValue primary={row.role} />,
+  },
+  {
+    id: "etapa",
+    header: "Etapa",
+    sortValue: (row) => (row.active ? 1 : 0),
+    cell: (row) => <RichStage label={row.active ? "Activo" : "Inactivo"} />,
+  },
+];
+
+const sourceColumns: RichColumn<SourceConfig>[] = [
+  {
+    id: "fuente",
+    header: "Fuente",
+    grow: true,
+    sortValue: (row) => row.name,
+    cell: (row) => <RichPrimary kicker={row.country} title={row.name} detail={row.lastSync ? `Última sync ${row.lastSync}` : "Sin sincronizar"} />,
+  },
+  {
+    id: "salud",
+    header: "Salud",
+    sortValue: (row) => row.health,
+    cell: (row) => <RichValue primary={row.health} secondary={row.enabled ? "Activa" : "Inactiva"} />,
+  },
+];
+
+const auditColumns: RichColumn<AuditEvent>[] = [
+  {
+    id: "evento",
+    header: "Evento",
+    grow: true,
+    sortValue: (row) => row.action,
+    cell: (row) => <RichPrimary kicker={row.correlationId} title={row.action} detail={`${row.actor} · ${row.entity}`} />,
+  },
+  {
+    id: "fecha",
+    header: "Fecha",
+    sortValue: (row) => row.at,
+    cell: (row) => <RichDate value={row.at} />,
+  },
+];
+
+const integrationColumns: RichColumn<IntegrationStatus>[] = [
+  {
+    id: "integracion",
+    header: "Integración",
+    grow: true,
+    sortValue: (row) => row.name,
+    cell: (row) => <RichPrimary kicker={row.system} title={row.name} detail={row.note} />,
+  },
+  {
+    id: "etapa",
+    header: "Etapa",
+    sortValue: (row) => row.status,
+    cell: (row) => <RichStage label={row.status} />,
+  },
+];
+
 export function AdministracionPage() {
   const location = useLocation();
   const workspace = useDemoStore((state) => state.workspace);
   const openFlow = useDrawerStore((state) => state.openFlow);
   const section = tabs.find((tab) => tab.to === location.pathname)?.label ?? "Resumen";
   return (
-    <section className="grid gap-4">
-      <header>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted">Administración</p>
-        <h1 className="text-3xl font-semibold">{section}</h1>
-      </header>
+    <section className="grid gap-3">
+      <PageHeader eyebrow="Administración" title={section} />
       <nav className="flex flex-wrap gap-2">
         {tabs.map((tab) => (
           <NavLink
@@ -46,37 +115,71 @@ export function AdministracionPage() {
         </p>
       )}
       {location.pathname.endsWith("usuarios") && (
-        <ul className="grid gap-2">
-          {workspace.memberships.map((item) => (
-            <li key={item.id} className="glass-panel flex items-center justify-between rounded-[22px] px-4 py-3">
-              <span>{item.name} · {item.role}</span>
-              <Button size="sm" onClick={() => openFlow({ type: "edit-user", title: "Administrar usuario", recordId: item.id })}>
-                Editar
-              </Button>
-            </li>
-          ))}
-        </ul>
+        <div className="table-surface overflow-hidden rounded-[20px]">
+          <DataTable
+            data={workspace.memberships}
+            columns={[
+              ...userColumns,
+              {
+                id: "acciones",
+                header: "Acciones",
+                cell: (item) => (
+                  <Button
+                    size="sm"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      openFlow({ type: "edit-user", title: "Administrar usuario", recordId: item.id });
+                    }}
+                  >
+                    Editar
+                  </Button>
+                ),
+              },
+            ]}
+            onRowClick={(item) => openFlow({ type: "edit-user", title: "Administrar usuario", recordId: item.id })}
+          />
+        </div>
       )}
       {location.pathname.endsWith("empresas") && (
-        <ul className="grid gap-2">
-          {workspace.companies.map((item) => (
-            <li key={item.id} className="glass-panel rounded-[22px] px-4 py-3">
-              {item.legalName} · {item.taxId}
-            </li>
-          ))}
-        </ul>
+        <div className="table-surface overflow-hidden rounded-[20px]">
+          <DataTable
+            data={workspace.companies}
+            columns={[
+              {
+                id: "empresa",
+                header: "Empresa",
+                grow: true,
+                sortValue: (row) => row.legalName,
+                cell: (row) => <RichPrimary kicker={row.taxId} title={row.legalName} detail={`${row.city} · ${row.department}`} />,
+              },
+              {
+                id: "etapa",
+                header: "Etapa",
+                sortValue: (row) => row.status,
+                cell: (row) => <RichStage label={row.status} />,
+              },
+            ]}
+          />
+        </div>
       )}
       {location.pathname.endsWith("fuentes") && (
-        <ul className="grid gap-2">
-          {workspace.sources.map((item) => (
-            <li key={item.id} className="glass-panel flex items-center justify-between rounded-[22px] px-4 py-3">
-              <span>{item.name} · {item.health}</span>
-              <Button size="sm" onClick={() => void adminService.toggleSource(item.id)}>
-                {item.enabled ? "Desactivar" : "Activar"}
-              </Button>
-            </li>
-          ))}
-        </ul>
+        <div className="table-surface overflow-hidden rounded-[20px]">
+          <DataTable
+            data={workspace.sources}
+            columns={[
+              ...sourceColumns,
+              {
+                id: "acciones",
+                header: "Acciones",
+                cell: (item) => (
+                  <Button size="sm" onClick={() => void adminService.toggleSource(item.id)}>
+                    {item.enabled ? "Desactivar" : "Activar"}
+                  </Button>
+                ),
+              },
+            ]}
+          />
+        </div>
       )}
       {location.pathname.endsWith("parametros") && (
         <article className="glass-panel rounded-[24px] p-4 text-sm">
@@ -89,26 +192,14 @@ export function AdministracionPage() {
         </article>
       )}
       {location.pathname.endsWith("auditoria") && (
-        <ul className="grid gap-2">
-          {workspace.auditEvents.map((item) => (
-            <li key={item.id} className="glass-panel rounded-[22px] px-4 py-3 text-sm">
-              {item.at} · {item.actor} · {item.action}
-            </li>
-          ))}
-        </ul>
+        <div className="table-surface overflow-hidden rounded-[20px]">
+          <DataTable data={workspace.auditEvents} columns={auditColumns} />
+        </div>
       )}
       {location.pathname.endsWith("integraciones") && (
-        <ul className="grid gap-2">
-          {workspace.integrations.map((item) => (
-            <li key={item.id} className="glass-panel flex items-center justify-between rounded-[22px] px-4 py-3">
-              <div>
-                <p className="font-medium">{item.name}</p>
-                <p className="text-xs text-muted">{item.note}</p>
-              </div>
-              <StatusBadge value={item.status} />
-            </li>
-          ))}
-        </ul>
+        <div className="table-surface overflow-hidden rounded-[20px]">
+          <DataTable data={workspace.integrations} columns={integrationColumns} />
+        </div>
       )}
     </section>
   );

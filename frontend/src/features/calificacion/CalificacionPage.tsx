@@ -1,13 +1,11 @@
 import { useMemo, useState } from "react";
-import type { ColumnDef } from "@tanstack/react-table";
 import { DataWorkspace } from "@/components/data/DataWorkspace";
-import { DataTable } from "@/components/data/DataTable";
+import { DataTable, RichPrimary, RichScore, RichStage, RichValue, type RichColumn } from "@/components/data/DataTable";
 import { ContextDetailPanel } from "@/components/data/ContextDetailPanel";
 import { Button } from "@/components/ui/button";
-import { ScoreIndicator } from "@/components/viz/ScoreIndicator";
-import { StatusBadge } from "@/components/viz/StatusBadge";
 import type { Assessment } from "@/contracts";
 import { useFilterChips } from "@/hooks/useFilterChips";
+import { prettyLabel } from "@/lib/format";
 import { assessmentsService } from "@/services/assessmentsService";
 import { useDemoStore } from "@/store/demo-store";
 import { useDrawerStore } from "@/store/drawer-store";
@@ -28,16 +26,56 @@ export function CalificacionPage() {
   const selected = rows.find((item) => item.id === selectedId);
   const tender = workspace.tenders.find((item) => item.id === selected?.tenderId);
   const openFlow = useDrawerStore((state) => state.openFlow);
-  const columns: ColumnDef<Assessment>[] = [
-    { accessorKey: "score", header: "Puntaje", cell: ({ getValue }) => <ScoreIndicator value={Number(getValue())} /> },
-    { accessorKey: "risk", header: "Riesgo", cell: ({ getValue }) => <StatusBadge value={String(getValue())} /> },
-    { accessorKey: "compatibility", header: "Compatibilidad" },
-    { accessorKey: "experience", header: "Experiencia" },
-    { accessorKey: "financial", header: "Financiero" },
-    { accessorKey: "legal", header: "Jurídico" },
-    { accessorKey: "technical", header: "Técnico" },
-    { accessorKey: "recommendation", header: "Recomendación", cell: ({ getValue }) => <StatusBadge value={String(getValue())} /> },
-  ];
+  const columns = useMemo<RichColumn<Assessment>[]>(
+    () => [
+      {
+        id: "proceso",
+        header: "Proceso / entidad",
+        grow: true,
+        sortValue: (row) => workspace.tenders.find((item) => item.id === row.tenderId)?.object ?? row.id,
+        cell: (row) => {
+          const origin = workspace.tenders.find((item) => item.id === row.tenderId);
+          return (
+            <RichPrimary
+              kicker={origin?.secopId ?? row.tenderId}
+              title={origin?.object ?? "Proceso"}
+              detail={origin ? `${origin.entity} · ${origin.department}` : undefined}
+            />
+          );
+        },
+      },
+      {
+        id: "puntaje",
+        header: "Encaje",
+        sortValue: (row) => row.score,
+        cell: (row) => <RichScore value={row.score} hint={`Confianza ${row.confidence}%`} />,
+      },
+      {
+        id: "dimensiones",
+        header: "Criterios",
+        sortValue: (row) => row.compatibility,
+        cell: (row) => (
+          <RichValue
+            primary={`Compatibilidad ${row.compatibility}`}
+            secondary={`Exp. ${row.experience} · Fin. ${row.financial} · Jur. ${row.legal} · Téc. ${row.technical}`}
+          />
+        ),
+      },
+      {
+        id: "riesgo",
+        header: "Riesgo",
+        sortValue: (row) => row.risk,
+        cell: (row) => <RichValue primary={prettyLabel(row.risk)} secondary={row.blocked ? row.blockReason : undefined} />,
+      },
+      {
+        id: "recomendacion",
+        header: "Etapa",
+        sortValue: (row) => row.recommendation,
+        cell: (row) => <RichStage label={row.recommendation} />,
+      },
+    ],
+    [workspace.tenders],
+  );
   return (
     <DataWorkspace
       title="Calificación y priorización"

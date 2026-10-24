@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { PageHeader } from "@/components/data/PageHeader";
 import { ActiveFilterChips } from "@/components/selection";
 import { Button } from "@/components/ui/button";
 import { KpiCard } from "@/components/viz/KpiCard";
@@ -21,32 +22,32 @@ export function AnaliticaPage() {
     [data?.byModality, chips],
   );
   return (
-    <section className="grid gap-4">
-      <header className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted">Analítica</p>
-          <h1 className="text-3xl font-semibold">Operación y resultado</h1>
-        </div>
-        <Button
-          onClick={() =>
-            openFlow({
-              type: "filters-generic",
-              title: "Filtros analíticos",
-              size: "compact",
-              payload: {
-                active: chips,
-                onApply: setChips,
-                fields: [
-                  { field: "source", label: "Fuente", options: ["SECOP II"] },
-                  { field: "modality", label: "Modalidad", options: data?.byModality.map((item) => item.name) ?? [] },
-                ],
-              },
-            })
-          }
-        >
-          Filtros
-        </Button>
-      </header>
+    <section className="grid gap-3">
+      <PageHeader
+        eyebrow="Analítica"
+        title="Operación y resultado"
+        actions={
+          <Button
+            onClick={() =>
+              openFlow({
+                type: "filters-generic",
+                title: "Filtros analíticos",
+                size: "compact",
+                payload: {
+                  active: chips,
+                  onApply: setChips,
+                  fields: [
+                    { field: "source", label: "Fuente", options: ["SECOP II"] },
+                    { field: "modality", label: "Modalidad", options: data?.byModality.map((item) => item.name) ?? [] },
+                  ],
+                },
+              })
+            }
+          >
+            Filtros
+          </Button>
+        }
+      />
       <ActiveFilterChips chips={chips} onRemove={(id) => setChips(chips.filter((chip) => chip.id !== id))} onClear={() => setChips([])} />
       <div className="grid gap-3 md:grid-cols-4">
         <KpiCard label="Tasa de éxito" value={`${data?.winRate ?? 0}%`} />

@@ -1,14 +1,12 @@
 import { useMemo, useState } from "react";
-import type { ColumnDef, RowSelectionState } from "@tanstack/react-table";
+import type { RowSelectionState } from "@tanstack/react-table";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { DataWorkspace } from "@/components/data/DataWorkspace";
-import { DataTable } from "@/components/data/DataTable";
+import { DataTable, RichDate, RichMoney, RichPrimary, RichScore, RichStage, type RichColumn } from "@/components/data/DataTable";
 import { ContextDetailPanel } from "@/components/data/ContextDetailPanel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/field";
 import { SelectedItemsBar } from "@/components/selection";
-import { ScoreIndicator } from "@/components/viz/ScoreIndicator";
-import { StatusBadge } from "@/components/viz/StatusBadge";
 import type { Tender } from "@/contracts";
 import { useFilterChips } from "@/hooks/useFilterChips";
 import { formatCurrency, formatDateTime } from "@/lib/format";
@@ -16,60 +14,6 @@ import { chipsToFilters, filterTenders, tendersService } from "@/services/tender
 import { useDemoStore } from "@/store/demo-store";
 import { useDrawerStore } from "@/store/drawer-store";
 import { useUiStore } from "@/store/ui-store";
-
-const columns: ColumnDef<Tender>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <input
-        type="checkbox"
-        aria-label="Seleccionar todos"
-        checked={table.getIsAllPageRowsSelected()}
-        onChange={table.getToggleAllPageRowsSelectedHandler()}
-      />
-    ),
-    cell: ({ row }) => (
-      <input
-        type="checkbox"
-        aria-label={`Seleccionar ${row.original.secopId}`}
-        checked={row.getIsSelected()}
-        onChange={row.getToggleSelectedHandler()}
-        onClick={(event) => event.stopPropagation()}
-      />
-    ),
-  },
-  { accessorKey: "secopId", header: "Identificador" },
-  { accessorKey: "entity", header: "Entidad" },
-  { accessorKey: "object", header: "Objeto" },
-  { accessorKey: "modality", header: "Modalidad" },
-  {
-    accessorKey: "value",
-    header: "Valor",
-    cell: ({ getValue }) => formatCurrency(Number(getValue())),
-  },
-  { accessorKey: "department", header: "Ubicación" },
-  {
-    accessorKey: "closesAt",
-    header: "Cierre",
-    cell: ({ getValue }) => formatDateTime(String(getValue())),
-  },
-  {
-    accessorKey: "status",
-    header: "Estado",
-    cell: ({ getValue }) => <StatusBadge value={String(getValue())} />,
-  },
-  { accessorKey: "source", header: "Fuente" },
-  {
-    accessorKey: "compatibility",
-    header: "Compatibilidad",
-    cell: ({ getValue }) => <ScoreIndicator value={Number(getValue())} />,
-  },
-  {
-    accessorKey: "risk",
-    header: "Riesgo",
-    cell: ({ getValue }) => <StatusBadge value={String(getValue())} />,
-  },
-];
 
 export function ExplorarPage() {
   const navigate = useNavigate();
@@ -80,6 +24,7 @@ export function ExplorarPage() {
   const setDensity = useUiStore((state) => state.setDensity);
   const hideDetail = useDrawerStore((state) => state.hiddenDetail);
   const tenders = useDemoStore((state) => state.workspace.tenders);
+  const assessments = useDemoStore((state) => state.workspace.assessments);
   const search = params.get("q") ?? "";
   const [selectedId, setSelectedId] = useState(tenders[0]?.id);
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
@@ -89,6 +34,51 @@ export function ExplorarPage() {
     [tenders, chips, search],
   );
   const selectedRows = rows.filter((item) => rowSelection[item.id]);
+  const columns = useMemo<RichColumn<Tender>[]>(
+    () => [
+      {
+        id: "proceso",
+        header: "Proceso / entidad",
+        grow: true,
+        sortValue: (row) => row.object,
+        cell: (row) => (
+          <RichPrimary
+            kicker={`${row.secopId} · ${row.source}`}
+            title={row.object}
+            detail={`${row.entity} · ${row.department}`}
+          />
+        ),
+      },
+      {
+        id: "presupuesto",
+        header: "Presupuesto",
+        sortValue: (row) => row.value,
+        cell: (row) => <RichMoney value={row.value} hint={row.modality} />,
+      },
+      {
+        id: "encaje",
+        header: "Encaje",
+        sortValue: (row) => row.compatibility,
+        cell: (row) => {
+          const confidence = assessments.find((item) => item.tenderId === row.id)?.confidence ?? row.compatibility;
+          return <RichScore value={row.compatibility} hint={`Confianza ${confidence}%`} />;
+        },
+      },
+      {
+        id: "etapa",
+        header: "Etapa",
+        sortValue: (row) => row.status,
+        cell: (row) => <RichStage label={row.status} />,
+      },
+      {
+        id: "cierre",
+        header: "Cierre",
+        sortValue: (row) => row.closesAt,
+        cell: (row) => <RichDate value={row.closesAt} />,
+      },
+    ],
+    [assessments],
+  );
 
   return (
     <DataWorkspace

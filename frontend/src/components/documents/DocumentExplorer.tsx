@@ -1,6 +1,29 @@
+import { DataTable, RichPrimary, RichStage, type RichColumn } from "@/components/data/DataTable";
 import type { ProcessDocument } from "@/contracts";
-import { StatusBadge } from "@/components/viz/StatusBadge";
-import { formatDateTime } from "@/lib/format";
+
+const columns: RichColumn<ProcessDocument>[] = [
+  {
+    id: "documento",
+    header: "Documento",
+    grow: true,
+    sortValue: (row) => row.name,
+    cell: (row) => (
+      <RichPrimary kicker={`${row.category} · v${row.version}`} title={row.name} detail={`${row.sizeKb} KB`} />
+    ),
+  },
+  {
+    id: "etapa",
+    header: "Etapa",
+    sortValue: (row) => row.status,
+    cell: (row) => <RichStage label={row.status} />,
+  },
+  {
+    id: "carga",
+    header: "Carga",
+    sortValue: (row) => row.uploadedAt,
+    cell: (row) => <RichPrimary title={row.reviewed ? "Revisado" : "Pendiente"} detail={row.excerpt} />,
+  },
+];
 
 export function DocumentExplorer({
   documents,
@@ -12,26 +35,6 @@ export function DocumentExplorer({
   onSelect: (doc: ProcessDocument) => void;
 }) {
   return (
-    <ul className="grid gap-2">
-      {documents.map((doc) => (
-        <li key={doc.id}>
-          <button
-            type="button"
-            onClick={() => onSelect(doc)}
-            className={`w-full rounded-2xl border px-3 py-2 text-left ${
-              selectedId === doc.id ? "border-electric bg-mist" : "border-transparent bg-white/60"
-            }`}
-          >
-            <div className="flex items-center justify-between gap-2">
-              <strong className="text-sm">{doc.name}</strong>
-              <StatusBadge value={doc.status} />
-            </div>
-            <p className="text-xs text-muted">
-              {doc.category} · v{doc.version} · {doc.sizeKb} KB · {formatDateTime(doc.uploadedAt)}
-            </p>
-          </button>
-        </li>
-      ))}
-    </ul>
+    <DataTable data={documents} columns={columns} selectedId={selectedId} onRowClick={onSelect} pageSize={8} />
   );
 }
