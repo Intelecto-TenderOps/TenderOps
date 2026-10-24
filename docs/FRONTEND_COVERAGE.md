@@ -2,6 +2,8 @@
 
 Leyenda: **UI** = pantalla implementada; **SIM** = comportamiento de demostración; **BE** = pendiente de Azure Functions / sistemas Microsoft.
 
+La matriz completa de 112 HUs (A–N) y el cableado actual está en `docs/MASTER_HU_MATRIX.md`. Explorar, Procesos, expediente y documentos de proceso consumen SECOP en vivo. Dynamics, Dataverse, SharePoint y Copilot se muestran fail-closed.
+
 | ID | Historia | Ruta | Estado |
 |---|---|---|---|
 | HU-A001 | Registrar una empresa licitante | `/empresa` | UI + SIM; BE Entra/Dataverse |

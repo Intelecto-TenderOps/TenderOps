@@ -11,6 +11,8 @@ import { SelectedItemsBar } from "@/components/selection";
 import type { Tender } from "@/contracts";
 import { useFilterChips } from "@/hooks/useFilterChips";
 import { formatCurrency, formatDateTime } from "@/lib/format";
+import { IntegrationNotice } from "@/components/status/IntegrationNotice";
+import { useSecopStatus } from "@/hooks/useIntegrations";
 import { chipsToFilters, filterTenders, tendersService } from "@/services/tendersService";
 import { useDemoStore } from "@/store/demo-store";
 import { useDrawerStore } from "@/store/drawer-store";
@@ -32,6 +34,7 @@ export function ExplorarPage() {
     refetchInterval: 45_000,
     refetchIntervalInBackground: true,
   });
+  const secop = useSecopStatus();
   const demoRows = useMemo(() => filterTenders(tenders, filters), [tenders, filters]);
   const rows = live.data?.simulated === false ? live.data.items : demoRows;
   const [selectedId, setSelectedId] = useState<string>();
@@ -97,6 +100,23 @@ export function ExplorarPage() {
       chips={chips}
       onRemoveChip={(id) => setChips(chips.filter((chip) => chip.id !== id))}
       onClearChips={() => setChips([])}
+      notice={
+        live.data?.simulated === false ? (
+          <IntegrationNotice
+            title={`SECOP en vivo · ${rows.length} procesos`}
+            detail={
+              secop.data
+                ? `Modo ${secop.data.mode}. Token de aplicación: ${secop.data.tokenConfigured ? "configurado" : "no configurado"}.`
+                : live.data.warnings?.join(" ")
+            }
+          />
+        ) : (
+          <IntegrationNotice
+            title="SECOP no disponible en este momento"
+            detail="Se muestra el lote de demostración. No se afirma una sincronización Microsoft."
+          />
+        )
+      }
       toolbar={
         <>
           <Input

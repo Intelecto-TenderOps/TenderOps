@@ -6,6 +6,7 @@ import { KpiCard } from "@/components/viz/KpiCard";
 import { StatusBadge } from "@/components/viz/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { FunnelBars } from "@/components/viz/SimpleChart";
+import { IntegrationNotice } from "@/components/status/IntegrationNotice";
 import { analyticsService } from "@/services/analyticsService";
 import { useWorkspace } from "@/hooks/useWorkspace";
 import { useDrawerStore } from "@/store/drawer-store";
@@ -26,6 +27,10 @@ export function PanoramaPage() {
   return (
     <section className="grid gap-3">
       <PageHeader eyebrow="Panorama ejecutivo" title="El día de la mesa de licitaciones" />
+      <IntegrationNotice
+        title={data?.source === "live" ? "Indicadores SECOP en vivo" : "Indicadores locales"}
+        detail={(data?.notes ?? ["Dynamics y Copilot no aportan métricas sin credenciales."]).join(" ")}
+      />
       <div className="grid gap-3 md:grid-cols-3 xl:grid-cols-6">
         <KpiCard label="Detectadas" value={data?.detected ?? "—"} />
         <KpiCard label="Evaluadas" value={data?.evaluated ?? "—"} />
@@ -36,7 +41,7 @@ export function PanoramaPage() {
       </div>
       <div className="grid gap-3 xl:grid-cols-[1.4fr_1fr]">
         <article className="glass-panel rounded-[24px] p-4">
-          <h2 className="text-sm font-semibold">Embudo comercial simulado</h2>
+          <h2 className="text-sm font-semibold">Embudo comercial</h2>
           <div className="mt-4">
             <FunnelBars items={data?.funnel ?? []} />
           </div>

@@ -48,7 +48,7 @@ export async function listLiveTenders(filters: TenderFilters = {}) {
     status: filters.statuses?.[0],
     minValue: filters.minValue ? String(filters.minValue) : undefined,
   });
-  return { ...result, simulated: false };
+  return { ...result, simulated: false as const };
 }
 
 export const tendersService = {
@@ -57,12 +57,17 @@ export const tendersService = {
       return await listLiveTenders(filters);
     } catch {
       const items = filterTenders(readWorkspace().tenders, filters);
-      return simulateLatency({ items, total: items.length, simulated: true, warnings: ["API SECOP no disponible; se muestra el lote de demostración."] });
+      return simulateLatency({ items, total: items.length, simulated: true as const, warnings: ["API SECOP no disponible; se muestra el lote de demostración."] });
     }
   },
   async get(id: string) {
-    const tender = readWorkspace().tenders.find((item) => item.id === id || item.secopId === id);
-    return simulateLatency(tender ?? null);
+    try {
+      const result = await apiGet<{ tender: Tender }>(`/api/v1/secop/processes/${encodeURIComponent(id)}`);
+      return { ...result.tender, simulated: false as const };
+    } catch {
+      const tender = readWorkspace().tenders.find((item) => item.id === id || item.secopId === id);
+      return tender ? { ...tender, simulated: true as const } : null;
+    }
   },
   async toggleFavorite(id: string) {
     writeWorkspace((workspace) => ({

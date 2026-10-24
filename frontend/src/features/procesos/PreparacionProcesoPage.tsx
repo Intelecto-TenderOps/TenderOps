@@ -1,20 +1,27 @@
 import { useParams } from "react-router-dom";
+import { IntegrationNotice } from "@/components/status/IntegrationNotice";
 import { Button } from "@/components/ui/button";
 import { ProgressRing } from "@/components/viz/ProgressRing";
 import { StatusBadge } from "@/components/viz/StatusBadge";
+import { useLiveTender } from "@/hooks/useLiveTender";
 import { useDemoStore } from "@/store/demo-store";
 import { useDrawerStore } from "@/store/drawer-store";
 
 export function PreparacionProcesoPage() {
   const { id = "" } = useParams();
   const workspace = useDemoStore((state) => state.workspace);
-  const tender = workspace.tenders.find((item) => item.secopId === id || item.id === id);
+  const { tender } = useLiveTender(id);
   const tasks = workspace.tasks.filter((item) => item.tenderId === tender?.id);
   const docs = workspace.companyDocuments;
   const openFlow = useDrawerStore((state) => state.openFlow);
   const done = tasks.filter((item) => item.status === "hecha").length;
   const progress = tasks.length ? Math.round((done / tasks.length) * 100) : 0;
   return (
+    <div className="grid gap-3">
+      <IntegrationNotice
+        title="Preparación local"
+        detail="El checklist no sincroniza Task de Dynamics ni evidencias de SharePoint sin credenciales."
+      />
     <div className="grid gap-3 lg:grid-cols-[200px_1fr]">
       <article className="glass-panel grid place-items-center rounded-[24px] p-4">
         <ProgressRing value={progress} label="Paquete" />
@@ -56,6 +63,7 @@ export function PreparacionProcesoPage() {
           </ul>
         </article>
       </div>
+    </div>
     </div>
   );
 }

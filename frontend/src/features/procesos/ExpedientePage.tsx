@@ -1,18 +1,26 @@
 import { NavLink, Outlet, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { IntegrationNotice } from "@/components/status/IntegrationNotice";
 import { ScoreIndicator } from "@/components/viz/ScoreIndicator";
 import { StatusBadge } from "@/components/viz/StatusBadge";
 import { formatCurrency, formatDateTime } from "@/lib/format";
+import { useLiveTender } from "@/hooks/useLiveTender";
 import { useWorkspace } from "@/hooks/useWorkspace";
 import { useDrawerStore } from "@/store/drawer-store";
 
 export function ExpedienteLayout() {
   const { id = "" } = useParams();
   const workspace = useWorkspace();
-  const tender = workspace.tenders.find((item) => item.secopId === id || item.id === id);
+  const { tender, live } = useLiveTender(id);
   const assessment = workspace.assessments.find((item) => item.tenderId === tender?.id);
   const openFlow = useDrawerStore((state) => state.openFlow);
-  if (!tender) return <p>Proceso no encontrado.</p>;
+  if (!tender) {
+    return (
+      <p className="text-sm text-muted">
+        {live.isFetching ? "Consultando SECOP…" : "Proceso no encontrado en SECOP ni en el lote local."}
+      </p>
+    );
+  }
   const tabs = [
     { to: `/procesos/${tender.secopId}`, label: "Resumen", end: true },
     { to: `/procesos/${tender.secopId}/analisis`, label: "Análisis" },
@@ -75,15 +83,23 @@ export function ExpedienteLayout() {
 export function ExpedienteResumen() {
   const { id = "" } = useParams();
   const workspace = useWorkspace();
-  const tender = workspace.tenders.find((item) => item.secopId === id || item.id === id);
+  const { tender, live } = useLiveTender(id);
   const assessment = workspace.assessments.find((item) => item.tenderId === tender?.id);
-  if (!tender || !assessment) return null;
+  if (!tender) return null;
   return (
     <div className="grid gap-3 md:grid-cols-2">
       <article className="glass-panel rounded-[24px] p-4">
-        <h2 className="font-semibold">Análisis simulado</h2>
-        <p className="mt-2 text-sm">{assessment.explanation}</p>
-        <p className="mt-2 text-xs text-muted">Confianza {assessment.confidence} · versión {assessment.version}</p>
+        <h2 className="font-semibold">Análisis</h2>
+        {assessment ? (
+          <>
+            <p className="mt-2 text-sm">{assessment.explanation}</p>
+            <p className="mt-2 text-xs text-muted">Confianza {assessment.confidence} · versión {assessment.version}</p>
+          </>
+        ) : (
+          <p className="mt-2 text-sm text-muted">
+            No hay evaluación persistida. Copilot Studio y Dataverse no están configurados; no se inventa un encaje.
+          </p>
+        )}
       </article>
       <article className="glass-panel rounded-[24px] p-4">
         <h2 className="font-semibold">Identificadores</h2>
@@ -92,6 +108,12 @@ export function ExpedienteResumen() {
           <div>SECOP: {tender.secopId}</div>
           <div>Dynamics: {tender.dynamicsOpportunityId ?? "sin crear"}</div>
         </dl>
+        <div className="mt-3">
+          <IntegrationNotice
+            title={live.data && "simulated" in live.data && live.data.simulated === false ? "Ficha SECOP en vivo" : "Ficha local"}
+            detail="Crear oportunidad o evaluar con IA exige Dynamics/Copilot configurados."
+          />
+        </div>
       </article>
     </div>
   );

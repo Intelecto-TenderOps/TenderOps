@@ -1,13 +1,15 @@
 import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { DataWorkspace } from "@/components/data/DataWorkspace";
 import { DataTable, RichMoney, RichPrimary, RichStage, type RichColumn } from "@/components/data/DataTable";
 import { ContextDetailPanel } from "@/components/data/ContextDetailPanel";
+import { IntegrationNotice } from "@/components/status/IntegrationNotice";
 import { Button } from "@/components/ui/button";
 import type { Tender } from "@/contracts";
 import { useFilterChips } from "@/hooks/useFilterChips";
 import { formatCurrency, prettyLabel } from "@/lib/format";
-import { chipsToFilters, filterTenders } from "@/services/tendersService";
+import { chipsToFilters, filterTenders, tendersService } from "@/services/tendersService";
 import { useWorkspace } from "@/hooks/useWorkspace";
 import { useDrawerStore } from "@/store/drawer-store";
 
@@ -45,10 +47,18 @@ export function ProcesosPage() {
   const navigate = useNavigate();
   const { chips, setChips } = useFilterChips();
   const workspace = useWorkspace();
-  const tenders = useMemo(
-    () => filterTenders(workspace.tenders, chipsToFilters(chips)),
-    [workspace.tenders, chips],
+  const filters = useMemo(() => chipsToFilters(chips), [chips]);
+  const live = useQuery({
+    queryKey: ["secop-live", filters],
+    queryFn: () => tendersService.list(filters),
+    retry: false,
+    refetchInterval: 45_000,
+  });
+  const demoRows = useMemo(
+    () => filterTenders(workspace.tenders, filters),
+    [workspace.tenders, filters],
   );
+  const tenders = live.data?.simulated === false ? live.data.items : demoRows;
   const [selectedId, setSelectedId] = useState(tenders[0]?.id);
   const selected = tenders.find((item) => item.id === selectedId);
   const openFlow = useDrawerStore((state) => state.openFlow);
@@ -60,6 +70,13 @@ export function ProcesosPage() {
       chips={chips}
       onRemoveChip={(id) => setChips(chips.filter((chip) => chip.id !== id))}
       onClearChips={() => setChips([])}
+      notice={
+        live.data?.simulated === false ? (
+          <IntegrationNotice title="Expedientes desde SECOP en vivo" detail="El detalle abre el proceso real. Dynamics/Dataverse siguen fail-closed." />
+        ) : (
+          <IntegrationNotice title="API SECOP no disponible" detail="Se muestra el lote de demostración." />
+        )
+      }
       toolbar={
         <Button
           onClick={() =>

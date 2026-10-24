@@ -1,6 +1,6 @@
 # Entrega preliminar para Azure Functions
 
-El frontend no llama todavía a Functions. Cada servicio de `frontend/src/services` es el contrato que el backend deberá honrar.
+Los servicios de `frontend/src/services` llaman `/api/v1`. SECOP es live; Microsoft permanece fail-closed hasta haber credenciales.
 
 ## Servicios previstos
 

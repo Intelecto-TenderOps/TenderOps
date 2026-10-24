@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { KpiCard } from "@/components/viz/KpiCard";
 import { BarList } from "@/components/viz/SimpleChart";
 import { useFilterChips } from "@/hooks/useFilterChips";
+import { IntegrationNotice } from "@/components/status/IntegrationNotice";
 import { formatCurrency } from "@/lib/format";
 import { analyticsService } from "@/services/analyticsService";
 import { useDrawerStore } from "@/store/drawer-store";
@@ -47,6 +48,10 @@ export function AnaliticaPage() {
             Filtros
           </Button>
         }
+      />
+      <IntegrationNotice
+        title={data?.source === "live" ? "Analítica conectada a la API" : "Analítica local"}
+        detail={(data?.notes ?? []).join(" ") || "Win rate y Dynamics permanecen en cero sin CRM configurado."}
       />
       <ActiveFilterChips chips={chips} onRemove={(id) => setChips(chips.filter((chip) => chip.id !== id))} onClear={() => setChips([])} />
       <div className="grid gap-3 md:grid-cols-4">

@@ -1,38 +1,43 @@
 import type { CommercialOpportunity } from "@/contracts";
-import { createId } from "@/lib/ids";
-import { readWorkspace, simulateLatency, writeWorkspace } from "./workspace";
+import { apiPost, isIntegrationUnconfigured, readIntegrationError } from "./http";
+import { readWorkspace, simulateLatency } from "./workspace";
 
 export const opportunitiesService = {
   async list() {
-    return simulateLatency(readWorkspace().opportunities);
+    return simulateLatency({ items: readWorkspace().opportunities, source: "demo" as const });
   },
-  async create(input: Omit<CommercialOpportunity, "id" | "createdAt" | "activities" | "tasks" | "documents">) {
-    const opportunity: CommercialOpportunity = {
-      ...input,
-      id: createId("opp"),
-      createdAt: new Date().toISOString(),
-      activities: 0,
-      tasks: 0,
-      documents: 0,
-    };
-    writeWorkspace((workspace) => ({
-      ...workspace,
-      opportunities: [opportunity, ...workspace.opportunities],
-      tenders: workspace.tenders.map((item) =>
-        item.id === input.tenderId
-          ? { ...item, dynamicsOpportunityId: input.dynamicsOpportunityId }
-          : item,
-      ),
-    }));
-    return simulateLatency(opportunity);
+  async create(input: {
+    tenderId: string;
+    name: string;
+    value: number;
+    secopId?: string;
+    account?: string;
+  }) {
+    try {
+      const result = await apiPost<unknown>("/api/v1/opportunities/from-tender", {
+        name: input.name,
+        secopId: input.secopId,
+        value: input.value,
+      });
+      return { ok: true as const, item: result };
+    } catch (error) {
+      return {
+        ok: false as const,
+        unconfigured: isIntegrationUnconfigured(error),
+        ...readIntegrationError(error),
+      };
+    }
   },
   async close(id: string, outcome: "ganada" | "perdida") {
-    writeWorkspace((workspace) => ({
-      ...workspace,
-      opportunities: workspace.opportunities.map((item) =>
-        item.id === id ? { ...item, status: "cerrada", outcome, stage: outcome } : item,
-      ),
-    }));
-    return simulateLatency(true);
+    try {
+      await apiPost(`/api/v1/opportunities/${encodeURIComponent(id)}/close`, { outcome });
+      return { ok: true as const };
+    } catch (error) {
+      return {
+        ok: false as const,
+        unconfigured: isIntegrationUnconfigured(error),
+        ...readIntegrationError(error),
+      };
+    }
   },
 };

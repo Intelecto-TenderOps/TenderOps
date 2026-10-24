@@ -8,6 +8,7 @@ export function DataWorkspace({
   title,
   eyebrow,
   toolbar,
+  notice,
   chips,
   onRemoveChip,
   onClearChips,
@@ -19,6 +20,7 @@ export function DataWorkspace({
   title: string;
   eyebrow?: string;
   description?: string;
+  notice?: ReactNode;
   toolbar: ReactNode;
   chips: FilterChip[];
   onRemoveChip: (id: string) => void;
@@ -31,6 +33,7 @@ export function DataWorkspace({
   return (
     <section className="flex min-h-0 flex-1 flex-col gap-2">
       <PageHeader eyebrow={eyebrow} title={title} actions={toolbar} />
+      {notice}
       <ActiveFilterChips chips={chips} onRemove={onRemoveChip} onClear={onClearChips} />
       {selectionBar}
       <div

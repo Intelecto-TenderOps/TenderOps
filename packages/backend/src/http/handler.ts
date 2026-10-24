@@ -153,6 +153,9 @@ async function secopRoutes(
   if (method === "GET" && path === "/api/v1/secop/sync-history") {
     return json(200, { items: catalogStatus().runs });
   }
+  if (method === "GET" && path === "/api/v1/secop/signals") {
+    return json(200, secopSignals());
+  }
   if ((method === "GET" || method === "POST") && path === "/api/v1/secop/sync") {
     if (!cronAuthorized(headers)) {
       return json(401, { error: { code: "unauthorized", message: "Cron no autorizado." } });
@@ -248,9 +251,101 @@ function copilotRoutes(path: string, method: string, body: unknown) {
 }
 
 function analyticsRoutes() {
+  const catalog = catalogStatus();
+  const dynamics = requireConfigured("dynamics");
+  const dataverse = requireConfigured("dataverse");
+  const copilot = requireConfigured("copilot");
   return json(200, {
-    overview: { detected: 0, evaluated: 0, discarded: 0, bid: 0, noBid: 0, note: "Las métricas reales requieren índice y Dataverse." },
+    detected: catalog.size,
+    evaluated: 0,
+    recommended: 0,
+    discarded: 0,
+    closingSoon: 0,
+    inDynamics: 0,
+    overdueTasks: 0,
+    winRate: 0,
+    funnel: [
+      { stage: "Detectadas", count: catalog.size },
+      { stage: "Evaluadas", count: 0 },
+      { stage: "Recomendadas", count: 0 },
+      { stage: "En Dynamics", count: 0 },
+      { stage: "Ganadas", count: 0 },
+    ],
+    byModality: [],
+    byEntity: [],
+    source: "live",
+    notes: [
+      catalog.size
+        ? `Catálogo SECOP: ${catalog.size} procesos indexados.`
+        : "El catálogo local está vacío; Explorar consulta SECOP en vivo.",
+      dynamics.ok
+        ? "Dynamics 365 configurado."
+        : "Dynamics 365 no configurado; el embudo comercial no tiene registros reales.",
+      dataverse.ok ? "Dataverse configurado." : "Dataverse no configurado; no hay evaluaciones persistidas.",
+      copilot.ok ? "Copilot Studio configurado." : "Copilot Studio no configurado; no hay análisis generativo.",
+    ],
+    integrations: {
+      dynamics: dynamics.ok,
+      dataverse: dataverse.ok,
+      copilot: copilot.ok,
+    },
+    catalog,
   });
+}
+
+function secopSignals() {
+  const env = loadEnv();
+  const catalog = catalogStatus();
+  const now = new Date().toISOString();
+  const items = [
+    {
+      id: "sig-secop-token",
+      tenderId: "",
+      kind: env.SOCRATA_APP_TOKEN ? "nueva" : "riesgo",
+      title: env.SOCRATA_APP_TOKEN ? "SECOP con token de aplicación" : "SECOP público sin token de aplicación",
+      detail: env.SOCRATA_APP_TOKEN
+        ? "Las consultas usan el token configurado en el servidor."
+        : "Las consultas públicas siguen activas; el cupo del proveedor puede ser más estricto.",
+      urgency: env.SOCRATA_APP_TOKEN ? "baja" : "media",
+      read: false,
+      silenced: false,
+      createdAt: catalog.lastSuccessAt ?? now,
+    },
+    {
+      id: "sig-secop-catalog",
+      tenderId: "",
+      kind: "cambio",
+      title: catalog.size ? `${catalog.size} procesos en el catálogo local` : "Catálogo SECOP vacío",
+      detail: catalog.lastSuccessAt
+        ? `Última sync correcta: ${catalog.lastSuccessAt}.`
+        : "Aún no hay una sincronización persistida; Explorar puede consultar SECOP en vivo.",
+      urgency: catalog.size ? "baja" : "media",
+      read: false,
+      silenced: false,
+      createdAt: catalog.lastAttemptAt ?? now,
+    },
+  ];
+  if (catalog.lastError) {
+    items.unshift({
+      id: "sig-secop-error",
+      tenderId: "",
+      kind: "riesgo",
+      title: "Última sincronización SECOP con error",
+      detail: catalog.lastError,
+      urgency: "alta",
+      read: false,
+      silenced: false,
+      createdAt: catalog.lastAttemptAt ?? now,
+    });
+  }
+  return {
+    items,
+    source: "secop",
+    tokenConfigured: Boolean(env.SOCRATA_APP_TOKEN),
+    warnings: [
+      "Estas señales son operativas de SECOP. Las alertas de coincidencia empresarial requieren Dataverse.",
+    ],
+  };
 }
 
 function adminRoutes(path: string) {

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { PageHeader } from "@/components/data/PageHeader";
 import { DocumentExplorer } from "@/components/documents/DocumentExplorer";
 import { EvidenceViewer } from "@/components/documents/EvidenceViewer";
+import { IntegrationNotice } from "@/components/status/IntegrationNotice";
 import { ActiveFilterChips } from "@/components/selection";
 import { Button } from "@/components/ui/button";
 import { useFilterChips } from "@/hooks/useFilterChips";
@@ -41,6 +42,10 @@ export function DocumentosPage() {
             Filtros
           </Button>
         }
+      />
+      <IntegrationNotice
+        title="SharePoint no está configurado"
+        detail="Este repositorio es local. Los pliegos oficiales de un proceso se consultan en el expediente SECOP."
       />
       <ActiveFilterChips chips={chips} onRemove={(id) => setChips(chips.filter((chip) => chip.id !== id))} onClear={() => setChips([])} />
       <div className="grid gap-3 lg:grid-cols-2">

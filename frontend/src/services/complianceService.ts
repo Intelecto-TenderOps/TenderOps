@@ -1,4 +1,5 @@
 import type { Requirement } from "@/contracts";
+import { apiGet } from "./http";
 import { readWorkspace, simulateLatency, writeWorkspace } from "./workspace";
 
 export function matrixProgress(items: Requirement[]): {
@@ -18,7 +19,21 @@ export function matrixProgress(items: Requirement[]): {
 
 export const complianceService = {
   async list(tenderId: string) {
-    return simulateLatency(readWorkspace().requirements.filter((item) => item.tenderId === tenderId));
+    try {
+      const result = await apiGet<{ configured?: boolean; message?: string }>(
+        `/api/v1/compliance/${encodeURIComponent(tenderId)}`,
+      );
+      return {
+        items: readWorkspace().requirements.filter((item) => item.tenderId === tenderId),
+        source: result.configured ? ("live" as const) : ("unconfigured" as const),
+        message: result.message,
+      };
+    } catch {
+      return {
+        items: readWorkspace().requirements.filter((item) => item.tenderId === tenderId),
+        source: "demo" as const,
+      };
+    }
   },
   async update(id: string, patch: Partial<Requirement>) {
     writeWorkspace((workspace) => ({

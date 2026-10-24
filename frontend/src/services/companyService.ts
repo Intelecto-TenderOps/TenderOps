@@ -9,11 +9,21 @@ import type {
   ParticipationRule,
 } from "@/contracts";
 import { createId } from "@/lib/ids";
+import { apiGet } from "./http";
 import { readWorkspace, simulateLatency, writeWorkspace } from "./workspace";
 
 export const companyService = {
   async list() {
-    return simulateLatency(readWorkspace().companies);
+    try {
+      const result = await apiGet<{ configured?: boolean; message?: string }>("/api/v1/companies");
+      return {
+        items: readWorkspace().companies,
+        source: result.configured ? ("live" as const) : ("unconfigured" as const),
+        message: result.message,
+      };
+    } catch {
+      return { items: readWorkspace().companies, source: "demo" as const };
+    }
   },
   async saveCompany(company: Company) {
     writeWorkspace((workspace) => ({

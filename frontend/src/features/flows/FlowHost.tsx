@@ -9,6 +9,7 @@ import { formatCop, prettyLabel } from "@/lib/format";
 import { MultiSelectWithChips } from "@/components/selection";
 import type { FilterChip, Recommendation, Tender } from "@/contracts";
 import { departments, modalities, people } from "@/mocks/catalogs";
+import { IntegrationNotice } from "@/components/status/IntegrationNotice";
 import { companyService } from "@/services/companyService";
 import { decisionsService } from "@/services/decisionsService";
 import { opportunitiesService } from "@/services/opportunitiesService";
@@ -19,7 +20,6 @@ import { adminService } from "@/services/adminService";
 import { useDemoStore } from "@/store/demo-store";
 import { useDrawerStore } from "@/store/drawer-store";
 import { useUiStore } from "@/store/ui-store";
-import { createId } from "@/lib/ids";
 import { z } from "zod";
 
 const experienceSchema = z.object({
@@ -303,9 +303,15 @@ function DecisionFlow() {
           </Field>
         )}
         {step === 2 && (
-          <p className="text-sm">
-            Vas a registrar una decisión humana <strong>{decision}</strong> sobre {recordId}. La recomendación simulada se conserva aparte.
-          </p>
+          <div className="grid gap-2">
+            <p className="text-sm">
+              Vas a registrar una decisión humana <strong>{decision}</strong> sobre {recordId}. La recomendación se conserva aparte.
+            </p>
+            <IntegrationNotice
+              title="Dataverse / Dynamics fail-closed"
+              detail="Sin credenciales la decisión queda como borrador local y no crea Opportunity."
+            />
+          </div>
         )}
       </FlowDrawerBody>
       <FlowDrawerFooter>
@@ -342,8 +348,10 @@ function OpportunityFlow() {
   const payload = useDrawerStore((state) => state.payload);
   const closeFlow = useDrawerStore((state) => state.closeFlow);
   const tender = useDemoStore((state) =>
-    state.workspace.tenders.find((item) => item.id === payload.tenderId),
+    state.workspace.tenders.find((item) => item.id === payload.tenderId || item.secopId === payload.tenderId),
   );
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
   if (!tender) {
     return (
       <FlowDrawerBody>
@@ -354,12 +362,23 @@ function OpportunityFlow() {
   return (
     <>
       <FlowDrawerBody>
-        {step === 0 && <p className="text-sm">Proceso origen: {tender.secopId}. Se mapeará a Dynamics 365 de forma simulada.</p>}
+        {step === 0 && (
+          <div className="grid gap-2">
+            <p className="text-sm">Proceso origen: {tender.secopId}. Se mapeará a Dynamics 365 solo si la integración responde.</p>
+            <IntegrationNotice
+              title="Dynamics 365 fail-closed"
+              detail="Sin credenciales no se inventa un GUID de Opportunity."
+            />
+          </div>
+        )}
         {step === 1 && <p className="text-sm">Cuenta compradora: {tender.entity} · {tender.entityTaxId}</p>}
         {step === 2 && (
-          <p className="text-sm">
-            Valor {tender.value.toLocaleString("es-CO")} COP. Se evitará duplicar si ya existe {tender.dynamicsOpportunityId ?? "sin oportunidad"}.
-          </p>
+          <div className="grid gap-2">
+            <p className="text-sm">
+              Valor {tender.value.toLocaleString("es-CO")} COP. Clave lógica: {tender.secopId}.
+            </p>
+            {error ? <p className="text-sm text-red-700">{error}</p> : null}
+          </div>
         )}
       </FlowDrawerBody>
       <FlowDrawerFooter>
@@ -370,19 +389,21 @@ function OpportunityFlow() {
         ) : (
           <Button
             variant="primary"
+            disabled={busy}
             onClick={async () => {
-              await opportunitiesService.create({
+              setBusy(true);
+              const result = await opportunitiesService.create({
                 tenderId: tender.id,
-                dynamicsOpportunityId: tender.dynamicsOpportunityId ?? `D365-OPP-${createId("n")}`,
-                dynamicsAccountId: `D365-ACC-${tender.entityTaxId}`,
-                account: tender.entity,
                 name: tender.object,
                 value: tender.value,
-                owner: tender.owner,
-                stage: "calificación",
-                status: "abierta",
-                outcome: null,
+                secopId: tender.secopId,
+                account: tender.entity,
               });
+              setBusy(false);
+              if (!result.ok) {
+                setError(result.message);
+                return;
+              }
               closeFlow(true);
             }}
           >
@@ -404,10 +425,16 @@ function TaskFlow() {
   const [priority, setPriority] = useState(existing?.priority ?? "media");
   const [owners, setOwners] = useState<string[]>(existing?.owners ?? []);
   const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
   return (
     <>
       <FlowDrawerBody>
         <div className="grid gap-3">
+          <IntegrationNotice
+            title="Dynamics 365 es el maestro de Task"
+            detail="Si la API responde 503, la tarea queda solo en el espacio local y no recibe dynamicsTaskId."
+          />
+          {notice ? <p className="text-sm text-muted">{notice}</p> : null}
           <Field label="Título" htmlFor="task-title" error={error}>
             <Input id="task-title" value={title} onChange={(e) => setTitle(e.target.value)} />
           </Field>
@@ -440,7 +467,7 @@ function TaskFlow() {
               setError("Escribe un título con al menos 4 caracteres");
               return;
             }
-            await tasksService.save({
+            const saved = await tasksService.save({
               id: existing?.id,
               tenderId: existing?.tenderId ?? (payload.tenderId as string | null) ?? null,
               title,
@@ -453,6 +480,9 @@ function TaskFlow() {
               evidence: existing?.evidence ?? null,
               dynamicsTaskId: existing?.dynamicsTaskId ?? null,
             });
+            if (!saved.dynamics.ok) {
+              setNotice(saved.dynamics.message ?? "Dynamics no creó la tarea.");
+            }
             closeFlow(true);
           }}
         >

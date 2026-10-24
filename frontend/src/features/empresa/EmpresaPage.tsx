@@ -1,6 +1,7 @@
 import { NavLink, useLocation } from "react-router-dom";
 import { DataTable, RichDate, RichMoney, RichPrimary, RichStage, RichValue } from "@/components/data/DataTable";
 import { PageHeader } from "@/components/data/PageHeader";
+import { IntegrationNotice } from "@/components/status/IntegrationNotice";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/viz/StatusBadge";
 import { SelectionChips } from "@/components/selection";
@@ -67,6 +68,10 @@ export function EmpresaPage() {
           </NavLink>
         ))}
       </nav>
+      <IntegrationNotice
+        title="Dataverse no persiste el perfil en este ambiente"
+        detail="Los cambios quedan en el espacio local. El aislamiento por empresa y el NIT único exigen Dataverse configurado."
+      />
       {section === "datos" && company && (
         <article className="glass-panel rounded-[24px] p-5 text-sm">
           <dl className="grid gap-3 md:grid-cols-2">

@@ -7,6 +7,7 @@ import { ActiveFilterChips } from "@/components/selection";
 import { ProgressRing } from "@/components/viz/ProgressRing";
 import { StatusBadge } from "@/components/viz/StatusBadge";
 import type { FilterChip } from "@/contracts";
+import { IntegrationNotice } from "@/components/status/IntegrationNotice";
 import { matrixProgress } from "@/services/complianceService";
 import { useWorkspace } from "@/hooks/useWorkspace";
 import { useDrawerStore } from "@/store/drawer-store";
@@ -73,6 +74,10 @@ export function MatrizPage() {
           </Button>
         </div>
       </div>
+      <IntegrationNotice
+        title="Matriz local"
+        detail="La extracción de requisitos por Copilot y la persistencia Dataverse no están configuradas. Actualizar no finge un análisis de agente."
+      />
       <ActiveFilterChips
         chips={chips}
         onRemove={(chipId) => setChips((current) => current.filter((chip) => chip.id !== chipId))}
