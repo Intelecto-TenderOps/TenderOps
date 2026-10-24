@@ -58,6 +58,7 @@ describe("servicios fail-closed", () => {
       secopId: "CO1.REQ.TEST",
     });
     expect(result.ok).toBe(false);
+    if (result.ok) throw new Error("expected fail-closed Dynamics");
     expect(result.unconfigured).toBe(true);
     expect(JSON.stringify(result)).not.toMatch(/D365-OPP/);
   });

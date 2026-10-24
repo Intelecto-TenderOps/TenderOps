@@ -1,4 +1,3 @@
-import type { CommercialOpportunity } from "@/contracts";
 import { apiPost, isIntegrationUnconfigured, readIntegrationError } from "./http";
 import { readWorkspace, simulateLatency } from "./workspace";
 

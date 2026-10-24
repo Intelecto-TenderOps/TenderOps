@@ -43,7 +43,7 @@ export const copilotService = {
           status: "error",
         },
       ]);
-      return { ok: false as const, code: "empty_copilot_payload" };
+      return { ok: false as const, unconfigured: false, code: "empty_copilot_payload", integration: "copilot" };
     } catch (error) {
       const info = readIntegrationError(error);
       const unconfigured = isIntegrationUnconfigured(error);

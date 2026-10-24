@@ -4,7 +4,7 @@ import { listLiveTenders } from "./tendersService";
 import { readWorkspace } from "./workspace";
 
 function demoSnapshot(): AnalyticsSnapshot {
-  const { tenders, opportunities, tasks, assessments } = readWorkspace();
+  const { tenders, tasks, assessments } = readWorkspace();
   return {
     detected: tenders.length,
     evaluated: assessments.length,
