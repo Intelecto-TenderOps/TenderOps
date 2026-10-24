@@ -44,6 +44,7 @@
   "exactMatch": "CO1.REQ.10000080",
   "paginationDistinct": true,
   "lastModified": "Fri, 23 Oct 2026 15:02:34 GMT",
-  "requestId": "f3d12ae812e3790d78fc4773588578a1",
-  "generatedAt": "2026-10-24T19:17:56.513Z"
+  "requestId": "6d31d8367f08183121182b4be5628a8e",
+  "tokenConfigured": true,
+  "generatedAt": "2026-10-24T19:27:41.764Z"
 }

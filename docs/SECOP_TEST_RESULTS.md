@@ -1,6 +1,6 @@
 # Resultados SECOP (consulta pública real)
 
-Fecha: 24 de octubre de 2026, 14:17 America/Bogota.
+Fecha: 24 de octubre de 2026, 14:27 America/Bogota.
 
 Comando: `npm --prefix packages/backend run secop:sample`
 
@@ -11,8 +11,8 @@ Comando: `npm --prefix packages/backend run secop:sample`
 | Búsqueda exacta | Coincidencia `CO1.REQ.10000080` |
 | Paginación `$offset` | Distinta de la primera página |
 | Last-Modified del origen | Fri, 23 Oct 2026 15:02:34 GMT |
-| RequestId Socrata | `f3d12ae812e3790d78fc4773588578a1` |
-| Token Socrata | No usado |
+| RequestId Socrata | `6d31d8367f08183121182b4be5628a8e` |
+| Token Socrata | Configurado (`tokenConfigured: true`; el valor no se registra) |
 | Estado calculado | `por_verificar` cuando apertura=Abierto sin fecha de cierre |
 
 Las URL oficiales de esa muestra apuntan a `community.secop.gov.co/STS/Users/Login/Index` (valor del dataset, no inventado).

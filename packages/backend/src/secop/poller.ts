@@ -21,6 +21,9 @@ export async function tick(reason: string) {
   try {
     const ii = await syncRecent("SECOP_II");
     const i = await syncRecent("SECOP_I");
+    console.info(
+      `SECOP sync ${reason}: II ${ii.fetched} filas (${ii.inserted}+${ii.updated}) · I ${i.fetched} filas (${i.inserted}+${i.updated})`,
+    );
     return { skipped: false as const, reason, secopII: ii, secopI: i };
   } finally {
     running = false;

@@ -232,7 +232,7 @@ export function ExplorarPage() {
               </div>
               <div>
                 <dt className="text-muted">Cierre</dt>
-                <dd>{formatDateTime(selected.closesAt)}</dd>
+                <dd>{selected.closesAt ? formatDateTime(selected.closesAt) : "Sin fecha de cierre"}</dd>
               </div>
               <div className="flex gap-2">
                 <Button
