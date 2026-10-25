@@ -1,5 +1,6 @@
+import { apiFetch, usesRemoteApi } from "@/lib/api";
 import { readWorkspace, simulateLatency, writeWorkspace } from "./workspace";
-import type { Membership, SourceConfig } from "@/contracts";
+import type { IntegrationStatus, Membership, SourceConfig } from "@/contracts";
 
 export const adminService = {
   async users() {
@@ -27,6 +28,7 @@ export const adminService = {
     return simulateLatency(true);
   },
   async integrations() {
+    if (usesRemoteApi()) return apiFetch<IntegrationStatus[]>("/administration/integrations");
     return simulateLatency(readWorkspace().integrations);
   },
   async audit() {

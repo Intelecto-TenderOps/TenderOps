@@ -2,7 +2,8 @@ import { Menu, X } from "lucide-react";
 import { Outlet } from "react-router-dom";
 import { AccessibilityDock } from "@/components/a11y/AccessibilityDock";
 import { DrawerManager } from "@/components/flow/DrawerManager";
-import { DEMO_MODE_LABEL } from "@/config/constants";
+import { AZURE_MODE_LABEL, DEMO_MODE_LABEL } from "@/config/constants";
+import { usesRemoteApi } from "@/lib/api";
 import { RightSidebar } from "./RightSidebar";
 import { useDrawerStore } from "@/store/drawer-store";
 import { useUiStore } from "@/store/ui-store";
@@ -58,7 +59,9 @@ export function AppShell() {
         <div className="mb-2 flex items-center justify-between gap-3">
           <div className="glass-panel flex items-center gap-2 rounded-full px-3 py-1 text-[11px] text-muted">
             <span className="h-2 w-2 rounded-full bg-electric" aria-hidden="true" />
-            {DEMO_MODE_LABEL} · datos simulados · se pueden restablecer
+            {usesRemoteApi()
+              ? `${AZURE_MODE_LABEL} · datos de la empresa activa`
+              : `${DEMO_MODE_LABEL} · datos simulados · se pueden restablecer`}
           </div>
           <button
             type="button"

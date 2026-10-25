@@ -1,3 +1,4 @@
+import { apiFetch, usesRemoteApi } from "@/lib/api";
 import { createId } from "@/lib/ids";
 import { readWorkspace, simulateLatency, writeWorkspace } from "./workspace";
 
@@ -6,6 +7,10 @@ export const copilotService = {
     return simulateLatency(readWorkspace().copilotThread);
   },
   async ask(body: string) {
+    if (usesRemoteApi()) {
+      await apiFetch("/copilot/ask", { method: "POST", body: JSON.stringify({ body, agent: "orquestador" }) });
+      return true;
+    }
     writeWorkspace((workspace) => ({
       ...workspace,
       copilotThread: [

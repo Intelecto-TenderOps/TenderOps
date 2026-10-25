@@ -44,6 +44,21 @@ jobs:
         with:
           name: frontend
           path: frontend/dist
+  azure-functions:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/api-azure
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: apps/api-azure/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
   infrastructure:
     runs-on: ubuntu-latest
     steps:
@@ -52,6 +67,10 @@ jobs:
       - run: az bicep build-params --file infra/dev.bicepparam
       - run: az bicep build-params --file infra/test.bicepparam
       - run: az bicep build-params --file infra/prod.bicepparam
+      - run: az bicep build --file infra/functions.bicep
+      - run: az bicep build-params --file infra/functions.dev.bicepparam
+      - run: az bicep build-params --file infra/functions.test.bicepparam
+      - run: az bicep build-params --file infra/functions.prod.bicepparam
   browser:
     runs-on: ubuntu-latest
     steps:

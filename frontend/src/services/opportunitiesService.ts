@@ -1,9 +1,11 @@
 import type { CommercialOpportunity } from "@/contracts";
+import { apiFetch, usesRemoteApi } from "@/lib/api";
 import { createId } from "@/lib/ids";
 import { readWorkspace, simulateLatency, writeWorkspace } from "./workspace";
 
 export const opportunitiesService = {
   async list() {
+    if (usesRemoteApi()) return apiFetch<CommercialOpportunity[]>("/opportunities");
     return simulateLatency(readWorkspace().opportunities);
   },
   async create(input: Omit<CommercialOpportunity, "id" | "createdAt" | "activities" | "tasks" | "documents">) {

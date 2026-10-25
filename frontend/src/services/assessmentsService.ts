@@ -1,8 +1,10 @@
-import type { CriterionWeight } from "@/contracts";
+import type { Assessment, CriterionWeight } from "@/contracts";
+import { apiFetch, usesRemoteApi } from "@/lib/api";
 import { readWorkspace, simulateLatency, writeWorkspace } from "./workspace";
 
 export const assessmentsService = {
   async list() {
+    if (usesRemoteApi()) return apiFetch<Assessment[]>("/assessments");
     return simulateLatency(readWorkspace().assessments);
   },
   async getByTender(tenderId: string) {

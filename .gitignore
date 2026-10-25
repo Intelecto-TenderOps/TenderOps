@@ -14,3 +14,4 @@
 .local/
 artifacts/
 *.tsbuildinfo
+infra/*.json
