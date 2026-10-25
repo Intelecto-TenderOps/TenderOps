@@ -66,7 +66,7 @@ export function AlertasPage() {
     [alerts, chips],
   );
   return (
-    <section className="grid gap-2">
+    <section className="grid min-w-0 gap-2">
       <PageHeader
         eyebrow="Alertas"
         title="Señales de la mesa"
@@ -93,7 +93,7 @@ export function AlertasPage() {
         }
       />
       <ActiveFilterChips chips={chips} onRemove={(id) => setChips(chips.filter((chip) => chip.id !== id))} onClear={() => setChips([])} />
-      <div className="table-surface overflow-hidden rounded-[20px]">
+      <div className="table-surface min-w-0 overflow-hidden rounded-[20px]">
         <DataTable
           data={rows}
           columns={columns}

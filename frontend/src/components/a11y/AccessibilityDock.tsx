@@ -5,7 +5,7 @@ import { useDemoStore } from "@/store/demo-store";
 import { useUiStore } from "@/store/ui-store";
 
 export function AccessibilityDock() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const pinned = useUiStore((state) => state.navPinned);
   const togglePinned = useUiStore((state) => state.toggleNavPinned);
   const theme = useUiStore((state) => state.theme);

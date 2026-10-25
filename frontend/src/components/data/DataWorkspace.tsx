@@ -35,12 +35,12 @@ export function DataWorkspace({
       {selectionBar}
       <div
         className={cn(
-          "grid min-h-0 flex-1 gap-3",
+          "grid min-h-0 min-w-0 flex-1 gap-3",
           detail ? "xl:grid-cols-[minmax(0,1.6fr)_minmax(280px,1fr)]" : "grid-cols-1",
           dense && "text-[13px]",
         )}
       >
-        <div className="table-surface min-h-0 overflow-hidden rounded-[20px]">{list}</div>
+        <div className="table-surface min-h-0 min-w-0 overflow-hidden rounded-[20px]">{list}</div>
         {detail}
       </div>
     </section>

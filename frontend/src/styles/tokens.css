@@ -154,6 +154,8 @@ textarea {
 .table-surface {
   background: rgb(255 255 255 / 0.94);
   border: 1px solid rgb(20 43 79 / 0.08);
+  min-width: 0;
+  max-width: 100%;
 }
 
 :root[data-theme="dark"] .table-surface {

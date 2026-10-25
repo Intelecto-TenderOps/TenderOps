@@ -19,8 +19,8 @@ export function PreparacionPage() {
           </Button>
         }
       />
-      <div className="grid gap-3 lg:grid-cols-2">
-        <div className="table-surface overflow-hidden rounded-[20px]">
+      <div className="grid min-w-0 gap-3 lg:grid-cols-2">
+        <div className="table-surface min-w-0 overflow-hidden rounded-[20px]">
           <DataTable
             data={docs}
             columns={[

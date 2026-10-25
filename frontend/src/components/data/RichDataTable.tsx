@@ -8,7 +8,7 @@ import {
   type RowSelectionState,
   type SortingState,
 } from "@tanstack/react-table";
-import { useMemo, useState, type KeyboardEvent, type ReactNode } from "react";
+import { useMemo, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from "react";
 import { cn } from "@/lib/cn";
 import { BOGOTA_ZONE, formatCop, formatLongDate, prettyLabel } from "@/lib/format";
 
@@ -178,6 +178,14 @@ export function DataTable<T extends { id: string }>({
   ]
     .filter(Boolean)
     .join(" ");
+  const desktopMinWidth = columns.reduce((sum, column, index) => {
+    if (column.grow || (!hasGrow && index === 0)) return sum + 220;
+    if (column.align === "right") return sum + 128;
+    return sum + 118;
+  }, (enableSelection ? 40 : 0) + columns.length * 16 + 32);
+  const primaryColumnId = columns.find((column) => column.grow)?.id ?? columns[0]?.id;
+  const sortableHeaders =
+    table.getHeaderGroups()[0]?.headers.filter((header) => header.column.getCanSort()) ?? [];
 
   function handleRowKey(event: KeyboardEvent<HTMLDivElement>, row: T) {
     if (!onRowClick) return;
@@ -188,14 +196,45 @@ export function DataTable<T extends { id: string }>({
   }
 
   return (
-    <div className="flex h-full min-h-[280px] flex-col">
-      <div className="min-h-0 flex-1 overflow-auto">
-        <div className="min-w-[720px]" role="table">
+    <div className="flex h-full min-h-[280px] min-w-0 flex-col">
+      {sortableHeaders.length ? (
+        <div className="hidden gap-2 overflow-x-auto border-b border-[var(--to-table-line)] px-3 py-2 max-md:flex">
+          {sortableHeaders.map((header) => {
+            const sorted = header.column.getIsSorted();
+            return (
+              <button
+                key={header.id}
+                type="button"
+                className={cn(
+                  "inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-[11px]",
+                  sorted ? "bg-mist text-corporate" : "text-muted",
+                )}
+                onClick={header.column.getToggleSortingHandler()}
+              >
+                {String(header.column.columnDef.header ?? "")}
+                {sorted === "asc" ? (
+                  <ArrowUp size={12} />
+                ) : sorted === "desc" ? (
+                  <ArrowDown size={12} />
+                ) : (
+                  <ArrowUpDown size={12} className="opacity-45" />
+                )}
+              </button>
+            );
+          })}
+        </div>
+      ) : null}
+      <div className="min-h-0 min-w-0 flex-1 overflow-auto">
+        <div
+          className="w-full min-w-0 md:min-w-[var(--to-table-min)]"
+          role="table"
+          style={{ ["--to-table-min"]: `${desktopMinWidth}px` } as CSSProperties}
+        >
           {table.getHeaderGroups().map((group) => (
             <div
               key={group.id}
               role="row"
-              className="sticky top-0 z-10 grid items-center gap-4 border-b border-[var(--to-table-line)] bg-[var(--to-table-head)] px-4 py-2.5 text-[12px] font-medium text-[var(--to-table-head-ink)]"
+              className="sticky top-0 z-10 hidden items-center gap-4 border-b border-[var(--to-table-line)] bg-[var(--to-table-head)] px-4 py-2.5 text-[12px] font-medium text-[var(--to-table-head-ink)] md:grid"
               style={{ gridTemplateColumns: template }}
             >
               {group.headers.map((header) => {
@@ -250,7 +289,9 @@ export function DataTable<T extends { id: string }>({
               onClick={() => onRowClick?.(row.original)}
               onKeyDown={(event) => handleRowKey(event, row.original)}
               className={cn(
-                "grid w-full items-center gap-4 border-b border-[var(--to-table-line)] px-4 py-4 text-left transition-colors",
+                "w-full text-left transition-colors",
+                "max-md:mx-2 max-md:my-1.5 max-md:flex max-md:flex-col max-md:gap-2 max-md:rounded-2xl max-md:border max-md:border-[var(--to-table-line)] max-md:px-3 max-md:py-3",
+                "md:grid md:items-center md:gap-4 md:border-b md:border-[var(--to-table-line)] md:px-4 md:py-4",
                 index % 2 === 0 ? "bg-[var(--to-table-row)]" : "bg-[var(--to-table-zebra)]",
                 onRowClick && "cursor-pointer hover:bg-[var(--to-table-hover)]",
                 selectedId === row.original.id && "bg-[var(--to-table-selected)] ring-1 ring-inset ring-[#b7d4ff]",
@@ -261,7 +302,12 @@ export function DataTable<T extends { id: string }>({
                 const meta = cell.column.columnDef.meta as RichColumn<T> | undefined;
                 if (cell.column.id === "select") {
                   return (
-                    <div key={cell.id} role="cell" onClick={(event) => event.stopPropagation()}>
+                    <div
+                      key={cell.id}
+                      role="cell"
+                      className="max-md:self-start"
+                      onClick={(event) => event.stopPropagation()}
+                    >
                       <input
                         type="checkbox"
                         aria-label={`Seleccionar ${row.original.id}`}
@@ -272,16 +318,23 @@ export function DataTable<T extends { id: string }>({
                     </div>
                   );
                 }
+                const isPrimary = cell.column.id === primaryColumnId;
                 return (
                   <div
                     key={cell.id}
                     role="cell"
+                    data-label={meta?.header}
                     className={cn(
                       "min-w-0",
-                      meta?.align === "right" && "text-right",
-                      meta?.align === "center" && "text-center",
+                      meta?.align === "right" && "md:text-right",
+                      meta?.align === "center" && "md:text-center",
+                      !isPrimary &&
+                        "max-md:grid max-md:grid-cols-[7.5rem_minmax(0,1fr)] max-md:items-start max-md:gap-2 max-md:border-t max-md:border-[var(--to-table-line)] max-md:pt-2",
                     )}
                   >
+                    {!isPrimary && meta?.header ? (
+                      <span className="hidden text-[11px] font-medium text-muted max-md:block">{meta.header}</span>
+                    ) : null}
                     {meta?.cell(row.original)}
                   </div>
                 );
@@ -293,7 +346,7 @@ export function DataTable<T extends { id: string }>({
           <p className="p-6 text-sm text-muted">No hay registros con los filtros actuales.</p>
         ) : null}
       </div>
-      <div className="flex items-center justify-between border-t border-[var(--to-table-line)] px-4 py-2 text-xs text-muted">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[var(--to-table-line)] px-3 py-2 text-xs text-muted md:px-4">
         <span>
           {table.getFilteredRowModel().rows.length} registros · página{" "}
           {table.getState().pagination.pageIndex + 1}
@@ -319,11 +372,16 @@ export function RichHtmlTable({
   rows: string[][];
 }) {
   const template = headers.map((_, index) => (index === 0 ? "minmax(140px, 1.6fr)" : "minmax(110px, 1fr)")).join(" ");
+  const desktopMinWidth = `${headers.length * 110 + 32}px`;
   return (
-    <div className="overflow-auto rounded-2xl border border-[var(--to-table-line)]" role="table">
+    <div className="min-w-0 overflow-x-auto rounded-2xl border border-[var(--to-table-line)]" role="table">
+      <div
+        className="w-full min-w-0 md:min-w-[var(--to-html-min)]"
+        style={{ ["--to-html-min"]: desktopMinWidth } as CSSProperties}
+      >
       <div
         role="row"
-        className="grid items-center gap-3 border-b border-[var(--to-table-line)] bg-[var(--to-table-head)] px-3 py-2 text-[11px] font-medium text-[var(--to-table-head-ink)]"
+        className="hidden items-center gap-3 border-b border-[var(--to-table-line)] bg-[var(--to-table-head)] px-3 py-2 text-[11px] font-medium text-[var(--to-table-head-ink)] md:grid"
         style={{ gridTemplateColumns: template }}
       >
         {headers.map((header) => (
@@ -337,18 +395,34 @@ export function RichHtmlTable({
           key={`${row[0]}-${index}`}
           role="row"
           className={cn(
-            "grid items-start gap-3 border-b border-[var(--to-table-line)] px-3 py-3 text-sm",
+            "text-sm",
+            "max-md:flex max-md:flex-col max-md:gap-2 max-md:px-3 max-md:py-3",
+            "md:grid md:items-start md:gap-3 md:border-b md:border-[var(--to-table-line)] md:px-3 md:py-3",
             index % 2 === 0 ? "bg-[var(--to-table-row)]" : "bg-[var(--to-table-zebra)]",
           )}
           style={{ gridTemplateColumns: template }}
         >
           {row.map((cell, cellIndex) => (
-            <div key={`${cell}-${cellIndex}`} role="cell" className={cn(cellIndex === 0 ? "font-semibold text-ink" : "text-muted")}>
+            <div
+              key={`${cell}-${cellIndex}`}
+              role="cell"
+              data-label={headers[cellIndex]}
+              className={cn(
+                "min-w-0",
+                cellIndex === 0 ? "font-semibold text-ink" : "text-muted",
+                cellIndex > 0 &&
+                  "max-md:grid max-md:grid-cols-[7.5rem_minmax(0,1fr)] max-md:items-start max-md:gap-2 max-md:border-t max-md:border-[var(--to-table-line)] max-md:pt-2",
+              )}
+            >
+              {cellIndex > 0 && headers[cellIndex] ? (
+                <span className="hidden text-[11px] font-medium text-muted max-md:block">{headers[cellIndex]}</span>
+              ) : null}
               {cell}
             </div>
           ))}
         </div>
       ))}
+      </div>
     </div>
   );
 }
