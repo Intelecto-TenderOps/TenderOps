@@ -32,8 +32,8 @@ export function PanoramaPage() {
 
   return (
     <section className="grid min-w-0 gap-3">
-      <article className="relative overflow-hidden rounded-[28px] bg-[linear-gradient(135deg,rgb(11_35_71/0.94),rgb(23_92_211/0.88)_55%,rgb(50_103_245/0.82))] px-5 py-6 text-white shadow-[0_24px_60px_rgb(11_35_71/0.28)] md:px-7">
-        <div className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-cyan/20 blur-3xl" />
+      <article className="relative overflow-hidden rounded-[28px] bg-[linear-gradient(135deg,#0b2347_0%,#123a7a_46%,#175cd3_100%)] px-5 py-6 text-white shadow-[0_24px_60px_rgb(11_35_71/0.32)] md:px-7">
+        <div className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-cyan/25 blur-3xl" />
         <div className="relative grid gap-5">
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div className="min-w-0">
@@ -57,7 +57,11 @@ export function PanoramaPage() {
             <HeroStat
               icon={<Clock3 size={16} />}
               label="Cierran primero"
-              value={pulse.closingSoon[0] ? `${Math.max(daysFromToday(pulse.closingSoon[0].closesAt), 0)}d` : "—"}
+              value={
+                pulse.closingSoon[0]
+                  ? `${Math.max(daysFromToday(pulse.closingSoon[0].closesAt), 0)} días`
+                  : "—"
+              }
               hint={pulse.closingSoon[0]?.secopId ?? "Sin cierre próximo"}
             />
             <HeroStat
@@ -71,7 +75,7 @@ export function PanoramaPage() {
               icon={<Users size={16} />}
               label="Actores con carga"
               value={pulse.loadedActors.length}
-              hint={`${formatCompact(pulse.pipelineValue)} en pipeline BID`}
+              hint={`COP ${formatCompact(pulse.pipelineValue)} en pipeline BID`}
             />
           </dl>
         </div>
