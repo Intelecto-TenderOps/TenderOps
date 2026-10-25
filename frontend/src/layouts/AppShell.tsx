@@ -55,7 +55,7 @@ export function AppShell() {
         Ir al contenido
       </a>
       <div
-        className="flex min-h-screen flex-col"
+        className="flex min-h-screen min-w-0 flex-col"
         style={{
           paddingRight: "calc(var(--to-nav-width) + var(--to-flow-width) + 16px)",
           paddingLeft: 16,

@@ -171,18 +171,18 @@ export function DataTable<T extends { id: string }>({
   const template = [
     enableSelection ? "40px" : null,
     ...columns.map((column, index) => {
-      if (column.grow || (!hasGrow && index === 0)) return "minmax(200px, 2.6fr)";
-      if (column.align === "right") return "minmax(112px, 0.9fr)";
-      return "minmax(108px, 1fr)";
+      if (column.grow || (!hasGrow && index === 0)) return "minmax(11rem, 2.2fr)";
+      if (column.align === "right") return "minmax(6.5rem, 0.9fr)";
+      return "minmax(6.5rem, 1fr)";
     }),
   ]
     .filter(Boolean)
     .join(" ");
   const minWidth =
     (enableSelection ? 40 : 0) +
-    columns.reduce((sum, column, index) => sum + (column.grow || (!hasGrow && index === 0) ? 200 : 108), 0) +
-    columns.length * 16 +
-    32;
+    columns.reduce((sum, column, index) => sum + (column.grow || (!hasGrow && index === 0) ? 176 : 104), 0) +
+    columns.length * 12 +
+    24;
 
   function handleRowKey(event: KeyboardEvent<HTMLElement>, row: T) {
     if (!onRowClick) return;
@@ -195,7 +195,7 @@ export function DataTable<T extends { id: string }>({
   return (
     <div className="flex h-full min-h-[240px] min-w-0 flex-col">
       <div className="min-h-0 min-w-0 flex-1 overflow-auto overscroll-x-contain">
-        <div className="divide-y divide-[var(--to-table-line)] md:hidden">
+        <div className="rich-table-cards divide-y divide-[var(--to-table-line)]">
           {table.getRowModel().rows.map((row) => (
             <article
               key={`card-${row.id}`}
@@ -229,7 +229,7 @@ export function DataTable<T extends { id: string }>({
             </article>
           ))}
         </div>
-        <div className="hidden w-max min-w-full md:block" role="table" style={{ minWidth }}>
+        <div className="rich-table-grid w-full" role="table" style={{ minWidth }}>
           {table.getHeaderGroups().map((group) => (
             <div
               key={group.id}
