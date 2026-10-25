@@ -1,9 +1,11 @@
 import type { WorkTask } from "@/contracts";
+import { apiFetch, usesRemoteApi } from "@/lib/api";
 import { createId } from "@/lib/ids";
 import { readWorkspace, simulateLatency, writeWorkspace } from "./workspace";
 
 export const tasksService = {
   async list() {
+    if (usesRemoteApi()) return apiFetch<WorkTask[]>("/tasks");
     return simulateLatency(readWorkspace().tasks);
   },
   async save(task: Omit<WorkTask, "id"> & { id?: string }) {

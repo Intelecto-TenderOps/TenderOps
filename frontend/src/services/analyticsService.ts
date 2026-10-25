@@ -1,8 +1,10 @@
 import type { AnalyticsSnapshot } from "@/contracts";
+import { apiFetch, usesRemoteApi } from "@/lib/api";
 import { readWorkspace, simulateLatency } from "./workspace";
 
 export const analyticsService = {
   async snapshot(): Promise<AnalyticsSnapshot> {
+    if (usesRemoteApi()) return apiFetch<AnalyticsSnapshot>("/analytics/overview");
     const { tenders, opportunities, tasks, assessments } = readWorkspace();
     const snapshot: AnalyticsSnapshot = {
       detected: tenders.length,

@@ -1,4 +1,5 @@
 import type { FilterChip, SavedSearch, Tender, TenderFilters } from "@/contracts";
+import { apiFetch, usesRemoteApi } from "@/lib/api";
 import { createId } from "@/lib/ids";
 import { readWorkspace, simulateLatency, writeWorkspace } from "./workspace";
 
@@ -34,14 +35,25 @@ export function filterTenders(items: Tender[], filters: TenderFilters): Tender[]
 
 export const tendersService = {
   async list(filters: TenderFilters = {}) {
+    if (usesRemoteApi()) {
+      const query = new URLSearchParams();
+      if (filters.search) query.set("search", filters.search);
+      const remote = await apiFetch<{ items: Tender[]; total: number; simulated?: boolean }>(
+        `/secop/processes?${query.toString()}`,
+      );
+      writeWorkspace((workspace) => ({ ...workspace, tenders: remote.items }));
+      return { items: filterTenders(remote.items, filters), total: remote.total, simulated: false };
+    }
     const items = filterTenders(readWorkspace().tenders, filters);
     return simulateLatency({ items, total: items.length, simulated: true });
   },
   async get(id: string) {
+    if (usesRemoteApi()) return apiFetch<Tender | null>(`/secop/processes/${id}`);
     const tender = readWorkspace().tenders.find((item) => item.id === id || item.secopId === id);
     return simulateLatency(tender ?? null);
   },
   async toggleFavorite(id: string) {
+    if (usesRemoteApi()) await apiFetch(`/secop/processes/${id}/favorite`, { method: "POST" });
     writeWorkspace((workspace) => ({
       ...workspace,
       tenders: workspace.tenders.map((item) =>
@@ -51,6 +63,7 @@ export const tendersService = {
     return simulateLatency(true);
   },
   async toggleWatch(id: string) {
+    if (usesRemoteApi()) await apiFetch(`/secop/processes/${id}/watch`, { method: "POST" });
     writeWorkspace((workspace) => ({
       ...workspace,
       tenders: workspace.tenders.map((item) =>
@@ -60,6 +73,7 @@ export const tendersService = {
     return simulateLatency(true);
   },
   async saveSearch(name: string, filters: TenderFilters) {
+    if (usesRemoteApi()) return apiFetch<SavedSearch>("/secop/searches", { method: "POST", body: JSON.stringify({ name, filters }) });
     const search: SavedSearch = {
       id: createId("ss"),
       name,

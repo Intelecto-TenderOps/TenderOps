@@ -11,8 +11,8 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      "/api": { target: "https://localhost:7043", secure: false },
-      "/auth": { target: "https://localhost:7043", secure: false },
+      "/api": { target: "http://127.0.0.1:7071", changeOrigin: true },
+      "/auth": { target: "http://127.0.0.1:7071", changeOrigin: true },
     },
   },
   test: {

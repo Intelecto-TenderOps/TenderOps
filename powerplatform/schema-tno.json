@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 2,
+  "prefix": "tno",
+  "publisherStatus": "Aprobado para el modelo TenderOps; comprobar colisiones en sandbox antes de aplicar",
+  "solutionUniqueName": "TenderOpsFoundation",
+  "version": "0.2.0.0",
+  "storageDecision": "Tablas estándar Dataverse. El catálogo SECOP es compartido; el seguimiento y el análisis son por empresa. No almacenar el histórico completo de SECOP ni binarios.",
+  "legacyPrefix": "tpo",
+  "tables": {
+    "catalog": [
+      { "logical": "tno_secopprocess", "label": "Proceso SECOP", "scope": "shared", "keys": ["source+externalid"] },
+      { "logical": "tno_secopsource", "label": "Fuente oficial", "scope": "shared" },
+      { "logical": "tno_secopchange", "label": "Cambio relevante", "scope": "shared" },
+      { "logical": "tno_secopsync", "label": "Ejecución de sincronización", "scope": "shared" },
+      { "logical": "tno_secopcursor", "label": "Cursor incremental", "scope": "shared" },
+      { "logical": "tno_secopdocument", "label": "Documento oficial", "scope": "shared" }
+    ],
+    "company": [
+      { "logical": "tno_company", "label": "Empresa", "keys": ["country+taxid"] },
+      { "logical": "tno_capability", "label": "Capacidad" },
+      { "logical": "tno_experience", "label": "Experiencia" },
+      { "logical": "tno_evidence", "label": "Evidencia" },
+      { "logical": "tno_financial", "label": "Corte financiero" },
+      { "logical": "tno_coverage", "label": "Cobertura" },
+      { "logical": "tno_rule", "label": "Regla de participación" },
+      { "logical": "tno_membership", "label": "Membresía" },
+      { "logical": "tno_team", "label": "Equipo" },
+      { "logical": "tno_sourcepolicy", "label": "Política de fuente" }
+    ],
+    "followup": [
+      { "logical": "tno_tendercandidate", "label": "Candidatura empresa-proceso" },
+      { "logical": "tno_savedsearch", "label": "Búsqueda guardada" },
+      { "logical": "tno_tenderalert", "label": "Alerta" },
+      { "logical": "tno_tenderfollowup", "label": "Seguimiento" }
+    ],
+    "analysis": [
+      { "logical": "tno_assessment", "label": "Evaluación" },
+      { "logical": "tno_requirement", "label": "Requisito" },
+      { "logical": "tno_requirementmatch", "label": "Cumplimiento de requisito" },
+      { "logical": "tno_bidrecommendation", "label": "Recomendación" },
+      { "logical": "tno_biddecision", "label": "Decisión" },
+      { "logical": "tno_checklistitem", "label": "Ítem de checklist" },
+      { "logical": "tno_integrationlink", "label": "Enlace Dynamics/SharePoint" },
+      { "logical": "tno_auditevent", "label": "Evento de auditoría" },
+      { "logical": "tno_task", "label": "Tarea operativa" },
+      { "logical": "tno_command", "label": "Recibo de comando" },
+      { "logical": "tno_outbox", "label": "Outbox" },
+      { "logical": "tno_inbox", "label": "Inbox" }
+    ]
+  },
+  "commonColumns": [
+    { "name": "name", "type": "String", "maxLength": 200, "primary": true },
+    { "name": "companykey", "type": "String", "maxLength": 36 },
+    { "name": "payload", "type": "Memo", "maxLength": 100000 },
+    { "name": "version", "type": "Integer" }
+  ],
+  "secopProcessColumns": [
+    { "name": "source", "type": "String" },
+    { "name": "externalid", "type": "String" },
+    { "name": "entity", "type": "String" },
+    { "name": "entitytaxid", "type": "String" },
+    { "name": "department", "type": "String" },
+    { "name": "status", "type": "String" },
+    { "name": "publishedat", "type": "DateTime" },
+    { "name": "updatedat", "type": "DateTime" },
+    { "name": "value", "type": "Decimal" },
+    { "name": "hash", "type": "String" },
+    { "name": "relevant", "type": "Boolean" },
+    { "name": "lastsyncedat", "type": "DateTime" }
+  ],
+  "relationships": [
+    "tno_tendercandidate N:1 tno_secopprocess (shared catalog)",
+    "tno_tendercandidate N:1 tno_company",
+    "tno_assessment N:1 tno_tendercandidate",
+    "tno_requirement N:1 tno_assessment",
+    "tno_biddecision N:1 tno_tendercandidate",
+    "tno_integrationlink optional Dynamics opportunity"
+  ],
+  "elasticTables": "No se usan. Reevaluar solo si el volumen de tno_secopchange o tno_auditevent lo justifica.",
+  "security": {
+    "catalog": "Lectura de aplicación; escritura solo por identidad de sincronización",
+    "company": "Aislamiento por companykey y equipos propietarios",
+    "applicationUser": "Create/Read/Write/Append mínimos; sin Delete de auditoría"
+  }
+}

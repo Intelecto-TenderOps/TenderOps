@@ -1,0 +1,26 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "node",
+    "FUNCTIONS_EXTENSION_VERSION": "~4",
+    "TENDEROPS_ENVIRONMENT": "development",
+    "DEMO_ENABLED": "true",
+    "STORAGE_MODE": "Memory",
+    "SECOP_II_DATASET_ID": "p6dx-8zbt",
+    "SECOP_I_DATASET_ID": "f789-7hwg",
+    "SECOP_RETENTION_DAYS": "90",
+    "SECOP_SYNC_SCHEDULE": "0 0 * * * *",
+    "SECOP_SYNC_BATCH_SIZE": "100",
+    "SECOP_MAX_REQUESTS_PER_RUN": "20",
+    "DATAVERSE_PUBLISHER_PREFIX": "tno",
+    "DATAVERSE_SOLUTION_NAME": "TenderOpsFoundation",
+    "SHAREPOINT_SITE_URL": "https://intelecto1.sharepoint.com/sites/intelectocrm",
+    "SHAREPOINT_LIBRARY_NAME": "Cuenta"
+  },
+  "Host": {
+    "LocalHttpPort": 7071,
+    "CORS": "http://127.0.0.1:5173,http://localhost:5173,http://127.0.0.1:4173",
+    "CORSCredentials": true
+  }
+}
