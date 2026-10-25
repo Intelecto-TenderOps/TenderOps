@@ -6,13 +6,11 @@ interface UiState {
   navPinned: boolean;
   mobileNavOpen: boolean;
   theme: "light" | "dark";
-  density: "comfortable" | "compact";
   setCompany: (id: string) => void;
   setNavExpanded: (value: boolean) => void;
   toggleNavPinned: () => void;
   setMobileNavOpen: (value: boolean) => void;
   toggleTheme: () => void;
-  setDensity: (value: "comfortable" | "compact") => void;
 }
 
 export const useUiStore = create<UiState>((set, get) => ({
@@ -21,7 +19,6 @@ export const useUiStore = create<UiState>((set, get) => ({
   navPinned: false,
   mobileNavOpen: false,
   theme: "light",
-  density: "comfortable",
   setCompany: (companyId) => set({ companyId }),
   setNavExpanded: (navExpanded) => set({ navExpanded }),
   toggleNavPinned: () =>
@@ -32,5 +29,4 @@ export const useUiStore = create<UiState>((set, get) => ({
     document.documentElement.dataset.theme = theme;
     set({ theme });
   },
-  setDensity: (density) => set({ density }),
 }));
