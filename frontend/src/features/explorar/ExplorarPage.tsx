@@ -13,15 +13,12 @@ import { formatCurrency, formatDateTime } from "@/lib/format";
 import { chipsToFilters, filterTenders, tendersService } from "@/services/tendersService";
 import { useDemoStore } from "@/store/demo-store";
 import { useDrawerStore } from "@/store/drawer-store";
-import { useUiStore } from "@/store/ui-store";
 
 export function ExplorarPage() {
   const navigate = useNavigate();
   const [params, setParams] = useSearchParams();
   const { chips, setChips } = useFilterChips();
   const openFlow = useDrawerStore((state) => state.openFlow);
-  const density = useUiStore((state) => state.density);
-  const setDensity = useUiStore((state) => state.setDensity);
   const hideDetail = useDrawerStore((state) => state.hiddenDetail);
   const tenders = useDemoStore((state) => state.workspace.tenders);
   const assessments = useDemoStore((state) => state.workspace.assessments);
@@ -85,7 +82,6 @@ export function ExplorarPage() {
       eyebrow="Exploración"
       title="Licitaciones SECOP"
       description="Listado amplio y detalle contextual. Los filtros y las acciones se ejecutan en el panel lateral."
-      dense={density === "compact"}
       chips={chips}
       onRemoveChip={(id) => setChips(chips.filter((chip) => chip.id !== id))}
       onClearChips={() => setChips([])}
@@ -121,9 +117,6 @@ export function ExplorarPage() {
             }
           >
             Filtros
-          </Button>
-          <Button onClick={() => setDensity(density === "compact" ? "comfortable" : "compact")}>
-            Densidad
           </Button>
           <Button
             onClick={() =>
