@@ -1,0 +1,30 @@
+[
+  {
+    "entidad": "DEPARTAMENTO ADMINISTRATIVO NACIONAL DE ESTADISTICA (DANE)",
+    "nit_entidad": "899999027",
+    "departamento_entidad": "Distrito Capital de Bogotá",
+    "ciudad_entidad": "Bogotá",
+    "id_del_proceso": "CO1.REQ.2577563",
+    "referencia_del_proceso": "EDP-545-2022",
+    "id_del_portafolio": "CO1.BDOS.2503732",
+    "nombre_del_procedimiento": "Prestación de servicios profesionales para procesar la información de la GEIH",
+    "descripci_n_del_procedimiento": "Análisis de resultados y generación de indicadores",
+    "fase": "Presentación de oferta",
+    "fecha_de_publicacion_del": "2022-01-18T00:00:00.000",
+    "fecha_de_ultima_publicaci": "2022-01-18T00:00:00.000",
+    "precio_base": "57333333",
+    "modalidad_de_contratacion": "Contratación directa",
+    "estado_del_procedimiento": "Seleccionado",
+    "estado_de_apertura_del_proceso": "Abierto",
+    "codigo_principal_de_categoria": "V1.80111500",
+    "urlproceso": { "url": "https://community.secop.gov.co/Public/Tendering/OpportunityDetail/Index?noticeUID=CO1.NTC.2597221" },
+    "adjudicado": "No"
+  },
+  {
+    "id_del_proceso": "CO1.REQ.999",
+    "nombre_del_procedimiento": "Proceso incompleto",
+    "entidad": "Entidad demo",
+    "estado_de_apertura_del_proceso": "Abierto",
+    "precio_base": "no-es-numero"
+  }
+]

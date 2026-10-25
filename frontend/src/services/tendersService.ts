@@ -1,5 +1,6 @@
 import type { FilterChip, SavedSearch, Tender, TenderFilters } from "@/contracts";
 import { createId } from "@/lib/ids";
+import { apiGet } from "./http";
 import { readWorkspace, simulateLatency, writeWorkspace } from "./workspace";
 
 export function chipsToFilters(chips: FilterChip[]): TenderFilters {
@@ -32,10 +33,32 @@ export function filterTenders(items: Tender[], filters: TenderFilters): Tender[]
   });
 }
 
+export async function listLiveTenders(filters: TenderFilters = {}) {
+  const result = await apiGet<{
+    items: Tender[];
+    total: number | null;
+    appliedFilters: FilterChip[];
+    warnings: string[];
+    sourceUpdatedAt: string | null;
+    mode: string;
+  }>("/api/v1/secop/processes", {
+    q: filters.search,
+    modality: filters.modalities?.[0],
+    department: filters.departments?.[0],
+    status: filters.statuses?.[0],
+    minValue: filters.minValue ? String(filters.minValue) : undefined,
+  });
+  return { ...result, simulated: false };
+}
+
 export const tendersService = {
   async list(filters: TenderFilters = {}) {
-    const items = filterTenders(readWorkspace().tenders, filters);
-    return simulateLatency({ items, total: items.length, simulated: true });
+    try {
+      return await listLiveTenders(filters);
+    } catch {
+      const items = filterTenders(readWorkspace().tenders, filters);
+      return simulateLatency({ items, total: items.length, simulated: true, warnings: ["API SECOP no disponible; se muestra el lote de demostración."] });
+    }
   },
   async get(id: string) {
     const tender = readWorkspace().tenders.find((item) => item.id === id || item.secopId === id);

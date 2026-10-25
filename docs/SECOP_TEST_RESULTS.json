@@ -1,0 +1,50 @@
+{
+  "fetched": 5,
+  "ids": [
+    "CO1.REQ.10000080",
+    "CO1.REQ.10000468",
+    "CO1.REQ.10000512",
+    "CO1.REQ.10000557",
+    "CO1.REQ.10000585"
+  ],
+  "urls": [
+    "https://community.secop.gov.co/STS/Users/Login/Index",
+    "https://community.secop.gov.co/STS/Users/Login/Index",
+    "https://community.secop.gov.co/STS/Users/Login/Index",
+    "https://community.secop.gov.co/STS/Users/Login/Index",
+    "https://community.secop.gov.co/STS/Users/Login/Index"
+  ],
+  "statuses": [
+    {
+      "id": "CO1.REQ.10000080",
+      "computed": "por_verificar",
+      "reason": "El indicador de apertura está abierto y el estado o la fecha límite no lo confirman."
+    },
+    {
+      "id": "CO1.REQ.10000468",
+      "computed": "por_verificar",
+      "reason": "El indicador de apertura está abierto y el estado o la fecha límite no lo confirman."
+    },
+    {
+      "id": "CO1.REQ.10000512",
+      "computed": "por_verificar",
+      "reason": "El indicador de apertura está abierto y el estado o la fecha límite no lo confirman."
+    },
+    {
+      "id": "CO1.REQ.10000557",
+      "computed": "por_verificar",
+      "reason": "El indicador de apertura está abierto y el estado o la fecha límite no lo confirman."
+    },
+    {
+      "id": "CO1.REQ.10000585",
+      "computed": "por_verificar",
+      "reason": "El indicador de apertura está abierto y el estado o la fecha límite no lo confirman."
+    }
+  ],
+  "exactMatch": "CO1.REQ.10000080",
+  "paginationDistinct": true,
+  "lastModified": "Fri, 23 Oct 2026 15:02:34 GMT",
+  "requestId": "6d31d8367f08183121182b4be5628a8e",
+  "tokenConfigured": true,
+  "generatedAt": "2026-10-24T19:27:41.764Z"
+}

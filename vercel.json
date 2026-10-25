@@ -1,7 +1,23 @@
 {
-  "buildCommand": "npm --prefix frontend ci && npm --prefix frontend run build",
+  "buildCommand": "npm --prefix frontend ci && npm --prefix frontend run build && npm --prefix packages/backend ci",
   "outputDirectory": "frontend/dist",
   "rewrites": [
-    { "source": "/((?!assets/).*)", "destination": "/index.html" }
+    { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/((?!api/|assets/).*)", "destination": "/index.html" }
+  ],
+  "crons": [
+    {
+      "path": "/api/v1/secop/sync",
+      "schedule": "* * * * *"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
+    }
   ]
 }

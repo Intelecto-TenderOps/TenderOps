@@ -8,6 +8,7 @@
 **/test-results/
 .env*
 !.env.example
+!.env.local.example
 *.pfx
 *.p12
 *.user

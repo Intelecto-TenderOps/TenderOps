@@ -2,7 +2,16 @@
 
 Plataforma SaaS para descubrir, calificar y preparar contrataciones públicas en Colombia.
 
-Esta entrega reconstruye el frontend empresarial (Liquid Glass, menú derecho y flujos laterales). El backend .NET permanece para la fase de integración y no es necesario para ejecutar la demostración.
+El frontend (Liquid Glass, menú derecho y drawers) se conserva. Hay un backend TypeScript para Vercel Functions y SECOP real en `packages/backend`, más el backend .NET existente.
+
+## API SECOP local
+
+```bash
+npm --prefix packages/backend ci
+npm --prefix packages/backend run dev
+```
+
+`GET http://127.0.0.1:8787/api/v1/secop/processes?q=software` consulta datos.gov.co. El frontend usa esa API cuando está disponible y, si no, el lote de demostración.
 
 ## Cómo ejecutar el frontend
 

@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import type { RowSelectionState } from "@tanstack/react-table";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { DataWorkspace } from "@/components/data/DataWorkspace";
-import { DataTable, RichDate, RichMoney, RichPrimary, RichScore, RichStage, type RichColumn } from "@/components/data/DataTable";
+import { DataTable, RichDate, RichMoney, RichPrimary, RichScore, RichStage, RichValue, type RichColumn } from "@/components/data/DataTable";
 import { ContextDetailPanel } from "@/components/data/ContextDetailPanel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/field";
@@ -13,26 +14,29 @@ import { formatCurrency, formatDateTime } from "@/lib/format";
 import { chipsToFilters, filterTenders, tendersService } from "@/services/tendersService";
 import { useDemoStore } from "@/store/demo-store";
 import { useDrawerStore } from "@/store/drawer-store";
-import { useUiStore } from "@/store/ui-store";
 
 export function ExplorarPage() {
   const navigate = useNavigate();
   const [params, setParams] = useSearchParams();
   const { chips, setChips } = useFilterChips();
   const openFlow = useDrawerStore((state) => state.openFlow);
-  const density = useUiStore((state) => state.density);
-  const setDensity = useUiStore((state) => state.setDensity);
   const hideDetail = useDrawerStore((state) => state.hiddenDetail);
   const tenders = useDemoStore((state) => state.workspace.tenders);
   const assessments = useDemoStore((state) => state.workspace.assessments);
   const search = params.get("q") ?? "";
-  const [selectedId, setSelectedId] = useState(tenders[0]?.id);
+  const filters = useMemo(() => ({ ...chipsToFilters(chips), search }), [chips, search]);
+  const live = useQuery({
+    queryKey: ["secop-live", filters],
+    queryFn: () => tendersService.list(filters),
+    retry: false,
+    refetchInterval: 45_000,
+    refetchIntervalInBackground: true,
+  });
+  const demoRows = useMemo(() => filterTenders(tenders, filters), [tenders, filters]);
+  const rows = live.data?.simulated === false ? live.data.items : demoRows;
+  const [selectedId, setSelectedId] = useState<string>();
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
-  const selected = tenders.find((item) => item.id === selectedId) ?? tenders[0];
-  const rows = useMemo(
-    () => filterTenders(tenders, { ...chipsToFilters(chips), search }),
-    [tenders, chips, search],
-  );
+  const selected = rows.find((item) => item.id === selectedId) ?? rows[0];
   const selectedRows = rows.filter((item) => rowSelection[item.id]);
   const columns = useMemo<RichColumn<Tender>[]>(
     () => [
@@ -74,7 +78,12 @@ export function ExplorarPage() {
         id: "cierre",
         header: "Cierre",
         sortValue: (row) => row.closesAt,
-        cell: (row) => <RichDate value={row.closesAt} />,
+        cell: (row) =>
+          row.closesAt ? (
+            <RichDate value={row.closesAt} />
+          ) : (
+            <RichValue primary="Sin fecha de cierre" secondary="No inferida" />
+          ),
       },
     ],
     [assessments],
@@ -82,10 +91,9 @@ export function ExplorarPage() {
 
   return (
     <DataWorkspace
-      eyebrow="Exploración"
+      eyebrow={live.data?.simulated === false ? "Exploración · SECOP en vivo" : "Exploración"}
       title="Licitaciones SECOP"
       description="Listado amplio y detalle contextual. Los filtros y las acciones se ejecutan en el panel lateral."
-      dense={density === "compact"}
       chips={chips}
       onRemoveChip={(id) => setChips(chips.filter((chip) => chip.id !== id))}
       onClearChips={() => setChips([])}
@@ -121,9 +129,6 @@ export function ExplorarPage() {
             }
           >
             Filtros
-          </Button>
-          <Button onClick={() => setDensity(density === "compact" ? "comfortable" : "compact")}>
-            Densidad
           </Button>
           <Button
             onClick={() =>
@@ -227,7 +232,7 @@ export function ExplorarPage() {
               </div>
               <div>
                 <dt className="text-muted">Cierre</dt>
-                <dd>{formatDateTime(selected.closesAt)}</dd>
+                <dd>{selected.closesAt ? formatDateTime(selected.closesAt) : "Sin fecha de cierre"}</dd>
               </div>
               <div className="flex gap-2">
                 <Button

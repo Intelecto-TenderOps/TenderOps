@@ -84,16 +84,25 @@ export function formatCompact(value: number): string {
   return compact.format(value);
 }
 
+function safeDate(value: string | null | undefined): Date | null {
+  if (!value) return null;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
 export function formatDateTime(value: string): string {
-  return dateTime.format(new Date(value));
+  const date = safeDate(value);
+  return date ? dateTime.format(date) : "Sin fecha";
 }
 
 export function formatDate(value: string): string {
-  return dateOnly.format(new Date(value));
+  const date = safeDate(value);
+  return date ? dateOnly.format(date) : "Sin fecha";
 }
 
 export function formatLongDate(value: string): string {
-  return longDate.format(new Date(value));
+  const date = safeDate(value);
+  return date ? longDate.format(date) : "Sin fecha";
 }
 
 export function prettyLabel(value: string): string {
@@ -101,6 +110,7 @@ export function prettyLabel(value: string): string {
 }
 
 export function daysUntil(value: string): number {
-  const target = new Date(value).getTime();
-  return Math.ceil((target - Date.now()) / 86_400_000);
+  const date = safeDate(value);
+  if (!date) return Number.POSITIVE_INFINITY;
+  return Math.ceil((date.getTime() - Date.now()) / 86_400_000);
 }
