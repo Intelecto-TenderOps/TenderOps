@@ -1,0 +1,12 @@
+export { tendersService } from "./tendersService";
+export { assessmentsService } from "./assessmentsService";
+export { documentsService } from "./documentsService";
+export { complianceService } from "./complianceService";
+export { decisionsService } from "./decisionsService";
+export { opportunitiesService } from "./opportunitiesService";
+export { tasksService } from "./tasksService";
+export { copilotService } from "./copilotService";
+export { analyticsService } from "./analyticsService";
+export { adminService } from "./adminService";
+export { companyService } from "./companyService";
+export { alertsService } from "./alertsService";
