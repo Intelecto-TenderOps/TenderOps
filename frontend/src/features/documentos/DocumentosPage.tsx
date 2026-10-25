@@ -49,7 +49,7 @@ export function DocumentosPage() {
       />
       <ActiveFilterChips chips={chips} onRemove={(id) => setChips(chips.filter((chip) => chip.id !== id))} onClear={() => setChips([])} />
       <div className="grid gap-3 lg:grid-cols-2">
-        <div className="table-surface overflow-hidden rounded-[20px]">
+        <div className="table-surface min-w-0 overflow-hidden rounded-[20px]">
           <DocumentExplorer documents={filtered} selectedId={selectedId} onSelect={(doc) => setSelectedId(doc.id)} />
         </div>
         <div className="glass-panel rounded-[24px] p-4">

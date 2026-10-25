@@ -110,7 +110,7 @@ export function AlertasPage() {
         }
       />
       <ActiveFilterChips chips={chips} onRemove={(id) => setChips(chips.filter((chip) => chip.id !== id))} onClear={() => setChips([])} />
-      <div className="table-surface overflow-hidden rounded-[20px]">
+      <div className="table-surface min-w-0 overflow-hidden rounded-[20px]">
         <DataTable
           data={rows}
           columns={columns}

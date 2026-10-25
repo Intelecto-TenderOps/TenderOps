@@ -83,7 +83,7 @@ export function EmpresaPage() {
         </article>
       )}
       {section === "capacidades" && (
-        <div className="table-surface overflow-hidden rounded-[20px]">
+        <div className="table-surface min-w-0 overflow-hidden rounded-[20px]">
           <DataTable
             data={workspace.capabilities.filter((item) => item.companyId === companyId)}
             columns={[
@@ -111,7 +111,7 @@ export function EmpresaPage() {
         </div>
       )}
       {section === "experiencia" && (
-        <div className="table-surface overflow-hidden rounded-[20px]">
+        <div className="table-surface min-w-0 overflow-hidden rounded-[20px]">
           <DataTable
             data={workspace.experiences.filter((item) => item.companyId === companyId)}
             columns={[
@@ -188,7 +188,7 @@ export function EmpresaPage() {
             </article>
           ))}
       {section === "documentos" && (
-        <div className="table-surface overflow-hidden rounded-[20px]">
+        <div className="table-surface min-w-0 overflow-hidden rounded-[20px]">
           <DataTable
             data={workspace.companyDocuments.filter((item) => item.companyId === companyId)}
             columns={[
@@ -216,7 +216,7 @@ export function EmpresaPage() {
         </div>
       )}
       {section === "usuarios" && (
-        <div className="table-surface overflow-hidden rounded-[20px]">
+        <div className="table-surface min-w-0 overflow-hidden rounded-[20px]">
           <DataTable
             data={workspace.memberships.filter((item) => item.companyId === companyId)}
             columns={[

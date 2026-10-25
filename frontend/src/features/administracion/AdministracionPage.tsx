@@ -127,7 +127,7 @@ export function AdministracionPage() {
         />
       )}
       {location.pathname.endsWith("usuarios") && (
-        <div className="table-surface overflow-hidden rounded-[20px]">
+        <div className="table-surface min-w-0 overflow-hidden rounded-[20px]">
           <DataTable
             data={workspace.memberships}
             columns={[
@@ -153,7 +153,7 @@ export function AdministracionPage() {
         </div>
       )}
       {location.pathname.endsWith("empresas") && (
-        <div className="table-surface overflow-hidden rounded-[20px]">
+        <div className="table-surface min-w-0 overflow-hidden rounded-[20px]">
           <DataTable
             data={workspace.companies}
             columns={[
@@ -175,7 +175,7 @@ export function AdministracionPage() {
         </div>
       )}
       {location.pathname.endsWith("fuentes") && (
-        <div className="table-surface overflow-hidden rounded-[20px]">
+        <div className="table-surface min-w-0 overflow-hidden rounded-[20px]">
           <DataTable
             data={liveSources}
             columns={[
@@ -204,7 +204,7 @@ export function AdministracionPage() {
         </article>
       )}
       {location.pathname.endsWith("auditoria") && (
-        <div className="table-surface overflow-hidden rounded-[20px]">
+        <div className="table-surface min-w-0 overflow-hidden rounded-[20px]">
           <DataTable data={workspace.auditEvents} columns={auditColumns} />
         </div>
       )}
@@ -214,7 +214,7 @@ export function AdministracionPage() {
             title={integrations.data?.source === "live" ? "Dependencias reales de la API" : "API no disponible"}
             detail="Una fila desconectada no se presenta como sincronizada."
           />
-          <div className="table-surface overflow-hidden rounded-[20px]">
+          <div className="table-surface min-w-0 overflow-hidden rounded-[20px]">
             <DataTable data={liveIntegrations} columns={integrationColumns} />
           </div>
         </div>

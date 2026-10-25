@@ -31,10 +31,10 @@ export function RichPrimary({
   detail?: ReactNode;
 }) {
   return (
-    <div className="min-w-0">
-      {kicker ? <p className="text-[11px] font-medium leading-4 text-muted">{kicker}</p> : null}
-      <p className="text-[15px] font-semibold leading-snug text-ink">{title}</p>
-      {detail ? <p className="mt-0.5 text-xs leading-snug text-muted">{detail}</p> : null}
+    <div className="min-w-0 break-words">
+      {kicker ? <p className="text-[11px] font-medium leading-4 text-muted [overflow-wrap:anywhere]">{kicker}</p> : null}
+      <p className="text-[15px] font-semibold leading-snug text-ink [overflow-wrap:anywhere]">{title}</p>
+      {detail ? <p className="mt-0.5 text-xs leading-snug text-muted [overflow-wrap:anywhere]">{detail}</p> : null}
     </div>
   );
 }
@@ -82,8 +82,8 @@ export function RichDate({ value, zone = BOGOTA_ZONE }: { value: string; zone?: 
 
 export function RichValue({ primary, secondary }: { primary: ReactNode; secondary?: ReactNode }) {
   return (
-    <div className="min-w-0">
-      <div className="text-[15px] font-semibold leading-snug text-ink">{primary}</div>
+    <div className="min-w-0 break-words">
+      <div className="text-[15px] font-semibold leading-snug text-ink [overflow-wrap:anywhere]">{primary}</div>
       {secondary ? <div className="mt-0.5 text-xs leading-snug text-muted">{secondary}</div> : null}
     </div>
   );
@@ -171,15 +171,20 @@ export function DataTable<T extends { id: string }>({
   const template = [
     enableSelection ? "40px" : null,
     ...columns.map((column, index) => {
-      if (column.grow || (!hasGrow && index === 0)) return "minmax(220px, 2.6fr)";
-      if (column.align === "right") return "minmax(128px, 0.9fr)";
-      return "minmax(118px, 1fr)";
+      if (column.grow || (!hasGrow && index === 0)) return "minmax(200px, 2.6fr)";
+      if (column.align === "right") return "minmax(112px, 0.9fr)";
+      return "minmax(108px, 1fr)";
     }),
   ]
     .filter(Boolean)
     .join(" ");
+  const minWidth =
+    (enableSelection ? 40 : 0) +
+    columns.reduce((sum, column, index) => sum + (column.grow || (!hasGrow && index === 0) ? 200 : 108), 0) +
+    columns.length * 16 +
+    32;
 
-  function handleRowKey(event: KeyboardEvent<HTMLDivElement>, row: T) {
+  function handleRowKey(event: KeyboardEvent<HTMLElement>, row: T) {
     if (!onRowClick) return;
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
@@ -188,27 +193,65 @@ export function DataTable<T extends { id: string }>({
   }
 
   return (
-    <div className="flex h-full min-h-[280px] flex-col">
-      <div className="min-h-0 flex-1 overflow-auto">
-        <div className="min-w-[720px]" role="table">
+    <div className="flex h-full min-h-[240px] min-w-0 flex-col">
+      <div className="min-h-0 min-w-0 flex-1 overflow-auto overscroll-x-contain">
+        <div className="divide-y divide-[var(--to-table-line)] md:hidden">
+          {table.getRowModel().rows.map((row) => (
+            <article
+              key={`card-${row.id}`}
+              tabIndex={onRowClick ? 0 : undefined}
+              onClick={() => onRowClick?.(row.original)}
+              onKeyDown={(event) => handleRowKey(event, row.original)}
+              className={cn(
+                "grid gap-3 px-3 py-3",
+                selectedId === row.original.id ? "bg-[var(--to-table-selected)]" : "bg-[var(--to-table-row)]",
+                onRowClick && "cursor-pointer",
+              )}
+            >
+              {enableSelection ? (
+                <label className="flex items-center gap-2 text-xs text-muted" onClick={(event) => event.stopPropagation()}>
+                  <input
+                    type="checkbox"
+                    aria-label={`Seleccionar ${row.original.id}`}
+                    className="rich-check"
+                    checked={row.getIsSelected()}
+                    onChange={row.getToggleSelectedHandler()}
+                  />
+                  Seleccionar
+                </label>
+              ) : null}
+              {columns.map((column, index) => (
+                <div key={column.id} className="min-w-0">
+                  {index === 0 ? null : <p className="mb-1 text-[11px] font-medium text-muted">{column.header}</p>}
+                  {column.cell(row.original)}
+                </div>
+              ))}
+            </article>
+          ))}
+        </div>
+        <div className="hidden w-max min-w-full md:block" role="table" style={{ minWidth }}>
           {table.getHeaderGroups().map((group) => (
             <div
               key={group.id}
               role="row"
-              className="sticky top-0 z-10 grid items-center gap-4 border-b border-[var(--to-table-line)] bg-[var(--to-table-head)] px-4 py-2.5 text-[12px] font-medium text-[var(--to-table-head-ink)]"
+              className="sticky top-0 z-10 grid items-center gap-3 border-b border-[var(--to-table-line)] bg-[var(--to-table-head)] px-3 py-2.5 text-[12px] font-medium text-[var(--to-table-head-ink)] lg:gap-4 lg:px-4"
               style={{ gridTemplateColumns: template }}
             >
-              {group.headers.map((header) => {
+              {group.headers.map((header, headerIndex) => {
                 const meta = header.column.columnDef.meta as RichColumn<T> | undefined;
                 const sorted = header.column.getIsSorted();
+                const sticky = headerIndex === 0 || (enableSelection && headerIndex === 1);
                 return (
                   <div
                     key={header.id}
                     role="columnheader"
                     className={cn(
-                      "flex items-center gap-1",
+                      "flex items-center gap-1 bg-[var(--to-table-head)]",
                       meta?.align === "right" && "justify-end",
                       meta?.align === "center" && "justify-center",
+                      sticky && "sticky z-20",
+                      headerIndex === 0 && "left-0",
+                      enableSelection && headerIndex === 1 && "left-10",
                     )}
                   >
                     {header.isPlaceholder ? null : header.column.id === "select" ? (
@@ -242,58 +285,77 @@ export function DataTable<T extends { id: string }>({
               })}
             </div>
           ))}
-          {table.getRowModel().rows.map((row, index) => (
-            <div
-              key={row.id}
-              role="row"
-              tabIndex={onRowClick ? 0 : undefined}
-              onClick={() => onRowClick?.(row.original)}
-              onKeyDown={(event) => handleRowKey(event, row.original)}
-              className={cn(
-                "grid w-full items-center gap-4 border-b border-[var(--to-table-line)] px-4 py-4 text-left transition-colors",
-                index % 2 === 0 ? "bg-[var(--to-table-row)]" : "bg-[var(--to-table-zebra)]",
-                onRowClick && "cursor-pointer hover:bg-[var(--to-table-hover)]",
-                selectedId === row.original.id && "bg-[var(--to-table-selected)] ring-1 ring-inset ring-[#b7d4ff]",
-              )}
-              style={{ gridTemplateColumns: template }}
-            >
-              {row.getVisibleCells().map((cell) => {
-                const meta = cell.column.columnDef.meta as RichColumn<T> | undefined;
-                if (cell.column.id === "select") {
+          {table.getRowModel().rows.map((row, index) => {
+            const zebra = index % 2 !== 0;
+            const selected = selectedId === row.original.id;
+            const rowBg = selected
+              ? "bg-[var(--to-table-selected)]"
+              : zebra
+                ? "bg-[var(--to-table-zebra)]"
+                : "bg-[var(--to-table-row)]";
+            return (
+              <div
+                key={row.id}
+                role="row"
+                tabIndex={onRowClick ? 0 : undefined}
+                onClick={() => onRowClick?.(row.original)}
+                onKeyDown={(event) => handleRowKey(event, row.original)}
+                className={cn(
+                  "grid w-full items-center gap-3 border-b border-[var(--to-table-line)] px-3 py-3 text-left transition-colors lg:gap-4 lg:px-4 lg:py-4",
+                  rowBg,
+                  onRowClick && "cursor-pointer hover:bg-[var(--to-table-hover)]",
+                  selected && "ring-1 ring-inset ring-[#b7d4ff]",
+                )}
+                style={{ gridTemplateColumns: template }}
+              >
+                {row.getVisibleCells().map((cell, cellIndex) => {
+                  const meta = cell.column.columnDef.meta as RichColumn<T> | undefined;
+                  const sticky = cellIndex === 0 || (enableSelection && cellIndex === 1);
+                  if (cell.column.id === "select") {
+                    return (
+                      <div
+                        key={cell.id}
+                        role="cell"
+                        className={cn(sticky && "sticky left-0 z-[1]", rowBg)}
+                        onClick={(event) => event.stopPropagation()}
+                      >
+                        <input
+                          type="checkbox"
+                          aria-label={`Seleccionar ${row.original.id}`}
+                          className="rich-check"
+                          checked={row.getIsSelected()}
+                          onChange={row.getToggleSelectedHandler()}
+                        />
+                      </div>
+                    );
+                  }
                   return (
-                    <div key={cell.id} role="cell" onClick={(event) => event.stopPropagation()}>
-                      <input
-                        type="checkbox"
-                        aria-label={`Seleccionar ${row.original.id}`}
-                        className="rich-check"
-                        checked={row.getIsSelected()}
-                        onChange={row.getToggleSelectedHandler()}
-                      />
+                    <div
+                      key={cell.id}
+                      role="cell"
+                      className={cn(
+                        "min-w-0",
+                        meta?.align === "right" && "text-right",
+                        meta?.align === "center" && "text-center",
+                        sticky && "sticky z-[1]",
+                        cellIndex === 0 && "left-0",
+                        enableSelection && cellIndex === 1 && "left-10",
+                        sticky && rowBg,
+                      )}
+                    >
+                      {meta?.cell(row.original)}
                     </div>
                   );
-                }
-                return (
-                  <div
-                    key={cell.id}
-                    role="cell"
-                    className={cn(
-                      "min-w-0",
-                      meta?.align === "right" && "text-right",
-                      meta?.align === "center" && "text-center",
-                    )}
-                  >
-                    {meta?.cell(row.original)}
-                  </div>
-                );
-              })}
-            </div>
-          ))}
+                })}
+              </div>
+            );
+          })}
         </div>
         {!table.getRowModel().rows.length ? (
           <p className="p-6 text-sm text-muted">No hay registros con los filtros actuales.</p>
         ) : null}
       </div>
-      <div className="flex items-center justify-between border-t border-[var(--to-table-line)] px-4 py-2 text-xs text-muted">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[var(--to-table-line)] px-3 py-2 text-xs text-muted">
         <span>
           {table.getFilteredRowModel().rows.length} registros · página{" "}
           {table.getState().pagination.pageIndex + 1}
@@ -320,10 +382,10 @@ export function RichHtmlTable({
 }) {
   const template = headers.map((_, index) => (index === 0 ? "minmax(140px, 1.6fr)" : "minmax(110px, 1fr)")).join(" ");
   return (
-    <div className="overflow-auto rounded-2xl border border-[var(--to-table-line)]" role="table">
+    <div className="min-w-0 overflow-x-auto rounded-2xl border border-[var(--to-table-line)]" role="table">
       <div
         role="row"
-        className="grid items-center gap-3 border-b border-[var(--to-table-line)] bg-[var(--to-table-head)] px-3 py-2 text-[11px] font-medium text-[var(--to-table-head-ink)]"
+        className="grid w-max min-w-full items-center gap-3 border-b border-[var(--to-table-line)] bg-[var(--to-table-head)] px-3 py-2 text-[11px] font-medium text-[var(--to-table-head-ink)]"
         style={{ gridTemplateColumns: template }}
       >
         {headers.map((header) => (
@@ -337,7 +399,7 @@ export function RichHtmlTable({
           key={`${row[0]}-${index}`}
           role="row"
           className={cn(
-            "grid items-start gap-3 border-b border-[var(--to-table-line)] px-3 py-3 text-sm",
+            "grid w-max min-w-full items-start gap-3 border-b border-[var(--to-table-line)] px-3 py-3 text-sm",
             index % 2 === 0 ? "bg-[var(--to-table-row)]" : "bg-[var(--to-table-zebra)]",
           )}
           style={{ gridTemplateColumns: template }}

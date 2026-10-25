@@ -119,7 +119,7 @@ export function TareasPage() {
         />
       )}
       {view === "lista" && (
-        <div className="table-surface overflow-hidden rounded-[20px]">
+        <div className="table-surface min-w-0 overflow-hidden rounded-[20px]">
           <DataTable
             data={rows}
             columns={columns}

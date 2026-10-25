@@ -128,6 +128,12 @@ textarea {
   --to-nav-width: 84px;
 }
 
+@media (max-width: 767px) {
+  .app-shell {
+    --to-nav-width: 0px;
+  }
+}
+
 .app-shell[data-nav="expanded"] {
   --to-nav-width: 268px;
 }
@@ -152,6 +158,7 @@ textarea {
 }
 
 .table-surface {
+  min-width: 0;
   background: rgb(255 255 255 / 0.94);
   border: 1px solid rgb(20 43 79 / 0.08);
 }

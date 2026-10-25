@@ -10,7 +10,7 @@ export function ContextDetailPanel({
   actions?: ReactNode;
 }) {
   return (
-    <aside className="glass-panel flex min-h-0 flex-col overflow-hidden rounded-[24px]">
+    <aside className="glass-panel flex min-h-0 min-w-0 flex-col overflow-hidden rounded-[24px]">
       <div className="flex items-center justify-between gap-2 border-b border-white/60 px-4 py-3">
         <h2 className="text-sm font-semibold">{title}</h2>
         {actions}

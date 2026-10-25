@@ -22,19 +22,27 @@ export function AppShell() {
   }, [flowOpen, navPinned, setExpanded]);
 
   useEffect(() => {
-    const nav = navExpanded ? "268px" : "84px";
-    const flow =
-      !flowOpen
-        ? "0px"
-        : size === "wide"
-          ? `min(760px, calc(100vw - ${nav} - 24px))`
-          : size === "compact"
-            ? `min(420px, calc(100vw - ${nav} - 24px))`
-            : `min(560px, calc(100vw - ${nav} - 24px))`;
-    document.documentElement.style.setProperty("--to-nav-width", nav);
-    document.documentElement.style.setProperty("--to-flow-width", flow);
-    document.documentElement.dataset.nav = navExpanded ? "expanded" : "compact";
-    document.documentElement.dataset.flow = flowOpen ? size : "none";
+    const media = window.matchMedia("(max-width: 767px)");
+    const apply = () => {
+      const narrow = media.matches;
+      const nav = narrow ? "0px" : navExpanded ? "268px" : "84px";
+      const flow =
+        !flowOpen
+          ? "0px"
+          : size === "wide"
+            ? `min(760px, calc(100vw - ${nav} - 24px))`
+            : size === "compact"
+              ? `min(420px, calc(100vw - ${nav} - 24px))`
+              : `min(560px, calc(100vw - ${nav} - 24px))`;
+      document.documentElement.style.setProperty("--to-nav-width", nav);
+      document.documentElement.style.setProperty("--to-flow-width", flow);
+      document.documentElement.dataset.nav = narrow ? "overlay" : navExpanded ? "expanded" : "compact";
+      document.documentElement.dataset.flow = flowOpen ? size : "none";
+      document.documentElement.dataset.narrow = narrow ? "true" : "false";
+    };
+    apply();
+    media.addEventListener("change", apply);
+    return () => media.removeEventListener("change", apply);
   }, [flowOpen, size, navExpanded]);
 
   return (
@@ -49,8 +57,8 @@ export function AppShell() {
       <div
         className="flex min-h-screen flex-col"
         style={{
-          paddingRight: "calc(var(--to-nav-width) + var(--to-flow-width) + 28px)",
-          paddingLeft: 20,
+          paddingRight: "calc(var(--to-nav-width) + var(--to-flow-width) + 16px)",
+          paddingLeft: 16,
           paddingTop: 10,
           paddingBottom: 12,
         }}
@@ -71,7 +79,7 @@ export function AppShell() {
             {mobileNav ? <X size={18} /> : <Menu size={18} />}
           </button>
         </div>
-        <main id="content" className="flex min-h-0 flex-1 flex-col">
+        <main id="content" className="flex min-h-0 min-w-0 flex-1 flex-col">
           <Outlet />
         </main>
       </div>

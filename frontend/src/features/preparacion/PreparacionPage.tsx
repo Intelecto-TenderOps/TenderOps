@@ -25,7 +25,7 @@ export function PreparacionPage() {
         detail="Adjuntar evidencia no crea archivos en SharePoint ni Task en Dynamics sin credenciales."
       />
       <div className="grid gap-3 lg:grid-cols-2">
-        <div className="table-surface overflow-hidden rounded-[20px]">
+        <div className="table-surface min-w-0 overflow-hidden rounded-[20px]">
           <DataTable
             data={docs}
             columns={[
