@@ -1,5 +1,6 @@
 import { DataTable, RichPrimary, RichStage } from "@/components/data/DataTable";
 import { PageHeader } from "@/components/data/PageHeader";
+import { IntegrationNotice } from "@/components/status/IntegrationNotice";
 import { Button } from "@/components/ui/button";
 import { useDemoStore } from "@/store/demo-store";
 import { useDrawerStore } from "@/store/drawer-store";
@@ -18,6 +19,10 @@ export function PreparacionPage() {
             Cargar evidencia
           </Button>
         }
+      />
+      <IntegrationNotice
+        title="Checklist local; Dynamics/SharePoint fail-closed"
+        detail="Adjuntar evidencia no crea archivos en SharePoint ni Task en Dynamics sin credenciales."
       />
       <div className="grid gap-3 lg:grid-cols-2">
         <div className="table-surface overflow-hidden rounded-[20px]">

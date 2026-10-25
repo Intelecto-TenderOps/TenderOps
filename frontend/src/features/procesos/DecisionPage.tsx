@@ -1,13 +1,15 @@
 import { useParams } from "react-router-dom";
+import { IntegrationNotice } from "@/components/status/IntegrationNotice";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/viz/StatusBadge";
+import { useLiveTender } from "@/hooks/useLiveTender";
 import { useDemoStore } from "@/store/demo-store";
 import { useDrawerStore } from "@/store/drawer-store";
 
 export function DecisionPage() {
   const { id = "" } = useParams();
   const workspace = useDemoStore((state) => state.workspace);
-  const tender = workspace.tenders.find((item) => item.secopId === id || item.id === id);
+  const { tender } = useLiveTender(id);
   const decision = workspace.decisions.find((item) => item.tenderId === tender?.id);
   const processApprovals = workspace.approvals.filter((item) => item.tenderId === tender?.id);
   const processComments = workspace.comments.filter((item) => item.tenderId === tender?.id);
@@ -16,8 +18,14 @@ export function DecisionPage() {
   if (!tender) return null;
   return (
     <div className="grid gap-3 lg:grid-cols-2">
+      <div className="lg:col-span-2">
+        <IntegrationNotice
+          title="La decisión humana no se publica a Dataverse/Dynamics"
+          detail="Sin credenciales, registrar BID no crea Opportunity. La recomendación de agente no se finge."
+        />
+      </div>
       <article className="glass-panel rounded-[24px] p-4">
-        <h2 className="font-semibold">Recomendación simulada</h2>
+        <h2 className="font-semibold">Recomendación</h2>
         <div className="mt-2">
           <StatusBadge value={decision?.recommended ?? tender.recommendation} />
         </div>

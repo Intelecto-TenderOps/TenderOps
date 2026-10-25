@@ -1,12 +1,15 @@
 import { useMemo, useState } from "react";
 import { DataTable, RichDate, RichPrimary, RichStage, RichValue, type RichColumn } from "@/components/data/DataTable";
 import { PageHeader } from "@/components/data/PageHeader";
+import { IntegrationNotice } from "@/components/status/IntegrationNotice";
 import { TaskBoard } from "@/components/tasks/TaskBoard";
 import { Button } from "@/components/ui/button";
 import { ActiveFilterChips } from "@/components/selection";
 import type { WorkTask } from "@/contracts";
 import { useFilterChips } from "@/hooks/useFilterChips";
+import { useIntegrations } from "@/hooks/useIntegrations";
 import { prettyLabel } from "@/lib/format";
+import { findIntegration } from "@/lib/integration";
 import { people } from "@/mocks/catalogs";
 import { useDemoStore } from "@/store/demo-store";
 import { useDrawerStore } from "@/store/drawer-store";
@@ -49,6 +52,8 @@ export function TareasPage() {
   const { chips, setChips } = useFilterChips();
   const tasks = useDemoStore((state) => state.workspace.tasks);
   const openFlow = useDrawerStore((state) => state.openFlow);
+  const integrations = useIntegrations();
+  const dynamics = findIntegration(integrations.data?.items, "Dynamics 365");
   const [view, setView] = useState<"lista" | "kanban" | "calendario" | "mias" | "equipo" | "carga">("lista");
   const rows = useMemo(() => {
     return tasks.filter((task) => {
@@ -101,6 +106,10 @@ export function TareasPage() {
             </Button>
           </>
         }
+      />
+      <IntegrationNotice
+        title={dynamics?.configured ? "Dynamics 365 configurado" : "Dynamics 365 no configurado"}
+        detail="El tablero local no crea Task en Dynamics. El maestro de tareas comerciales permanece fail-closed."
       />
       <ActiveFilterChips chips={chips} onRemove={(id) => setChips(chips.filter((chip) => chip.id !== id))} onClear={() => setChips([])} />
       {view === "kanban" && (

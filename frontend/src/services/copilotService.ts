@@ -1,39 +1,66 @@
 import { createId } from "@/lib/ids";
-import { readWorkspace, simulateLatency, writeWorkspace } from "./workspace";
+import type { CopilotMessage } from "@/contracts";
+import { apiPost, isIntegrationUnconfigured, readIntegrationError } from "./http";
+import { integrationsService } from "./integrationsService";
+import { readWorkspace, writeWorkspace } from "./workspace";
+
+function append(messages: CopilotMessage[]) {
+  writeWorkspace((workspace) => ({
+    ...workspace,
+    copilotThread: [...workspace.copilotThread, ...messages],
+  }));
+}
 
 export const copilotService = {
   async thread() {
-    return simulateLatency(readWorkspace().copilotThread);
+    return readWorkspace().copilotThread;
+  },
+  async agents() {
+    return integrationsService.agents();
   },
   async ask(body: string) {
-    writeWorkspace((workspace) => ({
-      ...workspace,
-      copilotThread: [
-        ...workspace.copilotThread,
+    const user: CopilotMessage = {
+      id: createId("cp"),
+      role: "user",
+      agent: "orquestador",
+      body,
+      createdAt: new Date().toISOString(),
+    };
+    append([user]);
+    try {
+      await apiPost("/api/v1/agent-executions", {
+        schemaVersion: "1.0",
+        action: "ASK",
+        message: body,
+      });
+      append([
         {
           id: createId("cp"),
-          role: "user",
+          role: "system",
           agent: "orquestador",
-          body,
+          body: "Copilot Studio respondió sin un contrato de salida utilizable. No se inventa un análisis.",
           createdAt: new Date().toISOString(),
+          status: "error",
         },
+      ]);
+      return { ok: false as const, unconfigured: false, code: "empty_copilot_payload", integration: "copilot" };
+    } catch (error) {
+      const info = readIntegrationError(error);
+      const unconfigured = isIntegrationUnconfigured(error);
+      append([
         {
           id: createId("cp"),
           role: "assistant",
-          agent: "estrategia",
-          body: "Respuesta simulada: revisa compatibilidad, evidencias y responsables antes de decidir BID.",
+          agent: "orquestador",
+          body: unconfigured
+            ? "Copilot Studio no está configurado. TenderOps no simula una evaluación ni una recomendación generativa."
+            : `No fue posible invocar Copilot Studio: ${info.message}`,
           createdAt: new Date().toISOString(),
-          findings: ["Sin conexión real a Copilot Studio", "Los hallazgos usan el expediente local"],
-          recommendation: "Abrir el flujo de asignación si falta un responsable.",
-          status: "listo",
-          proposedAction: {
-            type: "assign-owners",
-            label: "Asignar responsables",
-            payload: { tenderId: "tnd-001" },
-          },
+          findings: info.missing.length ? info.missing.map((item) => `Falta ${item}`) : undefined,
+          status: "error",
         },
-      ],
-    }));
-    return simulateLatency(true, 360);
+      ]);
+      return { ok: false as const, unconfigured, ...info };
+    }
   },
 };

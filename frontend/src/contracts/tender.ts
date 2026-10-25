@@ -23,7 +23,7 @@ export interface Tender {
   publishedAt: string;
   closesAt: string;
   status: TenderStatus;
-  source: "SECOP II";
+  source: "SECOP I" | "SECOP II";
   compatibility: number;
   risk: RiskLevel;
   recommendation: Recommendation;

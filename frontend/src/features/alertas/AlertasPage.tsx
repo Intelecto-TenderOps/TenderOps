@@ -1,6 +1,8 @@
 import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { DataTable, RichDate, RichPrimary, RichStage, RichValue, type RichColumn } from "@/components/data/DataTable";
 import { PageHeader } from "@/components/data/PageHeader";
+import { IntegrationNotice } from "@/components/status/IntegrationNotice";
 import { Button } from "@/components/ui/button";
 import { ActiveFilterChips } from "@/components/selection";
 import type { AlertItem } from "@/contracts";
@@ -54,7 +56,14 @@ const columns: RichColumn<AlertItem>[] = [
 
 export function AlertasPage() {
   const { chips, setChips } = useFilterChips();
-  const alerts = useDemoStore((state) => state.workspace.alerts);
+  const demoAlerts = useDemoStore((state) => state.workspace.alerts);
+  const live = useQuery({
+    queryKey: ["secop-signals"],
+    queryFn: () => alertsService.list(),
+    retry: false,
+    refetchInterval: 60_000,
+  });
+  const alerts = live.data?.items ?? demoAlerts;
   const openFlow = useDrawerStore((state) => state.openFlow);
   const rows = useMemo(
     () =>
@@ -90,6 +99,14 @@ export function AlertasPage() {
           >
             Filtros
           </Button>
+        }
+      />
+      <IntegrationNotice
+        title={live.data?.source === "live" ? "Señales operativas SECOP" : "Alertas del lote de demostración"}
+        detail={
+          live.data?.source === "live"
+            ? (live.data.warnings ?? []).join(" ")
+            : "Las coincidencias empresariales y adendas persistidas requieren Dataverse."
         }
       />
       <ActiveFilterChips chips={chips} onRemove={(id) => setChips(chips.filter((chip) => chip.id !== id))} onClear={() => setChips([])} />

@@ -1,14 +1,13 @@
 import type { CriterionWeight } from "@/contracts";
-import { readWorkspace, simulateLatency, writeWorkspace } from "./workspace";
+import { apiPost } from "./http";
+import { readWorkspace, writeWorkspace } from "./workspace";
 
 export const assessmentsService = {
   async list() {
-    return simulateLatency(readWorkspace().assessments);
+    return { items: readWorkspace().assessments, source: "local" as const };
   },
   async getByTender(tenderId: string) {
-    return simulateLatency(
-      readWorkspace().assessments.find((item) => item.tenderId === tenderId) ?? null,
-    );
+    return readWorkspace().assessments.find((item) => item.tenderId === tenderId) ?? null;
   },
   async saveWeights(weights: CriterionWeight[]) {
     writeWorkspace((workspace) => ({ ...workspace, criterionWeights: weights }));
@@ -33,17 +32,62 @@ export const assessmentsService = {
         return { ...item, score, version: item.version + 1 };
       }),
     }));
-    return simulateLatency(true);
+    return true;
   },
   async recalc(tenderId: string) {
-    writeWorkspace((workspace) => ({
-      ...workspace,
-      assessments: workspace.assessments.map((item) =>
-        item.tenderId === tenderId
-          ? { ...item, version: item.version + 1, updatedAt: new Date().toISOString() }
-          : item,
-      ),
-    }));
-    return simulateLatency(true);
+    const current = readWorkspace().assessments.find((item) => item.tenderId === tenderId);
+    let persistence = { configured: false, message: "Recálculo local." };
+    try {
+      const result = await apiPost<{
+        item: { score: number; risk: string; recommendation: string; blocked: boolean; blockReason: string | null; confidence: number };
+        persistence?: { configured?: boolean; message?: string };
+      }>("/api/v1/assessments", {
+        scores: {
+          commercial: current?.compatibility ?? 0,
+          experience: current?.experience ?? 0,
+          financial: current?.financial ?? 0,
+          legal: current?.legal ?? 0,
+          technical: current?.technical ?? 0,
+        },
+      });
+      persistence = {
+        configured: result.persistence?.configured ?? false,
+        message: result.persistence?.message ?? "Motor determinista; Dataverse no persistió.",
+      };
+      if (current) {
+        writeWorkspace((workspace) => ({
+          ...workspace,
+          assessments: workspace.assessments.map((item) =>
+            item.tenderId === tenderId
+              ? {
+                  ...item,
+                  score: result.item.score,
+                  risk: result.item.risk as typeof item.risk,
+                  recommendation: result.item.recommendation as typeof item.recommendation,
+                  blocked: result.item.blocked,
+                  blockReason: result.item.blockReason,
+                  confidence: result.item.confidence,
+                  version: item.version + 1,
+                  updatedAt: new Date().toISOString(),
+                  explanation: persistence.configured
+                    ? item.explanation
+                    : `${item.explanation} Recálculo determinista sin persistencia Dataverse.`,
+                }
+              : item,
+          ),
+        }));
+      }
+      return { ok: true as const, persistence };
+    } catch {
+      writeWorkspace((workspace) => ({
+        ...workspace,
+        assessments: workspace.assessments.map((item) =>
+          item.tenderId === tenderId
+            ? { ...item, version: item.version + 1, updatedAt: new Date().toISOString() }
+            : item,
+        ),
+      }));
+      return { ok: true as const, persistence };
+    }
   },
 };

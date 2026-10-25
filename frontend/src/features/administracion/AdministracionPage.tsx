@@ -1,8 +1,11 @@
+import { useQuery } from "@tanstack/react-query";
 import { NavLink, useLocation } from "react-router-dom";
 import { DataTable, RichDate, RichPrimary, RichStage, RichValue, type RichColumn } from "@/components/data/DataTable";
 import { PageHeader } from "@/components/data/PageHeader";
+import { IntegrationNotice } from "@/components/status/IntegrationNotice";
 import { Button } from "@/components/ui/button";
 import type { AuditEvent, IntegrationStatus, Membership, SourceConfig } from "@/contracts";
+import { useIntegrations } from "@/hooks/useIntegrations";
 import { adminService } from "@/services/adminService";
 import { useDemoStore } from "@/store/demo-store";
 import { useDrawerStore } from "@/store/drawer-store";
@@ -91,7 +94,15 @@ export function AdministracionPage() {
   const location = useLocation();
   const workspace = useDemoStore((state) => state.workspace);
   const openFlow = useDrawerStore((state) => state.openFlow);
+  const integrations = useIntegrations();
+  const sources = useQuery({
+    queryKey: ["secop-sources"],
+    queryFn: () => adminService.sources(),
+    retry: false,
+  });
   const section = tabs.find((tab) => tab.to === location.pathname)?.label ?? "Resumen";
+  const liveIntegrations = integrations.data?.items ?? workspace.integrations;
+  const liveSources = sources.data?.items ?? workspace.sources;
   return (
     <section className="grid gap-3">
       <PageHeader eyebrow="Administración" title={section} />
@@ -110,9 +121,10 @@ export function AdministracionPage() {
         ))}
       </nav>
       {location.pathname === "/administracion" && (
-        <p className="text-sm text-muted">
-          Gobierno de usuarios, fuentes, parámetros e integraciones. Ninguna conexión real está activa.
-        </p>
+        <IntegrationNotice
+          title={integrations.data?.source === "live" ? "Estado de integraciones leído de la API" : "Estado local"}
+          detail="Microsoft (Entra, Dynamics, Dataverse, SharePoint, Copilot) permanece fail-closed sin credenciales."
+        />
       )}
       {location.pathname.endsWith("usuarios") && (
         <div className="table-surface overflow-hidden rounded-[20px]">
@@ -165,7 +177,7 @@ export function AdministracionPage() {
       {location.pathname.endsWith("fuentes") && (
         <div className="table-surface overflow-hidden rounded-[20px]">
           <DataTable
-            data={workspace.sources}
+            data={liveSources}
             columns={[
               ...sourceColumns,
               {
@@ -197,8 +209,14 @@ export function AdministracionPage() {
         </div>
       )}
       {location.pathname.endsWith("integraciones") && (
-        <div className="table-surface overflow-hidden rounded-[20px]">
-          <DataTable data={workspace.integrations} columns={integrationColumns} />
+        <div className="grid gap-2">
+          <IntegrationNotice
+            title={integrations.data?.source === "live" ? "Dependencias reales de la API" : "API no disponible"}
+            detail="Una fila desconectada no se presenta como sincronizada."
+          />
+          <div className="table-surface overflow-hidden rounded-[20px]">
+            <DataTable data={liveIntegrations} columns={integrationColumns} />
+          </div>
         </div>
       )}
     </section>

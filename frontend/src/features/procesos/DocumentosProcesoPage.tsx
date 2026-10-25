@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { DocumentExplorer } from "@/components/documents/DocumentExplorer";
 import { EvidenceViewer } from "@/components/documents/EvidenceViewer";
+import { IntegrationNotice } from "@/components/status/IntegrationNotice";
 import { Button } from "@/components/ui/button";
+import { useLiveTender } from "@/hooks/useLiveTender";
 import { documentsService } from "@/services/documentsService";
 import { useDemoStore } from "@/store/demo-store";
 import { useDrawerStore } from "@/store/drawer-store";
@@ -10,13 +13,28 @@ import { useDrawerStore } from "@/store/drawer-store";
 export function DocumentosProcesoPage() {
   const { id = "" } = useParams();
   const workspace = useDemoStore((state) => state.workspace);
-  const tender = workspace.tenders.find((item) => item.secopId === id || item.id === id);
-  const docs = workspace.documents.filter((item) => item.tenderId === tender?.id);
-  const [selectedId, setSelectedId] = useState(docs[0]?.id);
-  const selected = docs.find((item) => item.id === selectedId) ?? null;
+  const { tender } = useLiveTender(id);
+  const liveDocs = useQuery({
+    queryKey: ["secop-documents", tender?.secopId ?? id],
+    queryFn: () => documentsService.list(tender?.id, tender?.secopId ?? id),
+    enabled: Boolean(tender?.secopId ?? id),
+    retry: false,
+  });
+  const docs = liveDocs.data?.items ?? workspace.documents.filter((item) => item.tenderId === tender?.id);
+  const [selectedId, setSelectedId] = useState<string>();
+  const selected = docs.find((item) => item.id === (selectedId ?? docs[0]?.id)) ?? null;
   const evidences = workspace.evidences.filter((item) => item.documentId === selected?.id);
   const openFlow = useDrawerStore((state) => state.openFlow);
   return (
+    <div className="grid gap-3">
+      <IntegrationNotice
+        title={liveDocs.data?.source === "live" ? "Inventario SECOP" : "Inventario local"}
+        detail={
+          liveDocs.data?.source === "live"
+            ? `${liveDocs.data.items.length} archivos publicados por la fuente. SharePoint no está configurado.`
+            : "SharePoint/Graph no está configurado. No se inventan pliegos."
+        }
+      />
     <div className="grid gap-3 lg:grid-cols-2">
       <article className="glass-panel rounded-[24px] p-4">
         <div className="mb-3 flex justify-between">
@@ -42,6 +60,7 @@ export function DocumentosProcesoPage() {
         </div>
         <EvidenceViewer document={selected} evidences={evidences} />
       </article>
+    </div>
     </div>
   );
 }

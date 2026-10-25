@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import type { Assessment } from "@/contracts";
 import { useFilterChips } from "@/hooks/useFilterChips";
 import { prettyLabel } from "@/lib/format";
+import { IntegrationNotice } from "@/components/status/IntegrationNotice";
 import { assessmentsService } from "@/services/assessmentsService";
 import { useDemoStore } from "@/store/demo-store";
 import { useDrawerStore } from "@/store/drawer-store";
@@ -80,7 +81,13 @@ export function CalificacionPage() {
     <DataWorkspace
       title="Calificación y priorización"
       eyebrow="Bandeja"
-      description="Puntajes 0-100, semáforo de riesgo y recomendaciones simuladas."
+      description="Puntajes 0-100 y semáforo de riesgo. El recálculo usa el motor determinista; Copilot no inventa encaje."
+      notice={
+        <IntegrationNotice
+          title="Evaluación generativa no disponible"
+          detail="Copilot Studio y Dataverse no están configurados. Recalcular no publica un análisis de agente."
+        />
+      }
       chips={chips}
       onRemoveChip={(id) => setChips(chips.filter((chip) => chip.id !== id))}
       onClearChips={() => setChips([])}

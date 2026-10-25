@@ -68,7 +68,7 @@ export function TenderOpsCopilot({
           aria-label="Pregunta para Copilot"
           value={value}
           onChange={(event) => setValue(event.target.value)}
-          placeholder="Pregunta al orquestador de demostración"
+          placeholder="Pregunta al orquestador. Sin Copilot Studio no hay respuesta generativa."
         />
         <Button type="submit" variant="primary" disabled={busy}>
           {busy ? "Pensando…" : "Enviar"}

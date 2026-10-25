@@ -33,7 +33,7 @@ Dynamics 365 · Dataverse · SharePoint · Copilot Studio · Entra ID · SECOP
 | `frontend/src/config` | Navegación y constantes |
 | `frontend/src/tests` | Pruebas unitarias |
 
-El backend .NET del repositorio no se modificó. Esta etapa no llama a Dynamics, Dataverse, SharePoint ni Copilot Studio.
+El cliente llama `/api/v1`. SECOP en vivo gana cuando la API responde. Dynamics, Dataverse, SharePoint y Copilot Studio son fail-closed: el front muestra `integration_unconfigured` y no inventa éxito.
 
 ## Gestión central de flujos
 
