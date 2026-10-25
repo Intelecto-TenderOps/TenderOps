@@ -93,7 +93,7 @@ export function AdministracionPage() {
   const openFlow = useDrawerStore((state) => state.openFlow);
   const section = tabs.find((tab) => tab.to === location.pathname)?.label ?? "Resumen";
   return (
-    <section className="grid gap-3">
+    <section className="grid min-w-0 gap-3">
       <PageHeader eyebrow="Administración" title={section} />
       <nav className="flex flex-wrap gap-2">
         {tabs.map((tab) => (
@@ -115,7 +115,7 @@ export function AdministracionPage() {
         </p>
       )}
       {location.pathname.endsWith("usuarios") && (
-        <div className="table-surface overflow-hidden rounded-[20px]">
+        <div className="table-surface min-w-0 overflow-hidden rounded-[20px]">
           <DataTable
             data={workspace.memberships}
             columns={[
@@ -141,7 +141,7 @@ export function AdministracionPage() {
         </div>
       )}
       {location.pathname.endsWith("empresas") && (
-        <div className="table-surface overflow-hidden rounded-[20px]">
+        <div className="table-surface min-w-0 overflow-hidden rounded-[20px]">
           <DataTable
             data={workspace.companies}
             columns={[
@@ -163,7 +163,7 @@ export function AdministracionPage() {
         </div>
       )}
       {location.pathname.endsWith("fuentes") && (
-        <div className="table-surface overflow-hidden rounded-[20px]">
+        <div className="table-surface min-w-0 overflow-hidden rounded-[20px]">
           <DataTable
             data={workspace.sources}
             columns={[
@@ -192,12 +192,12 @@ export function AdministracionPage() {
         </article>
       )}
       {location.pathname.endsWith("auditoria") && (
-        <div className="table-surface overflow-hidden rounded-[20px]">
+        <div className="table-surface min-w-0 overflow-hidden rounded-[20px]">
           <DataTable data={workspace.auditEvents} columns={auditColumns} />
         </div>
       )}
       {location.pathname.endsWith("integraciones") && (
-        <div className="table-surface overflow-hidden rounded-[20px]">
+        <div className="table-surface min-w-0 overflow-hidden rounded-[20px]">
           <DataTable data={workspace.integrations} columns={integrationColumns} />
         </div>
       )}

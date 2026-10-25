@@ -47,15 +47,7 @@ export function AppShell() {
       <a className="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-50 focus:rounded-full focus:bg-white focus:px-3 focus:py-2" href="#content">
         Ir al contenido
       </a>
-      <div
-        className="flex min-h-screen flex-col"
-        style={{
-          paddingRight: "calc(var(--to-nav-width) + var(--to-flow-width) + 28px)",
-          paddingLeft: 20,
-          paddingTop: 10,
-          paddingBottom: 12,
-        }}
-      >
+      <div className="flex min-h-screen min-w-0 flex-col px-4 pb-3 pt-2.5 md:pl-5 md:pr-[calc(var(--to-nav-width)+var(--to-flow-width)+28px)]">
         <div className="mb-2 flex items-center justify-between gap-3">
           <div className="glass-panel flex items-center gap-2 rounded-full px-3 py-1 text-[11px] text-muted">
             <span className="h-2 w-2 rounded-full bg-electric" aria-hidden="true" />
@@ -74,7 +66,7 @@ export function AppShell() {
             {mobileNav ? <X size={18} /> : <Menu size={18} />}
           </button>
         </div>
-        <main id="content" className="flex min-h-0 flex-1 flex-col">
+        <main id="content" className="flex min-h-0 min-w-0 flex-1 flex-col">
           <Outlet />
         </main>
       </div>

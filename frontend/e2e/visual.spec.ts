@@ -6,6 +6,8 @@ test("revisión visual, menú derecho y teclado", async ({ page }) => {
   await page.goto("/panorama");
   await expect(page.getByRole("heading", { name: /día de la mesa/ })).toBeVisible();
   await expect(page.getByRole("navigation", { name: "Navegación principal" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Abrir accesibilidad" })).toBeVisible();
+  await expect(page.getByText("Restablecer demo")).toHaveCount(0);
   await page.screenshot({ path: "test-results/visual/desktop-panorama.png", fullPage: true });
   await page.getByRole("link", { name: "Exploración" }).focus();
   await page.keyboard.press("Enter");

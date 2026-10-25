@@ -11,7 +11,7 @@ export function TaskBoard({
   onSelect: (task: WorkTask) => void;
 }) {
   return (
-    <div className="grid gap-3 md:grid-cols-4">
+    <div className="grid min-w-0 gap-3 sm:grid-cols-2 xl:grid-cols-4">
       {columns.map((status) => (
         <section key={status} className="glass-panel rounded-[22px] p-3">
           <h3 className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-muted">

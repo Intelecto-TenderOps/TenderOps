@@ -78,8 +78,8 @@ export function MatrizPage() {
         onRemove={(chipId) => setChips((current) => current.filter((chip) => chip.id !== chipId))}
         onClear={() => setChips([])}
       />
-      <div className="grid min-h-0 flex-1 gap-3 xl:grid-cols-[minmax(0,1.7fr)_minmax(260px,1fr)]">
-        <div className="table-surface overflow-hidden rounded-[24px]">
+      <div className="grid min-h-0 min-w-0 flex-1 gap-3 xl:grid-cols-[minmax(0,1.7fr)_minmax(260px,1fr)]">
+        <div className="table-surface min-w-0 overflow-hidden rounded-[24px]">
           <ComplianceMatrix
             rows={filtered}
             selectedId={selected?.id}
