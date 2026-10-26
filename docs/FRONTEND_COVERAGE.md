@@ -96,5 +96,10 @@ Leyenda: **UI** = pantalla implementada; **SIM** = comportamiento de demostraci�
 | HU-L090 | Pruebas de regresión | `npm test` + e2e | UI automatizada |
 | HU-L091 | Accesibilidad | drawers, chips, foco | UI parcial |
 | HU-L092 | Versiones y despliegues | `1.1.0` | UI; BE pipeline |
+| HU-PER-001 a 011 | Banco de perfiles | `/perfiles` | UI + SIM; BE Azure Functions |
+| HU-PER-012 a 014 | Personal propuesto | `/procesos/:id/personal` | UI + matching demo; BE matching |
+| HU-PER-015 a 022 | ResumeBuilder | flujo extraancho | UI selección granular; BE DOCX |
+| HU-PER-023 a 024 | Matriz y paquete | preparación / matriz | UI; paquete no se declara completo sin HV |
+| HU-PER-025 | Consentimiento | ficha del profesional | UI + SIM |
 
 Ninguna historia está conectada a un servicio real de Microsoft en esta entrega.

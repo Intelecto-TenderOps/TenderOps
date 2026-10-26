@@ -39,6 +39,14 @@ function labelFor(field: string): string {
     source: "Fuente",
     kind: "Tipo",
     priority: "Prioridad",
+    profession: "Profesión",
+    profile: "Perfil",
+    specialty: "Especialidad",
+    certification: "Certificación",
+    technology: "Tecnología",
+    availability: "Disponibilidad",
+    minYears: "Experiencia",
+    city: "Ciudad",
   };
   return labels[field] ?? field;
 }

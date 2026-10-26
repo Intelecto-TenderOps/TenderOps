@@ -26,7 +26,36 @@ import type {
   Tender,
   WorkTask,
 } from "@/contracts";
+import type {
+  GeneratedResume,
+  Professional,
+  ProfessionalAttachment,
+  ProfessionalCertification,
+  ProfessionalConsent,
+  ProfessionalEducation,
+  ProfessionalExperience,
+  ProfessionalImportBatch,
+  ProfessionalLicense,
+  ProfessionalSkill,
+  ResumeConfiguration,
+  TenderProfessionalAssignment,
+  TenderStaffRole,
+} from "@/contracts/professional";
 import { departments, people, sectors } from "./catalogs";
+import {
+  generatedResumes,
+  professionalAttachments,
+  professionalCertifications,
+  professionalConsents,
+  professionalEducation,
+  professionalExperiences,
+  professionalLicenses,
+  professionalSkills,
+  professionals,
+  resumeConfigs,
+  staffAssignments,
+  staffRoles,
+} from "./professionals";
 
 const now = "2026-10-23T16:00:00-05:00";
 
@@ -767,6 +796,19 @@ export interface DemoWorkspace {
   integrations: IntegrationStatus[];
   auditEvents: AuditEvent[];
   copilotThread: CopilotMessage[];
+  professionals: Professional[];
+  professionalEducation: ProfessionalEducation[];
+  professionalExperiences: ProfessionalExperience[];
+  professionalCertifications: ProfessionalCertification[];
+  professionalLicenses: ProfessionalLicense[];
+  professionalSkills: ProfessionalSkill[];
+  professionalAttachments: ProfessionalAttachment[];
+  professionalConsents: ProfessionalConsent[];
+  professionalImports: ProfessionalImportBatch[];
+  staffRoles: TenderStaffRole[];
+  staffAssignments: TenderProfessionalAssignment[];
+  resumeConfigs: ResumeConfiguration[];
+  generatedResumes: GeneratedResume[];
 }
 
 export function createSeed(): DemoWorkspace {
@@ -797,5 +839,18 @@ export function createSeed(): DemoWorkspace {
     integrations,
     auditEvents,
     copilotThread,
+    professionals,
+    professionalEducation,
+    professionalExperiences,
+    professionalCertifications,
+    professionalLicenses,
+    professionalSkills,
+    professionalAttachments,
+    professionalConsents,
+    professionalImports: [],
+    staffRoles,
+    staffAssignments,
+    resumeConfigs,
+    generatedResumes,
   });
 }

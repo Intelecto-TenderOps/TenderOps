@@ -21,6 +21,7 @@ export function ExpedienteLayout() {
     { to: `/procesos/${tender.secopId}/matriz`, label: "Matriz" },
     { to: `/procesos/${tender.secopId}/decision`, label: "Decisión" },
     { to: `/procesos/${tender.secopId}/preparacion`, label: "Preparación" },
+    { to: `/procesos/${tender.secopId}/personal`, label: "Personal Propuesto" },
     { to: `/procesos/${tender.secopId}/actividad`, label: "Actividad" },
     { to: `/procesos/${tender.secopId}/historial`, label: "Historial" },
   ];

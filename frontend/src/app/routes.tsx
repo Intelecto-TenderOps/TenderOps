@@ -65,6 +65,12 @@ const DocumentosPage = lazy(() =>
 const PreparacionPage = lazy(() =>
   import("@/features/preparacion/PreparacionPage").then((module) => ({ default: module.PreparacionPage })),
 );
+const PerfilesPage = lazy(() =>
+  import("@/features/perfiles/PerfilesPage").then((module) => ({ default: module.PerfilesPage })),
+);
+const PersonalPropuestoPage = lazy(() =>
+  import("@/features/procesos/PersonalPropuestoPage").then((module) => ({ default: module.PersonalPropuestoPage })),
+);
 
 function Fallback(): ReactElement {
   return <p className="p-6 text-sm text-muted">Cargando el espacio de trabajo…</p>;
@@ -89,10 +95,12 @@ export function AppRoutes() {
             <Route path="matriz" element={<MatrizPage />} />
             <Route path="decision" element={<DecisionPage />} />
             <Route path="preparacion" element={<PreparacionProcesoPage />} />
+            <Route path="personal" element={<PersonalPropuestoPage />} />
             <Route path="actividad" element={<ActividadPage />} />
             <Route path="historial" element={<ActividadPage />} />
           </Route>
           <Route path="/documentos" element={<DocumentosPage />} />
+          <Route path="/perfiles" element={<PerfilesPage />} />
           <Route path="/preparacion" element={<PreparacionPage />} />
           <Route path="/oportunidades" element={<OportunidadesPage />} />
           <Route path="/tareas" element={<TareasPage />} />

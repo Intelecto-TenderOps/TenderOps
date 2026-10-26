@@ -45,6 +45,27 @@ export function PreparacionProcesoPage() {
           </ul>
         </article>
         <article className="glass-panel rounded-[24px] p-4">
+          <div className="mb-2 flex justify-between">
+            <h2 className="font-semibold">Personal y hojas de vida</h2>
+            <Button size="sm" onClick={() => openFlow({ type: "staff-role", title: "Registrar perfil requerido", payload: { tenderId: tender?.id } })}>
+              Personal
+            </Button>
+          </div>
+          <ul className="grid gap-2 text-sm">
+            {workspace.staffRoles.filter((item) => item.tenderId === tender?.id).map((role) => {
+              const assigned = workspace.staffAssignments.filter((item) => item.roleId === role.id);
+              const resumes = workspace.generatedResumes.filter((item) => item.roleId === role.id && item.tenderId === tender?.id);
+              const approved = resumes.filter((item) => item.status === "aprobado").length;
+              return (
+                <li key={role.id} className="flex items-center justify-between rounded-2xl bg-white/70 px-3 py-2">
+                  <span>{role.name} · {assigned.length}/{role.quantity} · HV aprobadas {approved}</span>
+                  <StatusBadge value={assigned.length >= role.quantity && approved >= role.quantity ? "cumple" : "pendiente"} />
+                </li>
+              );
+            })}
+          </ul>
+        </article>
+        <article className="glass-panel rounded-[24px] p-4">
           <h2 className="font-semibold">Vigencias empresariales</h2>
           <ul className="mt-2 grid gap-2">
             {docs.map((item) => (

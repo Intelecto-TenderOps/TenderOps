@@ -17,6 +17,7 @@ const tabs = [
   { to: "/empresa/cobertura", label: "Cobertura", id: "cobertura" },
   { to: "/empresa/reglas", label: "Reglas", id: "reglas" },
   { to: "/empresa/documentos", label: "Documentos", id: "documentos" },
+  { to: "/perfiles", label: "Banco de perfiles", id: "perfiles" },
   { to: "/empresa/usuarios", label: "Usuarios y equipos", id: "usuarios" },
 ];
 

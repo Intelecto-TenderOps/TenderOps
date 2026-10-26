@@ -11,3 +11,4 @@ export * from "./task";
 export * from "./alert";
 export * from "./copilot";
 export * from "./admin";
+export * from "./professional";

@@ -46,6 +46,27 @@
       { "logical": "tno_command", "label": "Recibo de comando" },
       { "logical": "tno_outbox", "label": "Outbox" },
       { "logical": "tno_inbox", "label": "Inbox" }
+    ],
+    "professionals": [
+      { "logical": "tno_professional", "label": "Profesional" },
+      { "logical": "tno_professionalrole", "label": "Rol profesional" },
+      { "logical": "tno_professionaleducation", "label": "Formación académica" },
+      { "logical": "tno_professionalexperience", "label": "Experiencia profesional" },
+      { "logical": "tno_professionalcertification", "label": "Certificación" },
+      { "logical": "tno_professionallicense", "label": "Matrícula o tarjeta" },
+      { "logical": "tno_professionalskill", "label": "Competencia" },
+      { "logical": "tno_professionalattachment", "label": "Soporte del profesional" },
+      { "logical": "tno_professionalavailability", "label": "Disponibilidad" },
+      { "logical": "tno_professionalconsent", "label": "Autorización de tratamiento" },
+      { "logical": "tno_professionalimportbatch", "label": "Lote de importación" },
+      { "logical": "tno_professionalimportissue", "label": "Incidencia de importación" },
+      { "logical": "tno_tenderstaffrole", "label": "Perfil requerido" },
+      { "logical": "tno_tenderstaffrequirement", "label": "Requisito de personal" },
+      { "logical": "tno_tenderprofessionalassignment", "label": "Profesional propuesto" },
+      { "logical": "tno_resumeconfiguration", "label": "Configuración de hoja de vida" },
+      { "logical": "tno_generatedresume", "label": "Hoja de vida generada" },
+      { "logical": "tno_generatedresumeversion", "label": "Versión de hoja de vida" },
+      { "logical": "tno_resumegenerationjob", "label": "Trabajo de generación" }
     ]
   },
   "commonColumns": [
@@ -74,7 +95,17 @@
     "tno_assessment N:1 tno_tendercandidate",
     "tno_requirement N:1 tno_assessment",
     "tno_biddecision N:1 tno_tendercandidate",
-    "tno_integrationlink optional Dynamics opportunity"
+    "tno_integrationlink optional Dynamics opportunity",
+    "tno_professional N:1 tno_company",
+    "tno_professionaleducation N:1 tno_professional",
+    "tno_professionalexperience N:1 tno_professional",
+    "tno_professionalcertification N:1 tno_professional",
+    "tno_professionallicense N:1 tno_professional",
+    "tno_tenderstaffrole N:1 tno_tendercandidate",
+    "tno_tenderprofessionalassignment N:1 tno_professional",
+    "tno_tenderprofessionalassignment N:1 tno_tenderstaffrole",
+    "tno_generatedresume N:1 tno_professional",
+    "tno_generatedresume N:1 tno_resumeconfiguration"
   ],
   "elasticTables": "No se usan. Reevaluar solo si el volumen de tno_secopchange o tno_auditevent lo justifica.",
   "security": {

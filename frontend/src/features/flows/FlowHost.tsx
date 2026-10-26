@@ -21,6 +21,7 @@ import { useDrawerStore } from "@/store/drawer-store";
 import { useUiStore } from "@/store/ui-store";
 import { createId } from "@/lib/ids";
 import { z } from "zod";
+import { CreateProfessionalFlow, ImportProfessionalsFlow, ResumeBuilderFlow, SelectProfessionalFlow, StaffRoleFlow } from "@/features/perfiles/flows";
 
 const experienceSchema = z.object({
   client: z.string().min(3, "Indica el cliente"),
@@ -45,6 +46,11 @@ export function FlowHost() {
   if (type === "edit-user") return <UserFlow />;
   if (type === "create-capability") return <CapabilityFlow />;
   if (type === "edit-company") return <CompanyFlow />;
+  if (type === "import-professionals") return <ImportProfessionalsFlow />;
+  if (type === "create-professional") return <CreateProfessionalFlow />;
+  if (type === "resume-builder") return <ResumeBuilderFlow />;
+  if (type === "select-professional") return <SelectProfessionalFlow />;
+  if (type === "staff-role") return <StaffRoleFlow />;
   return <GenericFlow />;
 }
 

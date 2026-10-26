@@ -144,6 +144,10 @@ textarea {
   --to-flow-width: min(760px, calc(100vw - var(--to-nav-width) - 24px));
 }
 
+.app-shell[data-flow="extraWide"] {
+  --to-flow-width: min(1100px, calc(100vw - var(--to-nav-width) - 24px));
+}
+
 .glass-panel {
   background: var(--to-glass);
   border: 1px solid var(--to-glass-border);

@@ -4,6 +4,7 @@ import { DomainError } from "../shared/errors.js";
 import { stableId } from "../shared/ids.js";
 import type { Actor } from "../shared/types.js";
 import { CompanyService } from "../domains/companies/service.js";
+import { ProfessionalService } from "../domains/professionals/service.js";
 import { WorkspaceService } from "../domains/workspace/service.js";
 import { MemoryStore } from "../store/memory.js";
 import type { BusinessStore } from "../store/types.js";
@@ -24,13 +25,15 @@ export interface AppContainer {
   store: BusinessStore;
   companies: CompanyService;
   workspace: WorkspaceService;
+  professionals: ProfessionalService;
 }
 
 let singleton: AppContainer | undefined;
 
 export function createContainer(store = new MemoryStore()): AppContainer {
   const companies = new CompanyService(store);
-  return { store, companies, workspace: new WorkspaceService(store, companies) };
+  const workspace = new WorkspaceService(store, companies);
+  return { store, companies, workspace, professionals: new ProfessionalService(store, companies) };
 }
 
 export function getContainer(): AppContainer {
