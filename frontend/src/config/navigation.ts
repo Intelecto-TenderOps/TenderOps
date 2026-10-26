@@ -12,6 +12,7 @@ import {
   Scale,
   Settings2,
   Sparkles,
+  Users,
   type LucideIcon,
 } from "lucide-react";
 
@@ -42,9 +43,11 @@ export const navigation: NavItem[] = [
       { id: "procesos-lista", label: "Expedientes", to: "/procesos" },
       { id: "procesos-matriz", label: "Matrices", to: "/procesos/SECOP-LP-2026-041/matriz" },
       { id: "procesos-decision", label: "Decisiones", to: "/procesos/SECOP-LP-2026-041/decision" },
+      { id: "procesos-personal", label: "Personal propuesto", to: "/procesos/SECOP-LP-2026-041/personal" },
     ],
   },
   { id: "documentos", label: "Documentos", to: "/documentos", icon: FileStack },
+  { id: "perfiles", label: "Banco de Perfiles", to: "/perfiles", icon: Users },
   { id: "preparacion", label: "Preparación", to: "/preparacion", icon: ListChecks },
   { id: "oportunidades", label: "Oportunidades", to: "/oportunidades", icon: BriefcaseBusiness },
   { id: "tareas", label: "Tareas", to: "/tareas", icon: Bell },
@@ -77,6 +80,7 @@ export const navigation: NavItem[] = [
       { id: "empresa-cobertura", label: "Cobertura", to: "/empresa/cobertura" },
       { id: "empresa-reglas", label: "Reglas", to: "/empresa/reglas" },
       { id: "empresa-documentos", label: "Documentos", to: "/empresa/documentos" },
+      { id: "empresa-perfiles", label: "Banco de perfiles", to: "/perfiles" },
       { id: "empresa-usuarios", label: "Usuarios y equipos", to: "/empresa/usuarios" },
     ],
   },

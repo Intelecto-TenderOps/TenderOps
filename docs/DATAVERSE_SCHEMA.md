@@ -18,6 +18,7 @@ Un proceso público existe una sola vez.
 - Perfil: `tno_company`, `tno_capability`, `tno_experience`, `tno_evidence`, `tno_financial`, `tno_coverage`, `tno_rule`, `tno_membership`, `tno_team`, `tno_sourcepolicy`
 - Seguimiento: `tno_tendercandidate`, `tno_savedsearch`, `tno_tenderalert`, `tno_tenderfollowup`
 - Análisis: `tno_assessment`, `tno_requirement`, `tno_requirementmatch`, `tno_bidrecommendation`, `tno_biddecision`, `tno_checklistitem`, `tno_task`, `tno_integrationlink`, `tno_auditevent`
+- Perfiles: `tno_professional` y colecciones (`education`, `experience`, `certification`, `license`, `skill`, `attachment`, `availability`, `consent`, `importbatch`, `importissue`), `tno_tenderstaffrole`, `tno_tenderstaffrequirement`, `tno_tenderprofessionalassignment`, `tno_resumeconfiguration`, `tno_generatedresume`, `tno_generatedresumeversion`, `tno_resumegenerationjob`
 
 ## Relaciones
 

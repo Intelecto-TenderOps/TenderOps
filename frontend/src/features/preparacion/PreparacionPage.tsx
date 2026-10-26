@@ -7,6 +7,9 @@ import { useDrawerStore } from "@/store/drawer-store";
 export function PreparacionPage() {
   const docs = useDemoStore((state) => state.workspace.companyDocuments);
   const tasks = useDemoStore((state) => state.workspace.tasks);
+  const staffRoles = useDemoStore((state) => state.workspace.staffRoles);
+  const assignments = useDemoStore((state) => state.workspace.staffAssignments);
+  const resumes = useDemoStore((state) => state.workspace.generatedResumes);
   const openFlow = useDrawerStore((state) => state.openFlow);
   return (
     <section className="grid gap-2">
@@ -57,6 +60,17 @@ export function PreparacionPage() {
           </ul>
         </article>
       </div>
+      <article className="glass-panel rounded-[24px] p-4">
+        <div className="mb-2 flex items-center justify-between">
+          <h2 className="font-semibold">Personal y hojas de vida</h2>
+          <Button size="sm" onClick={() => openFlow({ type: "import-professionals", title: "Importar perfiles", size: "wide", steps: ["Archivo", "Estructura", "Mapeo", "Validación", "Revisión", "Confirmación", "Resultado"] })}>
+            Banco de perfiles
+          </Button>
+        </div>
+        <p className="text-sm text-muted">
+          {staffRoles.length} perfiles requeridos · {assignments.length} profesionales propuestos · {resumes.length} hojas de vida. Un paquete no se declara completo si faltan HV aprobadas o soportes.
+        </p>
+      </article>
     </section>
   );
 }

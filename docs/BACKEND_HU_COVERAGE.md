@@ -98,3 +98,37 @@ Fecha: 25 de octubre de 2026, America/Bogota. Ninguna HU se marca aceptada en sa
 | HU-L092 | Gestionar versiones y despliegues | Implementación de backend lista; aceptación externa pendiente. Bicep Functions + docs de versión; rollback Azure no ensayado |
 
 Resumen honesto: APIs, sync SECOP, aislamiento y contratos están en el repositorio. Entra/Dataverse/Dynamics/SharePoint/Copilot no se comprobaron con credenciales reales.
+
+## HU-PER Banco de perfiles y hojas de vida
+
+Las 92 historias originales se conservan. Estas 25 se añaden sin sustituirlas.
+
+| HU | Título | Entidades | Endpoints | Pruebas | Evidencia |
+| --- | --- | --- | --- | --- | --- |
+| HU-PER-001 | Crear profesional | tno_professional | POST/PATCH /professionals | A, I | `ProfessionalService.saveProfessional` |
+| HU-PER-002 | Importar desde Excel | tno_professionalimportbatch | POST /professionals/imports + commit | A | `importEngine` + ExcelJS |
+| HU-PER-003 | Mapear columnas | mapping profiles | PATCH .../mapping | A | `suggestMapping` |
+| HU-PER-004 | Validar y actualizar importaciones | import issue | commit duplicateAction | B | no duplica; no borra ausentes |
+| HU-PER-005 | Administrar estudios | tno_professionaleducation | GET/PUT .../education | A | colecciones hijas |
+| HU-PER-006 | Administrar experiencias | tno_professionalexperience | GET/PUT .../experiences | A, E | fusión de meses |
+| HU-PER-007 | Administrar certificaciones | tno_professionalcertification | GET/PUT .../certifications | D | vigencia |
+| HU-PER-008 | Administrar soportes | tno_professionalattachment | POST .../supports | G | SharePoint pending |
+| HU-PER-009 | Gestionar competencias | tno_professionalskill | GET/PUT .../skills | A | hoja Competencias |
+| HU-PER-010 | Vigencia y disponibilidad | professional + availability | GET list filters | D | availability + validity |
+| HU-PER-011 | Consultar y filtrar banco | professional | GET /professionals | A | filtros backend |
+| HU-PER-012 | Registrar perfiles exigidos | tno_tenderstaffrole | POST /tenders/{id}/staff-roles | C, E | captura manual si Copilot no está |
+| HU-PER-013 | Evaluar frente a requisitos | matching | GET .../matches | E, J | motor determinista |
+| HU-PER-014 | Seleccionar profesionales | tno_tenderprofessionalassignment | POST staff-assignments | G | no auto-prohíbe múltiples procesos |
+| HU-PER-015 | Seleccionar estudios HV | resumeconfiguration | resume-jobs educationIds | C | IDs verificados |
+| HU-PER-016 | Seleccionar experiencias HV | resumeconfiguration | experienceIds | C | no incluye todo por defecto |
+| HU-PER-017 | Seleccionar certificaciones HV | resumeconfiguration | certificationIds | D | advertencia vencida |
+| HU-PER-018 | HV corporativa | tno_generatedresume | resume-jobs format corporativo | C, G | DOCX OOXML |
+| HU-PER-019 | HV formato entidad | template variables | applyTemplateVariables | F | no aplasta tablas |
+| HU-PER-020 | Versionar HV | tno_generatedresumeversion | regenerate + versions | H | snapshot aprobado |
+| HU-PER-021 | Soportes del personal propuesto | attachments | supports + paquete | G, J | no inventa evidencia |
+| HU-PER-022 | HV por lote | resume job | G | cuatro documentos |
+| HU-PER-023 | Matriz de cumplimiento | assignment.match | matches + UI matriz | E | no cumple solo por tener el dato en el banco |
+| HU-PER-024 | Integrar al paquete documental | generatedresume | preparación | G | paquete incompleto si faltan HV |
+| HU-PER-025 | Autorizaciones de tratamiento | tno_professionalconsent | POST .../consent | I | Ley 1581 |
+
+Criterios de aceptación comunes: no inventar información profesional; no declarar integración real sin verificar; Excel de metadatos, no de PDF.

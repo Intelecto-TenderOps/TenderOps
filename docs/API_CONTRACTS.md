@@ -38,6 +38,12 @@ Mutaciones de perfil: `Idempotency-Key` UUID. Actualizaciones: `If-Match`.
 | GET/POST | `/tasks` |
 | GET | `/documents` |
 | GET | `/copilot/agents` |
+| GET/POST | `/professionals` |
+| GET | `/professionals/import-template` |
+| POST | `/professionals/imports` |
+| GET/POST | `/tenders/{id}/staff-roles` |
+| GET/POST | `/tenders/{id}/staff-assignments` |
+| POST | `/tenders/{id}/resume-jobs` |
 | POST | `/copilot/ask` |
 | GET | `/analytics/overview` |
 | GET | `/notifications` |

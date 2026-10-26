@@ -14,9 +14,11 @@
 | `/procesos/:id/matriz` | Matriz de cumplimiento |
 | `/procesos/:id/decision` | Decisión BID / NO BID |
 | `/procesos/:id/preparacion` | Preparación del proceso |
+| `/procesos/:id/personal` | Personal propuesto |
 | `/procesos/:id/actividad` | Actividad |
 | `/procesos/:id/historial` | Historial |
 | `/documentos` | Repositorio documental |
+| `/perfiles` | Banco de perfiles profesionales |
 | `/preparacion` | Vigencias y paquete empresarial |
 | `/oportunidades` | Oportunidades Dynamics 365 |
 | `/tareas` | Tareas y equipo |

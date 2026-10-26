@@ -35,6 +35,21 @@ function emptyWorkspace(): WorkspaceTables {
     copilotThread: [],
     criterionWeights: [],
     companyDocuments: [],
+    professionals: [],
+    professionalEducation: [],
+    professionalExperiences: [],
+    professionalCertifications: [],
+    professionalLicenses: [],
+    professionalSkills: [],
+    professionalAttachments: [],
+    professionalConsents: [],
+    professionalImports: [],
+    mappingProfiles: [],
+    staffRoles: [],
+    staffAssignments: [],
+    resumeConfigs: [],
+    generatedResumes: [],
+    resumeJobs: [],
   };
 }
 

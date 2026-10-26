@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-export type FlowSize = "compact" | "standard" | "wide";
+export type FlowSize = "compact" | "standard" | "wide" | "extraWide";
 
 export interface FlowSpec {
   type: string;

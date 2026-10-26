@@ -113,6 +113,11 @@ export function MatrizPage() {
             </div>
             <p className="mt-3 text-sm">Responsable: {selected.owner}</p>
             <p className="text-sm text-muted">{selected.notes || "Sin observaciones"}</p>
+            {selected.category === "experiencia" ? (
+              <p className="mt-3 text-xs text-muted">
+                El personal propuesto solo acredita este requisito si la evidencia seleccionada en la hoja de vida cumple las condiciones del proceso.
+              </p>
+            ) : null}
           </ContextDetailPanel>
         ) : null}
       </div>

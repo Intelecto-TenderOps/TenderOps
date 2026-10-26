@@ -1,5 +1,22 @@
 import type { CatalogProcess } from "../domains/secop/normalize.js";
 import type {
+  GeneratedResume,
+  ProfessionalAttachment,
+  ProfessionalCertification,
+  ProfessionalConsent,
+  ProfessionalEducation,
+  ProfessionalExperience,
+  ColumnMappingProfile,
+  ProfessionalImportBatch,
+  ProfessionalLicense,
+  Professional,
+  ProfessionalSkill,
+  ResumeConfiguration,
+  ResumeGenerationJob,
+  TenderProfessionalAssignment,
+  TenderStaffRole,
+} from "../contracts/professional.js";
+import type {
   AlertItem,
   Approval,
   Assessment,
@@ -99,6 +116,21 @@ export interface WorkspaceTables {
   copilotThread: CopilotMessage[];
   criterionWeights: CriterionWeight[];
   companyDocuments: CompanyDocumentRecord[];
+  professionals: Professional[];
+  professionalEducation: ProfessionalEducation[];
+  professionalExperiences: ProfessionalExperience[];
+  professionalCertifications: ProfessionalCertification[];
+  professionalLicenses: ProfessionalLicense[];
+  professionalSkills: ProfessionalSkill[];
+  professionalAttachments: ProfessionalAttachment[];
+  professionalConsents: ProfessionalConsent[];
+  professionalImports: ProfessionalImportBatch[];
+  mappingProfiles: ColumnMappingProfile[];
+  staffRoles: TenderStaffRole[];
+  staffAssignments: TenderProfessionalAssignment[];
+  resumeConfigs: ResumeConfiguration[];
+  generatedResumes: GeneratedResume[];
+  resumeJobs: ResumeGenerationJob[];
 }
 
 export interface BusinessStore {

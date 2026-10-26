@@ -27,6 +27,7 @@ export const rolePermissions: Record<RoleName, string[]> = {
     "workbench.commercial",
     "workbench.operations",
     "workbench.comment",
+    "workbench.approve",
   ],
   Analyst: [...profileRead, "profile.write", "workbench.read", "workbench.edit", "workbench.comment", "workbench.approve"],
   Commercial: [...profileRead, "rules.write", "workbench.read", "workbench.commercial", "workbench.comment"],

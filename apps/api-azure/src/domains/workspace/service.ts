@@ -20,6 +20,7 @@ import type {
   WorkTask,
 } from "../../contracts/workspace.js";
 import { CompanyService } from "../companies/service.js";
+import { matchProfessionalToRole } from "../professionals/matching.js";
 import { hybridSearch } from "../secop/search.js";
 import { toTender } from "../secop/normalize.js";
 
@@ -235,6 +236,41 @@ export class WorkspaceService {
         createdAt: new Date().toISOString(),
         findings: result.evidence,
         status: "listo",
+      };
+    } else if (agent === "candidatos") {
+      const roles = workspace.staffRoles;
+      const findings: string[] = ["copilot_not_configured"];
+      const tableRows: string[][] = [];
+      for (const role of roles) {
+        for (const professional of workspace.professionals) {
+          const record = {
+            professional,
+            education: workspace.professionalEducation.filter((item) => item.professionalId === professional.id),
+            experiences: workspace.professionalExperiences.filter((item) => item.professionalId === professional.id),
+            certifications: workspace.professionalCertifications.filter((item) => item.professionalId === professional.id),
+            licenses: workspace.professionalLicenses.filter((item) => item.professionalId === professional.id),
+            skills: workspace.professionalSkills.filter((item) => item.professionalId === professional.id),
+            attachments: workspace.professionalAttachments.filter((item) => item.professionalId === professional.id),
+            consent: workspace.professionalConsents.find((item) => item.professionalId === professional.id) ?? null,
+          };
+          const match = matchProfessionalToRole(record, role, role.referenceDate);
+          tableRows.push([professional.fullName, role.name, match.outcome, match.reasons[0] ?? "Sin criterio adicional"]);
+          findings.push(...match.reasons.slice(0, 2));
+        }
+      }
+      assistant = {
+        id: createPrefixedId("cp"),
+        companyId,
+        role: "assistant",
+        agent,
+        body: "Copilot Studio no está configurado. La comparación de perfiles se calculó de forma determinista en Azure Functions y no inventa experiencia ni certificaciones.",
+        createdAt: new Date().toISOString(),
+        findings: findings.slice(0, 8),
+        table: tableRows.length
+          ? { headers: ["Profesional", "Perfil requerido", "Resultado", "Motivo"], rows: tableRows.slice(0, 12) }
+          : undefined,
+        recommendation: "Revise y asigne el profesional en Personal propuesto. La asignación definitiva corresponde a un usuario autorizado.",
+        status: "error",
       };
     } else {
       assistant = {

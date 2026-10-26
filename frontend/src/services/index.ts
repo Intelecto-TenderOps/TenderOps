@@ -10,3 +10,4 @@ export { analyticsService } from "./analyticsService";
 export { adminService } from "./adminService";
 export { companyService } from "./companyService";
 export { alertsService } from "./alertsService";
+export { professionalsService } from "./professionalsService";

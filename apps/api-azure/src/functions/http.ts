@@ -8,6 +8,7 @@ import type { Actor, MembershipData } from "../shared/types.js";
 import { DEMO_USERS, demoActor, demoToken, getContainer, seedDemo } from "../app/container.js";
 import { openApiDocument } from "../openapi.js";
 import { lastSyncSafe, runNamedJob } from "../jobs/runner.js";
+import { dispatchProfessionals } from "../domains/professionals/http.js";
 
 type Handler = (request: HttpRequest, context: InvocationContext) => Promise<HttpResponseInit>;
 
@@ -123,6 +124,16 @@ async function dispatch(request: HttpRequest, _context: InvocationContext, corre
   }
 
   const actor = await actorOf(request);
+  const professionalResponse = await dispatchProfessionals(
+    request,
+    path,
+    method,
+    actor,
+    request.headers.get("x-company-id") ?? query(request, "companyId"),
+    container.professionals,
+    correlation,
+  );
+  if (professionalResponse) return professionalResponse;
 
   if (method === "POST" && path === "/api/v1/companies") {
     const body = await readJson<{ legalName: string; countryCode: string; taxId: string }>(request);

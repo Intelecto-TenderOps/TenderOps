@@ -8,11 +8,12 @@ import { useDrawerStore } from "@/store/drawer-store";
 export function CopilotPage() {
   const messages = useDemoStore((state) => state.workspace.copilotThread);
   const openFlow = useDrawerStore((state) => state.openFlow);
-  const ask = useMutation({ mutationFn: (value: string) => copilotService.ask(value) });
+  const ask = useMutation({ mutationFn: (value: string) => copilotService.ask(value, "candidatos") });
   return (
     <section className="glass-panel flex min-h-[70vh] flex-col rounded-[28px] p-4">
       <div className="mb-3">
-        <PageHeader eyebrow="Copilot Studio" title="Orquestador de demostración" />
+        <PageHeader eyebrow="Copilot Studio" title="Agente de Candidatos" />
+        <p className="mt-1 text-sm text-muted">La evaluación determinista se calcula en el banco de perfiles. Copilot Studio no inventa experiencia ni certificaciones.</p>
       </div>
       <TenderOpsCopilot
         messages={messages}
@@ -20,9 +21,9 @@ export function CopilotPage() {
         onAsk={(value) => ask.mutate(value)}
         onAction={(message) =>
           openFlow({
-            type: "assign-owners",
+            type: message.proposedAction?.type ?? "assign-owners",
             title: message.proposedAction?.label ?? "Asignar",
-            size: "compact",
+            size: message.proposedAction?.type === "select-professional" ? "wide" : "compact",
             payload: message.proposedAction?.payload,
           })
         }

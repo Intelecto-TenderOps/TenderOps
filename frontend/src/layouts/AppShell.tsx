@@ -27,11 +27,13 @@ export function AppShell() {
     const flow =
       !flowOpen
         ? "0px"
-        : size === "wide"
-          ? `min(760px, calc(100vw - ${nav} - 24px))`
-          : size === "compact"
-            ? `min(420px, calc(100vw - ${nav} - 24px))`
-            : `min(560px, calc(100vw - ${nav} - 24px))`;
+        : size === "extraWide"
+          ? `min(1100px, calc(100vw - ${nav} - 24px))`
+          : size === "wide"
+            ? `min(760px, calc(100vw - ${nav} - 24px))`
+            : size === "compact"
+              ? `min(420px, calc(100vw - ${nav} - 24px))`
+              : `min(560px, calc(100vw - ${nav} - 24px))`;
     document.documentElement.style.setProperty("--to-nav-width", nav);
     document.documentElement.style.setProperty("--to-flow-width", flow);
     document.documentElement.dataset.nav = navExpanded ? "expanded" : "compact";
